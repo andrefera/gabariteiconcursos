@@ -6,6 +6,9 @@ use App\Modules\Users\DTO\UserDTO;
 use App\Modules\Users\Services\Actions\ChangePassword;
 use App\Modules\Users\Services\Actions\LoginUser;
 use App\Modules\Users\Services\Actions\RegisterUser;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
@@ -13,12 +16,22 @@ use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
-    public function login(Request $request): JsonResponse
+    public function login(): View|Factory|Application
+    {
+        return view('auth.login');
+    }
+
+    public function loginAction(Request $request): JsonResponse
     {
         return response()->json(LoginUser::fromRequest($request)->execute());
     }
 
-    public function register(Request $request): JsonResponse
+    public function register(): View|Factory|Application
+    {
+        return view('auth.register');
+    }
+
+    public function registerAction(Request $request): JsonResponse
     {
         return response()->json(RegisterUser::fromRequest($request)->execute());
     }

@@ -12,7 +12,8 @@ readonly class RegisterUser
     public function __construct(
         public string $name,
         public string $email,
-        public string $password
+        public string $password,
+        public string $passwordConfirmation,
     )
     {
     }
@@ -25,6 +26,13 @@ readonly class RegisterUser
                 'success' => false,
                 'message' => 'E-mail já cadastrado!',
                 'token' => null
+            ];
+        }
+
+        if (trim($this->password) !== trim($this->passwordConfirmation)) {
+            return [
+                'success' => false,
+                'message' => 'As senhas são diferentes.'
             ];
         }
 
@@ -55,7 +63,8 @@ readonly class RegisterUser
         return new self(
             $request->get('name'),
             $request->get('email'),
-            $request->get('password')
+            $request->get('password'),
+            $request->get('password_confirmation')
         );
     }
 }

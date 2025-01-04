@@ -90,9 +90,8 @@
         <img src="{{ asset('images/logo.png') }}" alt="Ellon Sports Logo">
     </div>
     <nav>
-        <a href="/">Sobre</a>
-        <a href="/">Produtos</a>
-        <a href="/">Contato</a>
+        <a href="/login">Entrar</a>
+        <a href="/register">Cadastrar</a>
     </nav>
 </header>
 
