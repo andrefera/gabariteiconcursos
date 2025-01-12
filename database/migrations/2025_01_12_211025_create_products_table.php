@@ -23,7 +23,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->unsignedBigInteger('team_id')->nullable();
             $table->foreign('team_id')->references('id')->on('teams');
-            $table->string('sizes_image')->nullable();
+            $table->string('sizes_image')->nullable()->default(null);
             $table->string('gender')->default('unisex');
             $table->timestamps();
             $table->softDeletes();

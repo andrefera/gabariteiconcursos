@@ -7,6 +7,7 @@ use App\Models\ProductImage;
 use App\Models\ProductSize;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -14,20 +15,20 @@ use Illuminate\Support\Facades\Storage;
 readonly class CreateOrUpdateProduct
 {
     public function __construct(
-        public ?int    $id,
-        public string  $name,
-        public string  $sku,
-        public string  $url,
-        public ?string $description,
-        public float   $price,
-        public ?float  $special_price,
-        public string  $category,
-        public bool    $is_active,
-        public ?int    $team_id,
-        public ?string $sizes_image,
-        public string  $gender,
-        public array   $images,
-        public array   $sizes
+        public ?int                     $id,
+        public string                   $name,
+        public string                   $sku,
+        public string                   $url,
+        public ?string                  $description,
+        public float                    $price,
+        public ?float                   $special_price,
+        public string                   $category,
+        public bool                     $is_active,
+        public ?int                     $team_id,
+        public string|UploadedFile|null $sizes_image,
+        public string                   $gender,
+        public array                    $images,
+        public array                    $sizes
     )
     {
     }
@@ -52,8 +53,6 @@ readonly class CreateOrUpdateProduct
                 $sizesImagePath = 'products/' . $product->id . '/sizes_image.png';
                 $sizesImagePath = Storage::disk('s3')->put($sizesImagePath, fopen($this->sizes_image, 'r'));
                 $product->sizes_image = Storage::disk('s3')->url($sizesImagePath);
-            } else {
-                $product->sizes_image = null;
             }
 
             $product->fill([
@@ -80,7 +79,7 @@ readonly class CreateOrUpdateProduct
                 }
 
                 $imagePath = 'products/' . $product->id . "/images/{$image["order"]}.png";
-                $imagePath = Storage::disk('s3')->put($imagePath, fopen($image['url'], 'r'));
+                $imagePath = Storage::disk('s3')->put($imagePath, fopen($image['file'], 'r'));
                 $imageUrl = Storage::disk('s3')->url($imagePath);
 
                 $productImage->fill([
@@ -149,7 +148,7 @@ readonly class CreateOrUpdateProduct
             $request->get("category"),
             $request->get("is_active"),
             $request->get("team_id"),
-            $request->get("sizes_image"),
+            $request->file("sizes_image"),
             $request->get("gender"),
             $request->get("images"),
             $request->get("sizes")
