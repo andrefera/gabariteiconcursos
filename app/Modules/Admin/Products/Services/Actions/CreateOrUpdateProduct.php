@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Products\Services\Actions;
+namespace App\Modules\Admin\Products\Services\Actions;
 
 use App\Models\Product;
 use App\Models\ProductImage;

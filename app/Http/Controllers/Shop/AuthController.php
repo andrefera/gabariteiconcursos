@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Shop;
 
-use App\Modules\Users\DTO\UserDTO;
-use App\Modules\Users\Services\Actions\ChangePassword;
-use App\Modules\Users\Services\Actions\LoginUser;
-use App\Modules\Users\Services\Actions\RegisterUser;
+use App\Http\Controllers\Controller;
+use App\Modules\Shop\Users\DTO\UserDTO;
+use App\Modules\Shop\Users\Services\Actions\ChangePassword;
+use App\Modules\Shop\Users\Services\Actions\LoginUser;
+use App\Modules\Shop\Users\Services\Actions\RegisterUser;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Users\Services\Actions;
+namespace App\Modules\Shop\Users\Services\Actions;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
