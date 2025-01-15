@@ -3,18 +3,41 @@
 <link rel="stylesheet" href="{!! asset('assets/css/home.css') !!}">
 @section('content')
     <div class="banner">
-        <img src="{{ asset('images/banner2.jpg') }}" alt="Ellon Sports Banner">
+        <img src="{{ asset('images/banner.jpg') }}" alt="Ellon Sports Banner">
     </div>
 
-<header class="topbar">
-    <nav>
-        <a href="/login">Entrar</a>
-        <a href="/register">Cadastrar</a>
-    </nav>
-</header>
 
-<section class="hero-section">
-    <h1>Bem-vindo à Ellon Sports</h1>
-    <a href="/" class="btn btn-custom">Visite nossa loja</a>
-</section>
+    <section class="teamSection">
+        <div class="alignSection">
+            <div class="teamGroup">
+                <a href="/" class="team">
+                    <img src="{{ asset('images/teams/botafogo.png') }}" alt="Ellon Sports Banner">
+                </a>
+                <a href="/" class="team">
+                    <img src="{{ asset('images/teams/atletico.png') }}" alt="Ellon Sports Banner">
+                </a>
+                <a href="/" class="team">
+                    <img src="{{ asset('images/teams/cruzeiro.png') }}" alt="Ellon Sports Banner">
+                </a>
+                <a href="/" class="team">
+                    <img src="{{ asset('images/teams/corinthians.png') }}" alt="Ellon Sports Banner">
+                </a>
+                <a href="/" class="team">
+                    <img src="{{ asset('images/teams/flamengo.png') }}" alt="Ellon Sports Banner">
+                </a>
+                <a href="/" class="team">
+                    <img src="{{ asset('images/teams/palmeiras.png') }}" alt="Ellon Sports Banner">
+                </a>
+                <a href="/" class="team">
+                    <img src="{{ asset('images/teams/vasco.png') }}" alt="Ellon Sports Banner">
+                </a>
+                <a href="/" class="team">
+                    <img src="{{ asset('images/teams/saopaulo.png') }}" alt="Ellon Sports Banner">
+                </a>
+                <a href="/" class="team">
+                    <img src="{{ asset('images/teams/fluminense.png') }}" alt="Ellon Sports Banner">
+                </a>
+            </div>
+        </div>
+    </section>
 @endsection

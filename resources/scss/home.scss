@@ -1,7 +1,7 @@
 .banner {
     position: relative;
     width: 100%;
-    height: 600px;
+    height: auto;
     background-color: #ddd; // Cor de fundo padrão caso a imagem não carregue
     overflow: hidden;
 
@@ -30,20 +30,52 @@
             margin-bottom: 1rem;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
         }
+    }
+}
 
-        .btn-banner {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            background-color: #007BFF;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 1rem;
-            transition: background-color 0.3s ease;
+.teamSection {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+
+    .teamGroup {
+        display: flex;
+        justify-content: space-between;
+
+        .team {
+            border: 5px solid transparent;
+            border-radius: 50%;
+            display: flex;
+            padding: 15px;
+            background-color: #f9f9f9;
+            width: 120px;
+            height: 120px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(#f9f9f9, #f9f9f9) padding-box,
+            linear-gradient(45deg, #e83b06, orange) border-box;
 
             &:hover {
-                background-color: #0056b3;
+                transform: scale(1.1);
+                box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+                background-color: #eaeaea;
+            }
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                object-position: center;
             }
         }
     }
 }
+
+
+
