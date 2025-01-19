@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\Shop;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Modules\Shop\Users\DTO\UserDTO;
-use App\Modules\Shop\Users\Services\Actions\ChangePassword;
-use App\Modules\Shop\Users\Services\Actions\LoginUser;
-use App\Modules\Shop\Users\Services\Actions\RegisterUser;
+use App\Modules\Users\DTO\UserDTO;
+use App\Modules\Users\Services\Actions\ChangePassword;
+use App\Modules\Users\Services\Actions\LoginUser;
+use App\Modules\Users\Services\Actions\RegisterUser;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
@@ -24,7 +24,7 @@ class AuthController extends Controller
 
     public function loginAction(Request $request): JsonResponse
     {
-        return response()->json(LoginUser::fromRequest($request)->execute());
+        return response()->json(LoginUser::fromRequest($request, $request->path())->execute());
     }
 
     public function register(): View|Factory|Application

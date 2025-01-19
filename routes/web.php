@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Shop\AuthController;
+use App\Http\Controllers\AuthController;
 use App\Http\Middleware\Jwt;
 use Illuminate\Support\Facades\Route;
 

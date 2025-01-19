@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Shop\Users\DTO;
+namespace App\Modules\Users\DTO;
 
 use App\Models\User;
 
@@ -10,6 +10,7 @@ readonly class UserDTO
         public int $id,
         public string $name,
         public string $email,
+        public string $role,
     )
     {
     }
@@ -19,7 +20,8 @@ readonly class UserDTO
         return new self(
             $user->id,
             $user->name,
-            $user->email
+            $user->email,
+            $user->role,
         );
     }
 }

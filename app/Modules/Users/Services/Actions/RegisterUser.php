@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Shop\Users\Services\Actions;
+namespace App\Modules\Users\Services\Actions;
 
 use App\Models\User;
 use Illuminate\Http\Request;
