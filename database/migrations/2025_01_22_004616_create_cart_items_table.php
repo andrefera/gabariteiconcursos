@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('teams', function (Blueprint $table) {
+        Schema::create('cart_items', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('abbreviation')->nullable();
-            $table->string('logo')->nullable()->default(null);
-            $table->string('country')->nullable();
-            $table->string('league')->nullable();
+            $table->unsignedBigInteger('cart_id');
+            $table->foreign('cart_id')->references('id')->on('carts');
+            $table->unsignedBigInteger('product_id');
+            $table->foreign('product_id')->references('id')->on('products');
+            $table->unsignedInteger('quantity')->default(1);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('teams');
+        Schema::dropIfExists('cart_items');
     }
 };

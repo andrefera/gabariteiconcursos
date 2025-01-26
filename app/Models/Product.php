@@ -22,6 +22,7 @@ class Product extends Model
         'sku',
         'url',
         'description',
+        'cost',
         'price',
         'special_price',
         'category',
@@ -29,6 +30,7 @@ class Product extends Model
         'team_id',
         'sizes_image',
         'gender',
+        'season',
     ];
 
     /**

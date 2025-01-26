@@ -11,16 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('teams', function (Blueprint $table) {
+        Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('abbreviation')->nullable();
-            $table->string('logo')->nullable()->default(null);
-            $table->string('country')->nullable();
-            $table->string('league')->nullable();
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->string('status')->default('pending');
+            $table->string('method');
+            $table->decimal('total_price', 10, 2);
             $table->timestamps();
             $table->softDeletes();
         });
+
     }
 
     /**
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('teams');
+        Schema::dropIfExists('orders');
     }
 };

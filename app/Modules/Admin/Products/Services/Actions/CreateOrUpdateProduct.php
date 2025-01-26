@@ -20,6 +20,7 @@ readonly class CreateOrUpdateProduct
         public string                   $sku,
         public string                   $url,
         public ?string                  $description,
+        public float                    $cost,
         public float                    $price,
         public ?float                   $special_price,
         public string                   $category,
@@ -27,6 +28,7 @@ readonly class CreateOrUpdateProduct
         public ?int                     $team_id,
         public string|UploadedFile|null $sizes_image,
         public string                   $gender,
+        public ?string                  $season,
         public array                    $images,
         public array                    $sizes
     )
@@ -38,14 +40,27 @@ readonly class CreateOrUpdateProduct
         try {
             DB::beginTransaction();
 
+            $existSku = Product::query()
+                ->where('sku', $this->sku)
+                ->when($this->id, fn($query) => $query->where('id', '<>', $this->id))
+                ->first();
+
+            if ($existSku) {
+                return ["success" => false, "msg" => "Sku já existe."];
+            }
+
+            $existUrl = Product::query()
+                ->where('url', trim(strtolower($this->url)))
+                ->when($this->id, fn($query) => $query->where('id', '<>', $this->id))
+                ->first();
+
+            if ($existUrl) {
+                return ["success" => false, "msg" => "Url já existe."];
+            }
+
             if ($this->id) {
                 $product = Product::query()->find($this->id);
             } else {
-                $existSku = Product::query()->where('sku', $this->sku)->first();
-                if ($existSku) {
-                    return ["success" => false, "message" => "Sku já existe."];
-                }
-
                 $product = new Product();
             }
 
@@ -54,12 +69,14 @@ readonly class CreateOrUpdateProduct
                 "sku" => strtoupper($this->sku),
                 "url" => trim(strtolower($this->url)),
                 "description" => $this->description ? trim($this->description) : null,
+                "cost" => $this->cost,
                 "price" => $this->price,
                 "special_price" => $this->special_price,
                 "category" => $this->category,
                 "is_active" => $this->is_active,
                 "team_id" => $this->team_id,
-                "gender" => $this->gender
+                "gender" => $this->gender,
+                "season" => $this->season
             ]);
 
             $product->save();
@@ -182,6 +199,7 @@ readonly class CreateOrUpdateProduct
             $request->get("sku"),
             $request->get("url"),
             $request->get("description"),
+            floatval($request->get('cost')),
             floatval($request->get('price')),
             $request->get("special_price") ? $request->get("special_price") : null,
             $request->get("category"),
@@ -189,6 +207,7 @@ readonly class CreateOrUpdateProduct
             $request->get("team_id") ? (int)$request->get("team_id") : null,
             $request->file("sizes_image"),
             $request->get("gender"),
+            $request->get("season"),
             $images,
             $sizes
         );

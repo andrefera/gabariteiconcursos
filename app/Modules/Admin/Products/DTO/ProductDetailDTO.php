@@ -20,6 +20,8 @@ readonly class ProductDetailDTO
         public string  $is_active,
         public ?string $team,
         public string  $gender,
+        public ?string $season,
+        public int $stock,
         public string  $created_at,
     )
     {
@@ -38,6 +40,8 @@ readonly class ProductDetailDTO
             $product->is_active ? "Sim" : "Não",
             $product->team?->name,
             (new ProductGenderMapper())($product->gender),
+            $product->season,
+            $product->getStock(),
             Carbon::parse($product->created_at)->setTimezone('America/Sao_Paulo')->format('d/m/Y H:i:s'),
         );
     }
