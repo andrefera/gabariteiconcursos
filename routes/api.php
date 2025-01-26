@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\AuthController;
@@ -13,6 +14,8 @@ Route::get('/', function () {
 Route::post('admin/auth/login', [AuthController::class, 'loginAction'])->name('auth.login');
 
 Route::prefix('admin')->middleware(Jwt::class)->group(function () {
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+
     Route::prefix('auth')->group(function () {
         Route::get('me', [AuthController::class, 'me']);
     });

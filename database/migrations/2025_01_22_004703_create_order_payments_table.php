@@ -14,9 +14,11 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('order_id');
             $table->foreign('order_id')->references('id')->on('orders');
-            $table->unsignedInteger('installments')->default(1);
-            $table->decimal('amount', 10, 2);
             $table->string('status')->default('pending');
+            $table->unsignedInteger('installments')->default(1);
+            $table->decimal('installment_value', 10, 2);
+            $table->decimal('amount', 10, 2);
+            $table->dateTime('paid_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
