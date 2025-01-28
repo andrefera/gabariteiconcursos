@@ -3,7 +3,7 @@
 namespace App\Modules\Admin\Products\DTO;
 
 use App\Models\Product;
-use App\Modules\Admin\Products\Mappers\ProductCategoryMapper;
+use App\Modules\Admin\Products\Mappers\ProductTypeMapper;
 use App\Modules\Admin\Products\Mappers\ProductGenderMapper;
 use Carbon\Carbon;
 
@@ -16,12 +16,13 @@ readonly class ProductDetailDTO
         public string  $url,
         public string  $price,
         public ?string $special_price,
-        public string  $category,
+        public string  $type,
         public string  $is_active,
         public ?string $team,
         public string  $gender,
         public ?string $season,
-        public int $stock,
+        public int     $stock,
+        public string  $categories,
         public string  $created_at,
     )
     {
@@ -36,12 +37,13 @@ readonly class ProductDetailDTO
             $product->url,
             "R$" . number_format($product->price, 2, ',', '.'),
             $product->special_price ? ("R$" . number_format($product->special_price, 2, ',', '.')) : null,
-            (new ProductCategoryMapper())($product->category),
+            (new ProductTypeMapper())($product->type),
             $product->is_active ? "Sim" : "Não",
             $product->team?->name,
             (new ProductGenderMapper())($product->gender),
             $product->season,
             $product->getStock(),
+            $product->categories()->pluck("name")->join(', '),
             Carbon::parse($product->created_at)->setTimezone('America/Sao_Paulo')->format('d/m/Y H:i:s'),
         );
     }

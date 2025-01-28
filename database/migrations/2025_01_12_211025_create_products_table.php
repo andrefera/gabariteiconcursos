@@ -20,7 +20,7 @@ return new class extends Migration
             $table->decimal('cost', 10, 2);
             $table->decimal('price', 10, 2);
             $table->decimal('special_price', 10, 2)->nullable();
-            $table->string('category');
+            $table->string('type');
             $table->boolean('is_active')->default(true);
             $table->unsignedBigInteger('team_id')->nullable();
             $table->foreign('team_id')->references('id')->on('teams');

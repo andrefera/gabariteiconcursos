@@ -2,7 +2,7 @@
 
 namespace App\Models\Enums;
 
-enum ProductCategory: string
+enum ProductType: string
 {
     case SHIRT = 'shirt';
     case SHORTS = 'shorts';

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\TeamController;
@@ -33,6 +34,14 @@ Route::prefix('admin')->middleware(Jwt::class)->group(function () {
         Route::post('/store', [TeamController::class, 'createOrUpdate'])->name('team.store');
         Route::post('/delete/{team}', [TeamController::class, 'destroy'])->name('team.destroy');
         Route::get('/filter', [TeamController::class, 'filter'])->name('team.filter');
+    });
+
+    Route::prefix('category')->group(function () {
+        Route::get('/get-all', [CategoryController::class, 'index'])->name('category.index');
+        Route::get('/get/{category}', [CategoryController::class, 'edit'])->name('category.edit');
+        Route::post('/store', [CategoryController::class, 'createOrUpdate'])->name('category.store');
+        Route::post('/delete/{category}', [CategoryController::class, 'destroy'])->name('category.destroy');
+        Route::get('/filter', [CategoryController::class, 'filter'])->name('category.filter');
     });
 });
 

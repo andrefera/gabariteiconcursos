@@ -23,9 +23,10 @@ readonly class CreateOrUpdateProduct
         public float                    $cost,
         public float                    $price,
         public ?float                   $special_price,
-        public string                   $category,
+        public string                   $type,
         public bool                     $is_active,
         public ?int                     $team_id,
+        public array                    $category_ids,
         public string|UploadedFile|null $sizes_image,
         public string                   $gender,
         public ?string                  $season,
@@ -72,7 +73,7 @@ readonly class CreateOrUpdateProduct
                 "cost" => $this->cost,
                 "price" => $this->price,
                 "special_price" => $this->special_price,
-                "category" => $this->category,
+                "type" => $this->type,
                 "is_active" => $this->is_active,
                 "team_id" => $this->team_id,
                 "gender" => $this->gender,
@@ -80,6 +81,8 @@ readonly class CreateOrUpdateProduct
             ]);
 
             $product->save();
+
+            $product->categories()->sync($this->category_ids);
 
             if ($this->sizes_image) {
                 $sizesImagePath = 'products/' . $product->id . '/sizes_image.png';
@@ -202,9 +205,10 @@ readonly class CreateOrUpdateProduct
             floatval($request->get('cost')),
             floatval($request->get('price')),
             $request->get("special_price") ? $request->get("special_price") : null,
-            $request->get("category"),
+            $request->get("type"),
             $request->get("is_active") == '1',
             $request->get("team_id") ? (int)$request->get("team_id") : null,
+            $request->get("category_ids") ? explode(',', $request->get("category_ids")) : [],
             $request->file("sizes_image"),
             $request->get("gender"),
             $request->get("season"),
