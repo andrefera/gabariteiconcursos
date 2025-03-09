@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class OrderPayment extends Model
+class Coupon extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -17,22 +17,17 @@ class OrderPayment extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'order_id',
-        'method',
-        'installments',
-        'installment_value',
-        'amount',
-        'card_hash',
-        'payment_data',
+        'user_id',
+        'name',
+        'code',
+        'description',
+        'price',
+        'percentage_discount',
+        'expired_at',
     ];
 
-    protected $casts = [
-        'installment_value' => 'float',
-        'amount' => 'float',
-    ];
-
-    public function order(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(Order::class);
+        return $this->belongsTo(User::class);
     }
 }

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('state');
             $table->string('zip_code');
             $table->string('complement')->nullable();
-            $table->boolean('is_default')->default(false);
+            $table->boolean('is_default')->default(true);
             $table->timestamps();
             $table->softDeletes();
         });

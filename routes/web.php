@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Store\CheckoutController;
 use App\Http\Middleware\Jwt;
+use App\Http\Middleware\SessionTokenMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -20,7 +21,7 @@ Route::prefix('auth')->group(function () {
     Route::get('me', [AuthController::class, 'me']);
 });
 
-Route::prefix('checkout')->group(function () {
+Route::prefix('checkout')->middleware(SessionTokenMiddleware::class)->group(function () {
     Route::get('/', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('pay', [CheckoutController::class, 'pay'])->name('checkout.pay');
 });

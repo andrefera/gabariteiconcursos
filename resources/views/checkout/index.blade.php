@@ -91,8 +91,15 @@
                 try {
                     const token = await createCardToken();
                     paymentData.token = token;
-                    paymentData.installments = document.getElementById("installments").value;
+                    // paymentData.installments = document.getElementById("installments").value;
+                    paymentData.installments = 1;
                     paymentData.docNumber = document.getElementById("docNumber").value;
+
+                    const issuers = await getIssuers(paymentData.payment_method_id);
+                    if (issuers.length > 0) {
+                        paymentData.issuer_id = issuers[0].id; // Adiciona o issuer_id ao pagamento
+                    }
+
                 } catch (error) {
                     console.error("Erro ao gerar token do cartão:", error);
                     return;
@@ -133,11 +140,30 @@
                         identificationType: "CPF",
                         identificationNumber: document.getElementById("docNumber").value
                     }).then(response => {
+                        console.log(response)
                         resolve(response.id);
                     }).catch(error => {
                         reject(error);
                     });
                 });
+            }
+
+            async function getIssuers(paymentMethodId) {
+                try {
+                    const response = await mp.paymentMethods.getIssuers({
+                        payment_method_id: paymentMethodId
+                    });
+
+                    if (response.status === 200) {
+                        return response.response;
+                    } else {
+                        console.error("Erro ao buscar emissores", response);
+                        return [];
+                    }
+                } catch (error) {
+                    console.error("Erro ao buscar emissores:", error);
+                    return [];
+                }
             }
         });
     </script>
