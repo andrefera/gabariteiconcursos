@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Modules\Admin\Products\Services\Actions\InsertProductElasticSearch;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -44,6 +45,28 @@ class Product extends Model
         'special_price' => 'float',
         'is_active' => 'boolean',
     ];
+
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::created(function ($model) {
+            InsertProductElasticSearch::fromProduct($model)->execute();
+        });
+
+        static::updated(function ($model) {
+            InsertProductElasticSearch::fromProduct($model)->execute();
+        });
+
+        static::saved(function ($model) {
+            InsertProductElasticSearch::fromProduct($model)->execute();
+        });
+
+        static::deleted(function ($model) {
+            InsertProductElasticSearch::fromProduct($model)->execute();
+        });
+
+    }
 
     public function team(): BelongsTo
     {

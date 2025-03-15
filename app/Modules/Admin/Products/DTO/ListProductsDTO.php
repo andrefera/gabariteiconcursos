@@ -2,8 +2,6 @@
 
 namespace App\Modules\Admin\Products\DTO;
 
-use App\Models\Product;
-
 class ListProductsDTO
 {
     /**
@@ -11,13 +9,6 @@ class ListProductsDTO
      */
     public array $products;
 
-    /**
-     * @param Product[] $products
-     * @param int $total
-     * @param int $currentPage
-     * @param int $lastPage
-     * @param int $limit
-     */
     public function __construct(
         array      $products,
         public int $total,
@@ -26,6 +17,6 @@ class ListProductsDTO
         public int $limit,
     )
     {
-        $this->products = array_map(fn(Product $product) => ProductDetailDTO::fromProduct($product), $products);
+        $this->products = array_map(fn($product) => ProductDetailDTO::fromArray($product), $products);
     }
 }

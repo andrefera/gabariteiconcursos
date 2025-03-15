@@ -2,9 +2,11 @@
 
 namespace App\Modules\Admin\Products\Services\Actions;
 
-use App\Models\Product;
 use App\Modules\Admin\Products\DTO\ListProductsDTO;
+use App\Support\Util\ElasticSearchUtil;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 readonly class ListProducts
 {
@@ -14,8 +16,8 @@ readonly class ListProducts
         private ?string $sku,
         private ?string $type,
         private ?bool   $is_active,
-        private ?int    $team_id,
-        private ?int    $category_id,
+        private ?string $team_name,
+        private ?string $category,
         private ?string $gender,
         private int     $page = 1,
         private int     $limit = 50
@@ -25,29 +27,78 @@ readonly class ListProducts
 
     public function execute(): ListProductsDTO
     {
-        $products = Product::query()
-            ->when($this->id, fn($query) => $query->where('id', $this->id))
-            ->when($this->name, fn($query) => $query->where('name', 'like', '%' . $this->name . '%'))
-            ->when($this->sku, fn($query) => $query->where('sku', 'like', '%' . $this->sku . '%'))
-            ->when($this->type, fn($query) => $query->where('type', $this->type))
-            ->when(is_bool($this->is_active), fn($query) => $query->where('is_active', $this->is_active))
-            ->when($this->team_id, fn($query) => $query->where('team_id', $this->team_id))
-            ->when($this->gender, fn($query) => $query->where('gender', $this->gender))
-            ->when($this->category_id, function ($query) {
-                return $query->whereHas('categories', fn($query) => $query->where('category_id', $this->category_id));
-            })
-            ->orderByDesc('id')
-            ->paginate($this->limit, ['*'], 'page', $this->page);
 
+        $query = [
+            "bool" => [
+                "must" => $this->getFilter()
+            ]
+        ];
+
+        Log::info($query);
+
+        $start = ($this->page - 1) * $this->limit;
+
+        $response = ElasticSearchUtil::search(env('ELASTIC_SEARCH_INDEX_PRODUCTS', 'products_index'), $query, [], $start, $this->limit, ['id' => 'DESC']);
+        $total = $response['hits']['total']['value'];
+
+        $products = collect($response['hits']['hits'])->map(function ($item) {
+            return $item['_source'];
+        })->toArray();
 
         return new ListProductsDTO(
-            $products->items(),
-            $products->total(),
-            $products->currentPage(),
-            $products->lastPage(),
+            $products,
+            $total,
+            $this->page,
+            ceil($total / $this->limit),
             $this->limit
         );
 
+    }
+
+    public function getFilter(): Collection
+    {
+        $must = collect();
+
+        if ($this->id) {
+            $must->push([
+                'term' => [
+                    'id' => $this->id
+                ]
+            ]);
+        }
+
+        if ($this->name) {
+            $must->push([
+                'match' => [
+                    'name' => [
+                        'query' => $this->name,
+                        'operator' => 'and',
+                        'fuzziness' => 'AUTO',
+                    ]
+                ]
+            ]);
+        }
+
+        $params = [
+            'sku' => $this->sku,
+            'type' => $this->type,
+            'is_active' => is_bool($this->is_active) ? ($this->is_active ? "Sim" : "Não") : null,
+            'team_name' => $this->team_name,
+            'categories' => $this->category,
+            'gender' => $this->gender,
+        ];
+
+        foreach ($params as $key => $param) {
+            if ($param) {
+                $must->push([
+                    'term' => [
+                        $key . '.keyword' => $param
+                    ]
+                ]);
+            }
+        }
+
+        return $must;
     }
 
     public static function fromRequest(Request $request): self
@@ -58,8 +109,8 @@ readonly class ListProducts
             $request->get('sku'),
             $request->get('type'),
             !$request->get('is_active') ? null : $request->get('is_active') === 'true',
-            $request->get('team_id'),
-            $request->get('category_id'),
+            $request->get('team_name'),
+            $request->get('category'),
             $request->get('gender'),
             $request->get('page'),
             $request->get('limit')
