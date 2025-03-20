@@ -1,41 +1,42 @@
 #header {
   background-color: #ffffff;
-  padding: 1rem 2rem;
   border-bottom: 1px solid #ddd;
+}
+#header .alignHeader {
+  padding: 1rem 2rem;
   margin: 0 auto;
   width: 100rem;
-}
-#header div {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-#header div a {
+#header .alignHeader a {
   font-weight: 600;
   text-decoration: none;
   color: #333;
   margin-right: 1.5rem;
+  font-size: 14px;
 }
-#header div a:hover {
+#header .alignHeader a:hover {
   color: #FF7F00;
 }
-#header div img {
+#header .alignHeader img {
   max-height: 70px;
 }
-#header div .options {
+#header .alignHeader .options {
   display: flex;
   gap: 1rem;
 }
-#header div .options a {
+#header .alignHeader .options a {
   display: flex;
   font-size: 1rem;
   align-items: center;
   gap: 8px;
 }
-#header div .options a:hover {
+#header .alignHeader .options a:hover {
   text-decoration: underline;
 }
-#header div .searchGroup .searchInput {
+#header .alignHeader .searchGroup .searchInput {
   position: relative;
   display: flex;
   align-items: center;
@@ -46,7 +47,7 @@
   transition: width 0.3s ease;
   padding: 0 18px 0 20px;
 }
-#header div .searchGroup .searchInput input {
+#header .alignHeader .searchGroup .searchInput input {
   border: none;
   background: transparent;
   outline: none;
@@ -55,16 +56,16 @@
   height: 100%;
   color: #333;
 }
-#header div .searchGroup .searchInput .searchIcon {
+#header .alignHeader .searchGroup .searchInput .searchIcon {
   left: 10px;
   pointer-events: none;
 }
-#header div .imgIcon {
+#header .alignHeader .imgIcon {
   display: flex;
   gap: 5px;
   align-items: center;
 }
-#header div .imgIcon p {
+#header .alignHeader .imgIcon p {
   margin-top: 4px;
 }
 #header a:last-of-type {

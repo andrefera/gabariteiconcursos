@@ -1,0 +1,158 @@
+.listSection {
+    .alignSection {
+        h1 {
+            color: #29272e;
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 2.375rem;
+            margin-bottom: 34px;
+        }
+
+        .groupList {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+
+            .filter {
+                width: 340px;
+                padding: 20px;
+                background: #ffffff;
+                border-radius: 8px;
+                font-family: Arial, sans-serif;
+
+                h3 {
+                    font-size: 20px;
+                    margin-bottom: 15px;
+                    color: #333;
+                }
+            }
+
+
+
+
+
+            .productList {
+                width: 100%;
+
+                .grid {
+                    display: grid;
+                    grid-template-columns: repeat(4, 1fr);
+                    gap: 20px;
+
+                    .card {
+                        background-color: #F7F7F7;
+                        border-radius: 8px;
+                        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                        overflow: hidden;
+                        cursor: pointer;
+                        transition: transform 0.3s ease;
+
+                        &:hover {
+                            transform: translateY(-5px);
+                        }
+
+                        .cardContent {
+                            padding: 20px;
+
+                            img {
+                                width: 100%;
+                                height: auto;
+                                display: block;
+                                border-radius: 8px; // Aplica o border-radius diretamente
+                                margin: 0; // Garante que não há margem adicional
+                            }
+                        }
+
+                        .info {
+                            padding: 15px;
+
+                            h3 {
+                                font-size: 18px;
+                                margin: 0 0 10px;
+                                color: #333;
+                            }
+
+                            .price {
+                                font-size: 16px;
+                                color: #FF7C00;
+                                font-weight: bold;
+                            }
+
+                            .old-price {
+                                text-decoration: line-through;
+                                color: #aaa;
+                                margin-left: 10px;
+                                font-size: 14px;
+                            }
+                        }
+
+                        .badge {
+                            position: absolute;
+                            background: #FF7C00;
+                            color: white;
+                            font-size: 12px;
+                            padding: 5px 10px;
+                            border-radius: 8px 0;
+                        }
+
+                        .free-shipping {
+                            background: #FF7C00;
+                            color: white;
+                            display: inline-block;
+                            padding: 5px 10px;
+                            border-radius: 20px;
+                            font-size: 12px;
+                            margin-top: 10px;
+                        }
+
+                        .stars {
+                            color: #f5c518;
+                            font-size: 14px;
+                            margin-top: 5px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+select {
+    appearance: none;
+    border: 0;
+    outline: 0;
+    font: inherit;
+    width: 100%;
+    padding: 1rem 4rem 1rem 1rem;
+    background: var(--arrow-icon) no-repeat right 0.8em center / 1.4em,
+    linear-gradient(to left, var(--arrow-bg) 3em, var(--select-bg) 3em);
+    color: var(--text-color); /* Usa a variável para garantir visibilidade */
+    border-radius: 0.25em;
+    box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+/* Ajuste para os options */
+option {
+    color: black; /* Mantém a visibilidade dentro da dropdown */
+    background-color: var(--option-bg);
+}
+
+/* Para remover a seta padrão no IE */
+select::-ms-expand {
+    display: none;
+}
+
+/* Remove a borda ao focar */
+select:focus {
+    outline: none;
+}
+
+/* Estilização do grupo */
+.filter-group {
+    width: 300px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+}

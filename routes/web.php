@@ -8,6 +8,18 @@ Route::get('/', function () {
     return view('home');
 });
 
+Route::get('/camiseta/camisa-jogador-flamengo', function () {
+    return view('details.index');
+});
+
+Route::get('/carrinho', function () {
+    return view('cart.index');
+});
+
+Route::get('/camisetas', function () {
+    return view('list.index');
+});
+
 Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::get('register', [AuthController::class, 'register'])->name('register');
 

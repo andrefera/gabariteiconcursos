@@ -5,25 +5,142 @@
 }
 
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 16px;
     color: #333;
     line-height: 1.6;
-    background-color: #ffffff;
+    background-color: #f7f7f7;
+    overflow-x: hidden;
 }
 
-.alignSection{
+/* Melhorando a largura da seção para telas menores */
+.alignSection {
     margin: 0 auto;
     padding: 1rem 2rem;
-    width: 100rem;
+    max-width: 100rem;
+    width: 100%;
 }
 
+/* Links com transição suave */
 a {
     text-decoration: none;
     color: inherit;
-    transition: color 0.3s;
+    transition: color 0.3s ease-in-out;
 
     &:hover {
         color: #007BFF;
+        text-decoration: underline;
+    }
+}
+
+/* Ajustes para dispositivos menores */
+@media (max-width: 1200px) {
+    .alignSection {
+        max-width: 90%;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+
+    .alignSection {
+        padding: 1rem;
+        max-width: 100%;
+    }
+}
+
+.breadcrumb {
+    list-style: none;
+    display: flex;
+    padding: 10px 0;
+    border-radius: 5px;
+
+    li {
+        margin-right: 10px;
+        font-size: 14px;
+        &:not(:last-child)::after {
+            content: "/";
+            margin-left: 10px;
+            color: #6c757d;
+        }
+
+        a {
+            text-decoration: none;
+            color: #686868;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+
+        &.active {
+            font-weight: bold;
+            color: #495057;
+        }
+    }
+}
+
+footer {
+    background-color: #000;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.footer-logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #FF7C00;
+}
+
+.footer-links {
+    display: flex;
+    gap: 15px;
+}
+
+.footer-links a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.footer-links a:hover {
+    color: #FF7C00;
+}
+
+.footer-social {
+    display: flex;
+    gap: 15px;
+}
+
+.footer-social a {
+    color: #fff;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.footer-social a:hover {
+    color: #FF7C00;
+}
+
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer-links {
+        margin: 15px 0;
     }
 }

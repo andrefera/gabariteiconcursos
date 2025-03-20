@@ -1,0 +1,555 @@
+.detailSection .alignSection .productArea {
+  display: flex;
+  justify-content: space-between;
+  gap: 170px;
+}
+.detailSection .alignSection .productArea .imageArea {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+  justify-items: center;
+}
+.detailSection .alignSection .productArea .imageArea .imageMain {
+  width: 100%;
+  min-width: 620px;
+  background-color: #fff;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  padding: 25px;
+  border-radius: 21px;
+  box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.0784313725);
+}
+.detailSection .alignSection .productArea .imageArea .imageMain img {
+  cursor: pointer;
+  border-radius: 16px;
+  width: 100%;
+  height: auto;
+}
+.detailSection .alignSection .productArea .imageArea .otherImages {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+  justify-content: center;
+  width: 100%;
+  max-width: 600px;
+}
+.detailSection .alignSection .productArea .imageArea .otherImages .otherImage {
+  cursor: pointer;
+  background-color: #fff;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  padding: 10px;
+  border-radius: 21px;
+  box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.0784313725);
+}
+.detailSection .alignSection .productArea .imageArea .otherImages .otherImage img {
+  border-radius: 16px;
+  width: 100%;
+  max-width: 120px;
+}
+.detailSection .alignSection .productArea .textArea .firstStep {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 14px;
+  width: 85%;
+}
+.detailSection .alignSection .productArea .textArea .firstStep .title {
+  font-size: 36px;
+  color: #333;
+  margin-bottom: 10px;
+}
+.detailSection .alignSection .productArea .textArea .firstStep .stars {
+  display: flex;
+  font-size: 25px;
+  color: #FF7C00;
+  margin-top: 10px;
+  align-items: center;
+  gap: 5px;
+}
+.detailSection .alignSection .productArea .textArea .firstStep .stars p {
+  color: #495057;
+  font-size: 14px;
+}
+.detailSection .alignSection .productArea .textArea .secondStep {
+  border-bottom: 1px solid #ddd;
+  width: 85%;
+  padding: 20px 0;
+}
+.detailSection .alignSection .productArea .textArea .secondStep .priceGroup .discountArea {
+  display: flex;
+  gap: 12px;
+}
+.detailSection .alignSection .productArea .textArea .secondStep .priceGroup .discountArea .totalPrice {
+  color: #515050;
+  font-size: 1rem;
+  font-weight: 400;
+  text-decoration-line: line-through;
+}
+.detailSection .alignSection .productArea .textArea .secondStep .priceGroup .discountArea .offer {
+  align-items: center;
+  background-color: #333;
+  border-radius: 5px;
+  color: #fff;
+  display: flex;
+  font-size: 14px;
+  font-weight: 500;
+  height: 26px;
+  justify-content: center;
+  padding: 0 6px 0 14px;
+  width: 94px;
+}
+.detailSection .alignSection .productArea .textArea .secondStep .priceGroup .group {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+.detailSection .alignSection .productArea .textArea .secondStep .priceGroup .group .alignPrice {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.detailSection .alignSection .productArea .textArea .secondStep .priceGroup .group .alignPrice .price {
+  color: #FF7C00;
+  font-size: 2.45rem;
+  font-weight: 700;
+}
+.detailSection .alignSection .productArea .textArea .secondStep .priceGroup .group .alignPrice .specialPrice {
+  color: #29272e;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 500;
+}
+.detailSection .alignSection .productArea .textArea .thirdStep {
+  border-bottom: 1px solid #ddd;
+  width: 85%;
+  padding: 20px 0;
+}
+.detailSection .alignSection .productArea .textArea .thirdStep .choose {
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+.detailSection .alignSection .productArea .textArea .thirdStep .buttons {
+  display: flex;
+  gap: 20px;
+}
+.detailSection .alignSection .productArea .textArea .thirdStep .buttons .btnMeasure {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: none;
+  font-size: 16px;
+  color: #333;
+  font-weight: 600;
+  cursor: pointer;
+  border: 2px solid #FF7C00;
+  transition: all 0.3s ease-in-out;
+}
+.detailSection .alignSection .productArea .textArea .thirdStep .buttons .btnMeasure.active {
+  background: #FF7C00;
+  color: #fff;
+  border-color: #FF7C00;
+  box-shadow: 0 0 10px rgba(255, 124, 0, 0.5);
+  transform: scale(1.05);
+  font-weight: bold;
+  transition: all 0.2s ease-in-out;
+}
+.detailSection .alignSection .productArea .textArea .thirdStep .buttons .btnMeasure:hover {
+  background: #FF7C00;
+  color: #fff;
+  transform: scale(1.1);
+}
+.detailSection .alignSection .productArea .textArea .thirdStep .tableMeasure {
+  display: flex;
+  gap: 5px;
+  margin-top: 25px;
+  max-width: 240px;
+  height: 50px;
+  width: 100%;
+  border-radius: 6px;
+  border: none;
+  font-size: 18px;
+  background-color: #333;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+.detailSection .alignSection .productArea .textArea .thirdStep .tableMeasure img {
+  transition: transform 0.3s ease;
+}
+.detailSection .alignSection .productArea .textArea .thirdStep .tableMeasure:hover {
+  background: linear-gradient(135deg, #444, #222);
+}
+.detailSection .alignSection .productArea .textArea .thirdStep .tableMeasure:hover img {
+  transform: rotate(-5deg) scale(1.1);
+}
+.detailSection .alignSection .productArea .textArea .fourthStep {
+  width: 85%;
+  padding: 20px 0;
+}
+.detailSection .alignSection .productArea .textArea .fourthStep .quantityArea {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  margin-bottom: 23px;
+}
+.detailSection .alignSection .productArea .textArea .fourthStep .quantityArea .quantityGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100px;
+  height: 43px;
+  background: #333;
+  justify-content: center;
+  border-radius: 10px;
+}
+.detailSection .alignSection .productArea .textArea .fourthStep .quantityArea .quantityGroup .btnQtd {
+  width: 15px;
+  height: 15px;
+  border: none;
+  border-radius: 14px;
+  background: #FF7C00;
+  color: #fff;
+  font-size: 15px;
+  font-weight: bold;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.detailSection .alignSection .productArea .textArea .fourthStep .quantityArea .quantityGroup .btnQtd .less {
+  font-size: 18px;
+  margin-bottom: 2px;
+}
+.detailSection .alignSection .productArea .textArea .fourthStep .quantityArea .quantityGroup .btnQtd:hover {
+  background: rgb(204, 99.2, 0);
+}
+.detailSection .alignSection .productArea .textArea .fourthStep .quantityArea .quantityGroup .btnQtd:active {
+  transform: scale(0.95);
+}
+.detailSection .alignSection .productArea .textArea .fourthStep .quantityArea .quantityGroup .quantity {
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+}
+.detailSection .alignSection .productArea .textArea .fourthStep .quantityArea .phrase {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+.detailSection .alignSection .productArea .textArea .fourthStep .quantityArea .phrase span {
+  font-weight: bold;
+  color: red;
+}
+.detailSection .alignSection .productArea .textArea .fourthStep .buyArea {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+.detailSection .alignSection .productArea .textArea .fourthStep .buyArea button {
+  width: 48%;
+  height: 50px;
+  border-radius: 56px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+.detailSection .alignSection .productArea .textArea .fourthStep .buyArea .btnBuy {
+  background-color: #FF7C00;
+  color: #fff;
+}
+.detailSection .alignSection .productArea .textArea .fourthStep .buyArea .btnBuy:hover {
+  background: linear-gradient(135deg, #FF7C00, #FF5100);
+  box-shadow: 0 4px 10px rgba(255, 124, 0, 0.3);
+  transform: translateY(-2px);
+  transition: background 0.3s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+.detailSection .alignSection .productArea .textArea .fourthStep .buyArea .btnBuy:active {
+  transform: scale(0.97);
+}
+.detailSection .alignSection .productArea .textArea .fourthStep .buyArea .btnCart {
+  background-color: #333;
+  color: #fff;
+}
+.detailSection .alignSection .productArea .textArea .fourthStep .buyArea .btnCart:hover {
+  background: linear-gradient(135deg, rgb(59.5, 59.5, 59.5), rgb(12.75, 12.75, 12.75));
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+  transition: background 0.3s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+.detailSection .alignSection .productArea .textArea .fourthStep .buyArea .btnCart:active {
+  transform: scale(0.97);
+}
+
+.descriptionSection .title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+.descriptionSection .description {
+  font-size: 14px;
+  color: #495057;
+}
+.descriptionSection .informations {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #495057;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.descriptionSection .informations .groupInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.descriptionSection .informations .groupInfo span {
+  font-weight: 600;
+}
+
+.reviewSection .title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+.reviewSection .reviewGroup {
+  display: flex;
+  justify-content: space-between;
+}
+.reviewSection .reviewGroup .reviews {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  gap: 20px;
+  align-items: start;
+}
+.reviewSection .reviewGroup .reviews .review {
+  width: 100%;
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+.reviewSection .reviewGroup .reviews .review .reviewName {
+  font-weight: bold;
+  color: #333;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+.reviewSection .reviewGroup .reviews .review .reviewDate {
+  font-weight: normal;
+  color: #777;
+  font-size: 14px;
+}
+.reviewSection .reviewGroup .reviews .review .reviewStars {
+  color: #FF7C00;
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+.reviewSection .reviewGroup .reviews .review .reviewText {
+  font-size: 16px;
+  color: #555;
+  font-style: italic;
+}
+.reviewSection .reviewGroup .reviews .review .photoGroup {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+.reviewSection .reviewGroup .reviews .review .photoGroup img {
+  cursor: pointer;
+  border-radius: 8px;
+  transition: transform 0.2s ease-in-out;
+}
+.reviewSection .reviewGroup .reviews .review .photoGroup img:hover {
+  transform: translateY(-5px);
+}
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  padding: 0;
+  margin: 30px;
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.fade-in.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.review-summary {
+  font-family: Arial, sans-serif;
+  max-width: 300px;
+}
+.review-summary .review-score {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.review-summary .review-score .score {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #FF7C00;
+}
+.review-summary .review-score .stars {
+  font-size: 1.5rem;
+  color: #FF7C00;
+}
+.review-summary .review-score .stars .half-star {
+  color: #ccc;
+}
+.review-summary .review-score .total-reviews {
+  font-size: 0.9rem;
+  color: #777;
+}
+.review-summary .review-bars {
+  margin-top: 10px;
+}
+.review-summary .review-bars .review-bar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 5px;
+}
+.review-summary .review-bars .review-bar .stars-label {
+  font-size: 0.9rem;
+  width: 35px;
+}
+.review-summary .review-bars .review-bar .bar {
+  flex-grow: 1;
+  height: 6px;
+  background-color: #eee;
+  border-radius: 5px;
+  position: relative;
+}
+.review-summary .review-bars .review-bar .bar .filled {
+  height: 100%;
+  background-color: #FF7C00;
+  border-radius: 5px;
+}
+
+.productSection .title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+.productSection .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+.productSection .card {
+  background-color: #F7F7F7;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+.productSection .card:hover {
+  transform: translateY(-5px);
+}
+.productSection .card .cardContent {
+  padding: 20px;
+}
+.productSection .card .cardContent img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+  margin: 0;
+}
+.productSection .card .info {
+  padding: 15px;
+}
+.productSection .card .info h3 {
+  font-size: 18px;
+  margin: 0 0 10px;
+  color: #333;
+}
+.productSection .card .info .price {
+  font-size: 16px;
+  color: #FF7C00;
+  font-weight: bold;
+}
+.productSection .card .info .old-price {
+  text-decoration: line-through;
+  color: #aaa;
+  margin-left: 10px;
+  font-size: 14px;
+}
+.productSection .card .badge {
+  position: absolute;
+  background: #FF7C00;
+  color: white;
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 8px 0;
+}
+.productSection .card .free-shipping {
+  background: #FF7C00;
+  color: white;
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  margin-top: 10px;
+}
+.productSection .card .stars {
+  color: #f5c518;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.linkSection {
+  margin-bottom: 35px;
+}
+.linkSection .title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+.linkSection .outherLinks {
+  display: flex;
+  justify-content: center;
+}
+.linkSection .outherLinks .mostWantesLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+}
+.linkSection .outherLinks .mostWantesLinks li {
+  background: #fff;
+  padding: 8px 12px;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+}
+.linkSection .outherLinks .mostWantesLinks li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+.linkSection .outherLinks .mostWantesLinks li:hover {
+  background: #ddd;
+}

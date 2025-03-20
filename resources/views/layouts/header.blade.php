@@ -1,5 +1,5 @@
 <header id="header">
-    <div>
+    <div class="alignHeader">
         <a href="/">
             <img src="{{ asset('images/logo.png') }}" alt="Ellon Sports Logo">
         </a>
