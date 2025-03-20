@@ -15,9 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('abbreviation')->nullable();
-            $table->string('logo')->nullable();
+            $table->string('logo')->nullable()->default(null);
             $table->string('country')->nullable();
-            $table->string('state')->nullable();
             $table->string('league')->nullable();
             $table->timestamps();
             $table->softDeletes();

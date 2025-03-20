@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Modules\Admin\Products\Services\Actions\InsertProductElasticSearch;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -22,13 +24,15 @@ class Product extends Model
         'sku',
         'url',
         'description',
+        'cost',
         'price',
         'special_price',
-        'category',
+        'type',
         'is_active',
         'team_id',
         'sizes_image',
         'gender',
+        'season',
     ];
 
     /**
@@ -41,6 +45,28 @@ class Product extends Model
         'special_price' => 'float',
         'is_active' => 'boolean',
     ];
+
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::created(function ($model) {
+            InsertProductElasticSearch::fromProduct($model)->execute();
+        });
+
+        static::updated(function ($model) {
+            InsertProductElasticSearch::fromProduct($model)->execute();
+        });
+
+        static::saved(function ($model) {
+            InsertProductElasticSearch::fromProduct($model)->execute();
+        });
+
+        static::deleted(function ($model) {
+            InsertProductElasticSearch::fromProduct($model)->execute();
+        });
+
+    }
 
     public function team(): BelongsTo
     {
@@ -65,5 +91,10 @@ class Product extends Model
     public function getStock(): int
     {
         return $this->sizes()->sum('stock');
+    }
+
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class, 'product_categories');
     }
 }

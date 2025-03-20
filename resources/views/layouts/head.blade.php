@@ -39,6 +39,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="theme-color" content="#076035">
     <meta name="robots" content="index, follow">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @yield('meta-tags')
     @yield('head_content')
     <title>@yield('title')</title>

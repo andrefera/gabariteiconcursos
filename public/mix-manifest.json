@@ -1,10 +1,4 @@
 {
-    "/assets/css/cart.css": "/assets/css/cart.css",
-    "/assets/css/list.css": "/assets/css/list.css",
-    "/assets/css/detail.css": "/assets/css/detail.css",
-    "/assets/css/home.css": "/assets/css/home.css",
-    "/assets/css/header.css": "/assets/css/header.css",
-    "/assets/css/main.css": "/assets/css/main.css",
     "/~partytown/debug/partytown-atomics.js": "/~partytown/debug/partytown-atomics.js",
     "/~partytown/debug/partytown-media.js": "/~partytown/debug/partytown-media.js",
     "/~partytown/debug/partytown-sandbox-sw.js": "/~partytown/debug/partytown-sandbox-sw.js",

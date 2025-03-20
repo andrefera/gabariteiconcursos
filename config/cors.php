@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:3000', 'https://poke-dex-react-gilt.vercel.app'],
+    'allowed_origins' => ['http://localhost:3001'],
 
     'allowed_origins_patterns' => [],
 

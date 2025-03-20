@@ -14,17 +14,19 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('sku')->unique();
-            $table->string('url')->unique();
+            $table->string('sku');
+            $table->string('url');
             $table->text('description')->nullable();
+            $table->decimal('cost', 10, 2);
             $table->decimal('price', 10, 2);
             $table->decimal('special_price', 10, 2)->nullable();
-            $table->string('category');
+            $table->string('type');
             $table->boolean('is_active')->default(true);
             $table->unsignedBigInteger('team_id')->nullable();
             $table->foreign('team_id')->references('id')->on('teams');
             $table->string('sizes_image')->nullable()->default(null);
             $table->string('gender')->default('unisex');
+            $table->string('season')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

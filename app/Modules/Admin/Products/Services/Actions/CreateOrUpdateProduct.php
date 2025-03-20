@@ -20,13 +20,16 @@ readonly class CreateOrUpdateProduct
         public string                   $sku,
         public string                   $url,
         public ?string                  $description,
+        public float                    $cost,
         public float                    $price,
         public ?float                   $special_price,
-        public string                   $category,
+        public string                   $type,
         public bool                     $is_active,
         public ?int                     $team_id,
+        public array                    $category_ids,
         public string|UploadedFile|null $sizes_image,
         public string                   $gender,
+        public ?string                  $season,
         public array                    $images,
         public array                    $sizes
     )
@@ -38,21 +41,28 @@ readonly class CreateOrUpdateProduct
         try {
             DB::beginTransaction();
 
+            $existSku = Product::query()
+                ->where('sku', $this->sku)
+                ->when($this->id, fn($query) => $query->where('id', '<>', $this->id))
+                ->first();
+
+            if ($existSku) {
+                return ["success" => false, "msg" => "Sku já existe."];
+            }
+
+            $existUrl = Product::query()
+                ->where('url', trim(strtolower($this->url)))
+                ->when($this->id, fn($query) => $query->where('id', '<>', $this->id))
+                ->first();
+
+            if ($existUrl) {
+                return ["success" => false, "msg" => "Url já existe."];
+            }
+
             if ($this->id) {
                 $product = Product::query()->find($this->id);
             } else {
-                $existSku = Product::query()->where('sku', $this->sku)->first();
-                if ($existSku) {
-                    return ["success" => false, "message" => "Sku já existe."];
-                }
-
                 $product = new Product();
-            }
-
-            if ($this->sizes_image) {
-                $sizesImagePath = 'products/' . $product->id . '/sizes_image.png';
-                $sizesImagePath = Storage::disk('s3')->put($sizesImagePath, fopen($this->sizes_image, 'r'));
-                $product->sizes_image = Storage::disk('s3')->url($sizesImagePath);
             }
 
             $product->fill([
@@ -60,33 +70,49 @@ readonly class CreateOrUpdateProduct
                 "sku" => strtoupper($this->sku),
                 "url" => trim(strtolower($this->url)),
                 "description" => $this->description ? trim($this->description) : null,
+                "cost" => $this->cost,
                 "price" => $this->price,
                 "special_price" => $this->special_price,
-                "category" => $this->category,
+                "type" => $this->type,
                 "is_active" => $this->is_active,
                 "team_id" => $this->team_id,
-                "gender" => $this->gender
+                "gender" => $this->gender,
+                "season" => $this->season
             ]);
 
             $product->save();
+
+            $product->categories()->sync($this->category_ids);
+
+            if ($this->sizes_image) {
+                $sizesImagePath = 'products/' . $product->id . '/sizes_image.png';
+                if (Storage::disk('s3')->put($sizesImagePath, fopen($this->sizes_image, 'r'))) {
+                    $product->sizes_image = env('S3_URL') . $sizesImagePath;
+                    $product->save();
+                }
+            }
 
             $imageIds = [];
             foreach ($this->images as $image) {
                 if (isset($image["id"])) {
                     $productImage = ProductImage::query()->find($image["id"]);
+                    $imageUrl = $productImage->url;
+
                 } else {
                     $productImage = new ProductImage();
-                }
+                    $time = time();
+                    $imagePath = 'products/' . $product->id . "/images/image_$time.png";
+                    Storage::disk('s3')->put($imagePath, fopen($image['file'], 'r'));
+                    $imageUrl = env('S3_URL') . $imagePath;
 
-                $imagePath = 'products/' . $product->id . "/images/{$image["order"]}.png";
-                $imagePath = Storage::disk('s3')->put($imagePath, fopen($image['file'], 'r'));
-                $imageUrl = Storage::disk('s3')->url($imagePath);
+                }
 
                 $productImage->fill([
                     "product_id" => $product->id,
                     "url" => $imageUrl,
                     "order" => $image["order"]
                 ]);
+
                 $productImage->save();
 
                 $imageIds[] = $productImage->id;
@@ -94,10 +120,10 @@ readonly class CreateOrUpdateProduct
 
             $deletedImages = ProductImage::query()->where("product_id", $product->id)->whereNotIn("id", $imageIds)->get();
             foreach ($deletedImages as $deletedImage) {
-                $imagePath = parse_url($deletedImage->url, PHP_URL_PATH);
-                $imagePath = ltrim($imagePath, '/');
+                $imagePath = str_replace(env('S3_URL'), '', $deletedImage->url);
 
                 if (Storage::disk('s3')->exists($imagePath)) {
+                    Log::warning("Deleting image: " . $deletedImage->url);
                     Storage::disk('s3')->delete($imagePath);
                 }
 
@@ -137,21 +163,57 @@ readonly class CreateOrUpdateProduct
 
     public static function fromRequest(Request $request): self
     {
+        $images = [];
+        $position = 1;
+        do {
+            $file = $request->file('image_file_' . $position);
+            $id = $request->get('image_id_' . $position);
+
+            if ($file || $id) {
+                $images[] = [
+                    'id' => $id,
+                    'order' => (int)$request->get('image_order_' . $position),
+                    'file' => $file
+                ];
+
+                $position++;
+            }
+        } while ($file !== null || $id !== null);
+
+        $sizes = [];
+        $position = 1;
+
+        do {
+            $name = $request->get('size_name_' . $position);
+            if ($name) {
+                $sizes[] = [
+                    'id' => $request->get('size_id_' . $position),
+                    'name' => $name,
+                    'stock' => (int)$request->get('size_stock_' . $position)
+                ];
+
+                $position++;
+            }
+        } while ($name !== null);
+
         return new self(
             $request->get("id"),
             $request->get("name"),
             $request->get("sku"),
             $request->get("url"),
             $request->get("description"),
-            $request->get("price"),
-            $request->get("special_price"),
-            $request->get("category"),
-            $request->get("is_active"),
-            $request->get("team_id"),
+            floatval($request->get('cost')),
+            floatval($request->get('price')),
+            $request->get("special_price") ? $request->get("special_price") : null,
+            $request->get("type"),
+            $request->get("is_active") == '1',
+            $request->get("team_id") ? (int)$request->get("team_id") : null,
+            $request->get("category_ids") ? explode(',', $request->get("category_ids")) : [],
             $request->file("sizes_image"),
             $request->get("gender"),
-            $request->get("images"),
-            $request->get("sizes")
+            $request->get("season"),
+            $images,
+            $sizes
         );
     }
 }

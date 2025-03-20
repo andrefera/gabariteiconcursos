@@ -17,9 +17,16 @@ return new class extends Migration {
             $table->string('role')->default(\App\Models\Enums\UserRole::CUSTOMER->value);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('document')->nullable();
             $table->string('phone')->nullable();
+            $table->string('zip_code')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('street_name')->nullable();
+            $table->string('street_neighborhood')->nullable();
+            $table->string('street_number')->nullable();
+            $table->string('street_complement')->nullable();
             $table->date('birth_date')->nullable();
-            $table->unsignedBigInteger('loyalty_points')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

@@ -19,6 +19,7 @@
         "webpack-cli": "^6.0.1"
     },
     "dependencies": {
-        "@builder.io/partytown": "^0.10.0"
+        "@builder.io/partytown": "^0.10.0",
+        "tailwindcss": "^4.0.4"
     }
 }

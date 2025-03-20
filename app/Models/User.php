@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -21,9 +22,16 @@ class User extends Authenticatable implements JWTSubject
         'email',
         'role',
         'password',
+        'document',
         'phone',
+        'zip_code',
+        'city',
+        'state',
+        'street_name',
+        'street_neighborhood',
+        'street_number',
+        'street_complement',
         'birth_date',
-        'loyalty_points',
     ];
 
 
@@ -45,7 +53,6 @@ class User extends Authenticatable implements JWTSubject
     protected $casts = [
         'email_verified_at' => 'datetime',
         'birth_date' => 'date',
-        'loyalty_points' => 'integer',
     ];
 
     /**
@@ -66,6 +73,21 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims(): array
     {
         return [];
+    }
+
+    public function carts(): HasMany
+    {
+        return $this->hasMany(Cart::class);
+    }
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function addresses(): HasMany
+    {
+        return $this->hasMany(UserAddress::class);
     }
 
 }
