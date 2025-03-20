@@ -22,6 +22,7 @@ class Order extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'increment_id',
         'user_id',
         'cart_id',
         'address_id',
@@ -43,6 +44,16 @@ class Order extends Model
         'cancelled_at',
         'refunded_at',
     ];
+
+    protected static function boot(): void
+    {
+        parent::boot();
+        static::created(function ($model) {
+            if (!$model->increment_id) {
+                $model->generateIncrementId();
+            }
+        });
+    }
 
     /**
      * The attributes that should be cast.
@@ -131,5 +142,11 @@ class Order extends Model
             PaymentStatus::REFUNDED->value => OrderStatus::REFUNDED->value,
             default => OrderStatus::NEW->value,
         };
+    }
+
+    public function generateIncrementId(): void
+    {
+        $this->increment_id = env('PREFIX_INCREMENT', 'ESL-') . str_pad($this->id, 10, "0", STR_PAD_LEFT);
+        $this->save();
     }
 }
