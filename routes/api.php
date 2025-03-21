@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\AuthController;
@@ -42,6 +43,14 @@ Route::prefix('admin')->middleware(Jwt::class)->group(function () {
         Route::post('/store', [CategoryController::class, 'createOrUpdate'])->name('category.store');
         Route::post('/delete/{category}', [CategoryController::class, 'destroy'])->name('category.destroy');
         Route::get('/filter', [CategoryController::class, 'filter'])->name('category.filter');
+    });
+
+    Route::prefix('order')->group(function () {
+        Route::get('/get-all', [OrderController::class, 'index'])->name('order.index');
+        Route::get('/get/{order}', [OrderController::class, 'edit'])->name('order.edit');
+        Route::post('/store', [OrderController::class, 'createOrUpdate'])->name('order.store');
+        Route::post('/delete/{order}', [OrderController::class, 'destroy'])->name('order.destroy');
+        Route::get('/filter', [OrderController::class, 'filter'])->name('order.filter');
     });
 });
 

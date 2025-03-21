@@ -23,6 +23,7 @@ readonly class ProductDetailDTO
         public ?string $season,
         public int     $stock,
         public string  $categories,
+        public ?string $image_url,
         public string  $created_at,
     )
     {
@@ -44,7 +45,9 @@ readonly class ProductDetailDTO
             $product->season,
             $product->getStock(),
             $product->categories()->pluck("name")->join(', '),
+            $product->images()->orderBy('order')->first()?->url,
             Carbon::parse($product->created_at)->setTimezone('America/Sao_Paulo')->format('d/m/Y H:i:s'),
+
         );
     }
 
@@ -64,7 +67,8 @@ readonly class ProductDetailDTO
             $product['season'],
             $product['stock'],
             collect($product['categories'] ?? [])->join(', '),
-            $product['created_at']
+            null,
+            $product['created_at'],
         );
     }
 }
