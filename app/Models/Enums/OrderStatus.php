@@ -4,7 +4,6 @@ namespace App\Models\Enums;
 
 enum OrderStatus: string
 {
-    case NEW = 'new';
     case WAITING_PAYMENT = 'waiting_payment';
     case PAID = 'paid';
     case IN_SEPARATION = 'in_separation';
@@ -17,7 +16,6 @@ enum OrderStatus: string
     public static function toPortuguese(string $type): string
     {
         return match ($type) {
-            self::NEW->value => 'Novo',
             self::WAITING_PAYMENT->value => 'Aguardando Pagamento',
             self::PAID->value => 'Pago',
             self::IN_SEPARATION->value => 'Em Separação',

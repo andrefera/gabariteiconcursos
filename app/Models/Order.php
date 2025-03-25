@@ -43,6 +43,7 @@ class Order extends Model
         'paid_at',
         'cancelled_at',
         'refunded_at',
+        'delivered_at',
     ];
 
     protected static function boot(): void
@@ -115,18 +116,20 @@ class Order extends Model
                 $this->cancelled_at = null;
                 $this->paid_at = new Carbon();
                 break;
-            case OrderStatus::WAITING_PAYMENT->value:
-                $this->status = OrderStatus::WAITING_PAYMENT->value;
-                $this->cancelled_at = null;
-                break;
             case OrderStatus::REFUNDED->value:
                 $this->status = OrderStatus::REFUNDED->value;
                 $this->cancelled_at = new Carbon();
                 $this->refunded_at = new Carbon();
                 $this->cancel();
                 break;
+            case OrderStatus::DELIVERED->value:
+                $this->status = OrderStatus::DELIVERED->value;
+                $this->cancelled_at = null;
+                $this->delivered_at = new Carbon();
+                break;
             default:
-                $this->status = OrderStatus::NEW->value;
+                $this->status = OrderStatus::WAITING_PAYMENT->value;
+                $this->cancelled_at = null;
                 break;
         }
 
@@ -138,9 +141,8 @@ class Order extends Model
         return match ($paymentStatus) {
             PaymentStatus::REFUSED->value, PaymentStatus::CHARGEDBACK->value, PaymentStatus::REJECTED->value, PaymentStatus::ERROR_INFRASTRUCTURE->value => OrderStatus::CANCELLED->value,
             PaymentStatus::PAID->value, PaymentStatus::APPROVED->value => OrderStatus::PAID->value,
-            PaymentStatus::WAINTING_PAYMENT->value, PaymentStatus::PROCESSING->value => OrderStatus::WAITING_PAYMENT->value,
             PaymentStatus::REFUNDED->value => OrderStatus::REFUNDED->value,
-            default => OrderStatus::NEW->value,
+            default => OrderStatus::WAITING_PAYMENT->value,
         };
     }
 

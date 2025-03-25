@@ -34,7 +34,7 @@ readonly class ResponseMercadoPagoDTO
     {
         $this->id = $response->id ?? null;
         $this->statusDetail = $response->status_detail ?? null;
-        $this->status = $response ? $this->convertStatusPayment($response->status, $response->status_detail) : PaymentStatus::WAINTING_PAYMENT->value;
+        $this->status = $response ? $this->convertStatusPayment($response->status, $response->status_detail) : PaymentStatus::WAITING_PAYMENT->value;
         $this->message = $response ? $this->getMessage($response->status, $response->status_detail) : ($message ?: 'Erro ao processar pedido');
         $this->cardBrand = $response->payment_method_id ?? null;
         $this->installments = $response->installments ?? 1;
@@ -69,7 +69,7 @@ readonly class ResponseMercadoPagoDTO
             },
             "rejected" => PaymentStatus::REJECTED->value,
             "cancelled", "in_mediation", "refunded", "charged_back" => PaymentStatus::REFUNDED->value,
-            default => PaymentStatus::WAINTING_PAYMENT->value,
+            default => PaymentStatus::WAITING_PAYMENT->value,
         };
     }
 

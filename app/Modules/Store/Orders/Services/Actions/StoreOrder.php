@@ -69,7 +69,7 @@ class StoreOrder
                 'user_id' => $cart->user->id,
                 'cart_id' => $cart->id,
                 'address_id' => $this->addressId,
-                'status' => OrderStatus::NEW->value,
+                'status' => OrderStatus::WAITING_PAYMENT->value,
                 'method' => $this->method,
                 'total_price' => $this->totalPrice,
                 'final_price' => $this->finalPrice,
