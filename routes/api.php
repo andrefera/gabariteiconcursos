@@ -51,6 +51,7 @@ Route::prefix('admin')->middleware(Jwt::class)->group(function () {
         Route::post('/store', [OrderController::class, 'createOrUpdate'])->name('order.store');
         Route::post('/delete/{order}', [OrderController::class, 'destroy'])->name('order.destroy');
         Route::get('/filter', [OrderController::class, 'filter'])->name('order.filter');
+        Route::get('/shipping-labels', [OrderController::class, 'downloadShippingLabels'])->name('order.shipping.labels');
     });
 });
 

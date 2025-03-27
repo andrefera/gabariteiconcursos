@@ -6,15 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Modules\Admin\Category\DTO\EditCategoryDTO;
 use App\Modules\Admin\Category\Services\Actions\CreateOrUpdateCategory;
-use App\Modules\Admin\Category\Services\Actions\GetFilterCategory;
-use App\Modules\Admin\Category\Services\Actions\ListCategories;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Modules\Admin\Orders\Services\Actions\ListOrders;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class OrderController extends Controller
 {
+    const BASE_VIEW = 'orders';
+
     public function index(Request $request): JsonResponse
     {
         return response()->json(ListOrders::fromRequest($request)->execute());
@@ -44,4 +46,11 @@ class OrderController extends Controller
             return response()->json(['success' => false, 'msg' => $exception->getMessage()]);
         }
     }
+
+    public function downloadShippingLabels(Request $request): Response
+    {
+        $pdf = Pdf::loadView(self::BASE_VIEW . '.shipping_label')->setPaper('a4');
+        return $pdf->download('etiquetas.pdf');
+    }
+
 }

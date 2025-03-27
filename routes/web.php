@@ -22,6 +22,10 @@ Route::get('/camisetas', function () {
     return view('list.index');
 });
 
+Route::get('/etiqueta', function () {
+    return view('orders.shipping_label');
+});
+
 Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::get('register', [AuthController::class, 'register'])->name('register');
 
