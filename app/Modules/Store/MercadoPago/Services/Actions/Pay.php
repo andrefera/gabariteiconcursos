@@ -23,7 +23,7 @@ readonly class Pay
 
     public function __construct(
         public Cart    $cart,
-        public Order    $order,
+        public Order   $order,
         public string  $paymentMethodId,
         public ?string $issuerId,
         public ?string $cardHash,
@@ -65,7 +65,7 @@ readonly class Pay
                     ->isoFormat('YYYY-MM-DDTHH:mm:ss.SSSZ');
 
             } elseif ($this->paymentMethodId === PaymentMethod::TICKET->value) {
-                $parameters['issuer_id'] = $this->issuerId;
+//                $parameters['issuer_id'] = $this->issuerId;
                 $parameters['token'] = $this->cardHash;
                 $parameters['installments'] = $this->installments;
 

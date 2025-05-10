@@ -165,9 +165,9 @@ class StoreOrder
     public static function fromRequest(Request $request): self
     {
         return new self(
-            $request->get('address_id'),
+            $request->get('address_id', 1),
             $request->get('card_hash'),
-            $request->get('paymentMethodId'),
+            $request->get('payment_method_id'),
             $request->get('issuerId'),
             $request->get('method'),
             $request->get('installments', 1),

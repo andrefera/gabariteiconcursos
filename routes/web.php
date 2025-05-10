@@ -42,4 +42,7 @@ Route::prefix('checkout')->middleware(SessionTokenMiddleware::class)->group(func
     Route::post('pay', [CheckoutController::class, 'pay'])->name('checkout.pay');
 });
 
+Route::get('/checkout-test', function () {
+    return view('checkout-test');
+});
 
