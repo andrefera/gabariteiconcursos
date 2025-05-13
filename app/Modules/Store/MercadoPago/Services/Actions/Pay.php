@@ -64,8 +64,8 @@ readonly class Pay
                     ->addWeekDays(env('MERCADOPAGO_PIX_DIAS_VENCIMENTO', 5))
                     ->isoFormat('YYYY-MM-DDTHH:mm:ss.SSSZ');
 
-            } elseif ($this->paymentMethodId === PaymentMethod::TICKET->value) {
-//                $parameters['issuer_id'] = $this->issuerId;
+            } elseif (in_array($this->paymentMethodId, [PaymentMethod::VISA->value, PaymentMethod::MASTERCARD->value])) {
+                $parameters['issuer_id'] = $this->issuerId;
                 $parameters['token'] = $this->cardHash;
                 $parameters['installments'] = $this->installments;
 

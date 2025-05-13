@@ -81,6 +81,22 @@
             margin-bottom: 1rem;
         }
 
+        .couponLabel {
+            display: flex;
+            gap: 25px;
+        }
+
+        .couponLabel button {
+            width: 120px;
+            height: 37px;
+            background: #FF7C00;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
         .recommended .add-to-cart img {
             width: 80px;
             border-radius: 8px;
@@ -108,6 +124,7 @@
             margin-bottom: 1rem;
             border-radius: 6px;
             border: 1px solid #ccc;
+            height: 37px;
         }
 
         .btn {
@@ -143,8 +160,14 @@
             margin-bottom: 1rem;
         }
 
+        .credit-card {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
         .payment-methods img {
-            height: 24px;
+            width: 50px;
         }
 
         .card-fields {
@@ -213,23 +236,23 @@
             </div>
 
             <input id="paymentMethod" type="hidden" value="credit_card">
-
-            <div class="payment-methods" id="card-icons">
-                <img src="https://img.icons8.com/color/48/visa.png" alt="Visa">
-                <img src="https://img.icons8.com/color/48/mastercard-logo.png" alt="Mastercard">
-                <img src="https://img.icons8.com/color/48/amex.png" alt="Amex">
-            </div>
-
             <div class="card-fields" id="card-fields">
-                <input type="text" id="cardNumber" placeholder="Número do Cartão"
-                       data-msg="Digite um número de cartão válido">
+                <div class="credit-card">
+                    <input type="text" id="cardNumber" placeholder="Número do Cartão"
+                           data-msg="Digite um número de cartão válido">
+
+                    <div class="payment-methods" id="card-icons">
+                        <img src="{{ asset('images/icons/visa.svg') }}" alt="Visa" width="60" height="50">
+                        <img src="{{ asset('images/icons/mastercard.svg') }}" alt="Mastercard" width="60" height="50">
+                    </div>
+                </div>
                 <input type="text" id="cardExpiration" placeholder="MM/AA" data-msg="Informe a validade do cartão">
                 <input type="text" id="cardCVV" placeholder="CVV" data-msg="Digite o CVV (3 ou 4 dígitos)">
                 <input type="text" id="cardHolderName" placeholder="Nome no Cartão"
                        data-msg="Digite o nome impresso no cartão">
                 <input type="text" id="docNumber" placeholder="CPF" data-msg="Digite um CPF válido">
                 <select id="installments" data-msg="Escolha o número de parcelas">
-                    <option value="" disabled>Selecione as parcelas</option>
+                    <option value="" disabled>Selecione</option>
                     <option value="1" selected>1x de R$599,98</option>
                 </select>
             </div>
@@ -247,8 +270,11 @@
             </div>
 
             <div class="discount">
-                <strong>Cupom</strong> <br>
-                <input type="text">
+                <strong>Cupom</strong>
+                <div class="couponLabel">
+                    <input type="text">
+                    <button id="applyCoupon" type="button">Aplicar</button>
+                </div>
             </div>
 
             <div class="totals">
@@ -257,7 +283,7 @@
                 <div><strong>Total</strong><strong>R$599,98</strong></div>
             </div>
 
-            <button class="btn" type="submit">Finalizar Pedido</button>
+            <button class="btn" id="submitPayment" type="button">Finalizar Pedido</button>
         </form>
     </div>
 </div>
@@ -296,6 +322,10 @@
     });
 
     IMask(document.getElementById('docNumber'), {
+        mask: '000.000.000-00'
+    });
+
+    IMask(document.getElementById('cpf'), {
         mask: '000.000.000-00'
     });
 
@@ -351,97 +381,86 @@
 
     const mp = new MercadoPago("TEST-0de9a30b-3ac2-408d-b2bf-7c50fba3625f", {locale: "pt-BR"});
 
-    document.getElementById("paymentForm").addEventListener("submit", async function (event) {
-        function isValidCPF(cpf) {
-            cpf = cpf.replace(/[^\d]+/g, '');
-            if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+    function isValidCPF(cpf) {
+        cpf = cpf.replace(/[^\d]+/g, '');
+        if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
 
-            let sum = 0;
-            for (let i = 0; i < 9; i++) sum += parseInt(cpf.charAt(i)) * (10 - i);
-            let rev = 11 - (sum % 11);
-            if (rev === 10 || rev === 11) rev = 0;
-            if (rev !== parseInt(cpf.charAt(9))) return false;
+        let sum = 0;
+        for (let i = 0; i < 9; i++) sum += parseInt(cpf.charAt(i)) * (10 - i);
+        let rev = 11 - (sum % 11);
+        if (rev === 10 || rev === 11) rev = 0;
+        if (rev !== parseInt(cpf.charAt(9))) return false;
 
-            sum = 0;
-            for (let i = 0; i < 10; i++) sum += parseInt(cpf.charAt(i)) * (11 - i);
-            rev = 11 - (sum % 11);
-            if (rev === 10 || rev === 11) rev = 0;
-            return rev === parseInt(cpf.charAt(10));
-        }
+        sum = 0;
+        for (let i = 0; i < 10; i++) sum += parseInt(cpf.charAt(i)) * (11 - i);
+        rev = 11 - (sum % 11);
+        if (rev === 10 || rev === 11) rev = 0;
+        return rev === parseInt(cpf.charAt(10));
+    }
 
-        function isValidCardNumber(number) {
-            number = number.replace(/\D/g, '');
+    function isValidCardNumber(number) {
+        return number.replace(/\D/g, '').length === 16;
+    }
 
-            if (number.length < 13 || number.length > 19) return false;
+    function isValidCVV(cvv) {
+        return /^\d{3,4}$/.test(cvv);
+    }
 
-            let sum = 0;
-            let shouldDouble = false;
+    function isValidCardExpiration(cardExpiration) {
+        return /^\d{4}$/.test(cardExpiration.replaceAll('/', ''));
+    }
 
-            for (let i = number.length - 1; i >= 0; i--) {
-                let digit = parseInt(number.charAt(i));
+    document.getElementById("submitPayment").onclick = async function (e) {
+        let paymentMethod = document.getElementById("paymentMethod").value;
+        let cardNumber = document.getElementById('cardNumber');
+        let cardExpiration = document.getElementById('cardExpiration');
+        let carDocNumber = document.getElementById('docNumber');
+        let cvv = document.getElementById('cardCVV');
+        let cardHolderName = document.getElementById('cardHolderName');
 
-                if (shouldDouble) {
-                    digit *= 2;
-                    if (digit > 9) digit -= 9;
-                }
+        [cardNumber, cardExpiration, carDocNumber, cvv].forEach(el => {
+            if (el) el.setCustomValidity('');
+        });
 
-                sum += digit;
-                shouldDouble = !shouldDouble;
+        if (paymentMethod === "credit_card") {
+            if (cardNumber.value.trim() === '' || !isValidCardNumber(cardNumber.value)) {
+                cardNumber.setCustomValidity('Número do cartão inválido');
+                cardNumber.reportValidity();
+                return;
             }
 
-            return sum % 10 === 0;
-        }
-
-        function isValidCVV(cvv) {
-            return /^\d{3,4}$/.test(cvv);
-        }
-
-        const fields = this.querySelectorAll('[data-msg]');
-        let isValid = true;
-
-        for (const field of fields) {
-            if (!isValid) break;
-
-            let customMessage = field.dataset.msg || 'Campo obrigatório';
-            field.setCustomValidity('');
-
-            if (field.value.trim() === '') {
-                field.setCustomValidity(customMessage);
-                isValid = false;
-                field.reportValidity();
-                break;
+            if (cardExpiration.value.trim() === '' || !isValidCardExpiration(cardExpiration.value)) {
+                cardExpiration.setCustomValidity('Validade inválida');
+                cardExpiration.reportValidity();
+                return;
             }
 
-            if (field.id === 'docNumber' && !isValidCPF(field.value)) {
-                field.setCustomValidity('CPF inválido');
-                isValid = false;
-                field.reportValidity();
-                break;
+            if (cvv.value.trim() === '' || !isValidCVV(cvv.value)) {
+                cvv.setCustomValidity('CVV inválido');
+                cvv.reportValidity();
+                return;
             }
 
-            if (field.id === 'cardNumber' && !isValidCardNumber(field.value)) {
-                field.setCustomValidity('Número do cartão inválido');
-                isValid = false;
-                field.reportValidity();
-                break;
+            if (cardHolderName.value.trim() === '') {
+                cardHolderName.setCustomValidity('Digite o nome impresso no cartão');
+                cardHolderName.reportValidity();
+                return;
             }
 
-            if (field.id === 'cardCVV' && !isValidCVV(field.value)) {
-                field.setCustomValidity('CVV inválido (3 ou 4 dígitos)');
-                isValid = false;
-                field.reportValidity();
-                break;
+            if (carDocNumber.value.trim() === '' || !isValidCPF(carDocNumber.value)) {
+                carDocNumber.setCustomValidity('CPF inválido');
+                carDocNumber.reportValidity();
+                return;
+            }
+        } else {
+            let docNumber = document.getElementById('cpf');
+            if (docNumber.value.trim() === '' || !isValidCPF(docNumber.value)) {
+                docNumber.setCustomValidity('CPF inválido');
+                docNumber.reportValidity();
+                return;
             }
         }
 
-        if (!isValid) {
-            event.preventDefault();
-            return;
-        }
-
-
-
-        const paymentMethod = document.getElementById("paymentMethod").value;
         let paymentData = {
             total_price: 100.00,
             final_price: 100.00,
@@ -452,7 +471,9 @@
             shipping_days: 7,
             payment_method_id: paymentMethod === "credit_card" ? "visa" : (paymentMethod === "pix" ? "pix" : "bolbradesco"),
             email: "comprador@email.com",
-            document: paymentMethod === "credit_card" ? document.getElementById('docNumber').value : document.getElementById('cpf').value,
+            document: paymentMethod === "credit_card"
+                ? document.getElementById('docNumber').value.replace(/[^\d]+/g, '')
+                : document.getElementById('cpf').value.replace(/[^\d]+/g, ''),
             method: paymentMethod
         };
 
@@ -460,9 +481,16 @@
             try {
                 const token = await createCardToken();
                 paymentData.token = token;
-                // paymentData.installments = document.getElementById("installments").value;
-                paymentData.installments = 1;
-                paymentData.docNumber = document.getElementById("docNumber").value;
+                paymentData.installments = document.getElementById("installments").value;
+
+                const bin = cardNumber.value.replace(/\D/g, '').substring(0, 6);
+
+                const paymentMethods = await mp.getPaymentMethods({bin});
+
+                if (paymentMethods && paymentMethods.results.length > 0) {
+                    paymentData.payment_method_id = paymentMethods.results[0].id;
+                    paymentData.issuer = paymentMethods.results[0].issuer.id;
+                }
 
             } catch (error) {
                 console.error("Erro ao gerar token do cartão:", error);
@@ -496,21 +524,27 @@
         async function createCardToken() {
             return new Promise((resolve, reject) => {
                 mp.createCardToken({
-                    cardNumber: document.getElementById("cardNumber").value,
-                    securityCode: document.getElementById("cardCVV").value,
-                    expirationMonth: document.getElementById("cardExpiration").value.split("/")[0],
-                    expirationYear: `20${document.getElementById("cardExpiration").value.split("/")[1]}`,
-                    cardholderName: document.getElementById("cardHolderName").value,
-                    identificationType: "CPF",
-                    identificationNumber: document.getElementById("docNumber").value
+                    cardNumber: cardNumber.value.replace(/\D/g, ''),
+                    securityCode: cvv.value.trim(),
+                    expirationMonth: cardExpiration.value.split("/")[0],
+                    expirationYear: `20${cardExpiration.value.split("/")[1]}`,
+                    cardholder: {
+                        name: cardHolderName.value,
+                        identification: {
+                            type: 'CPF',
+                            number: carDocNumber.value.replaceAll('.', '').replaceAll('-', ''),
+                        },
+                    },
                 }).then(response => {
-                    console.log(response)
                     resolve(response.id);
                 }).catch(error => {
                     reject(error);
                 });
             });
         }
-    });
+
+    };
+
+
 </script>
 @endsection
