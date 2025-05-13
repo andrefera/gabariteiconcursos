@@ -1,0 +1,346 @@
+$corPrincipal: #FF7C00;
+
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #eb5939, #f89d33);
+
+    @media(max-width: 1144px) {
+        height: auto;
+    }
+}
+
+.containerPrincipal {
+    display: flex;
+    width: 90%;
+    max-width: 1000px;
+    height: 90vh;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    overflow: hidden;
+    font-family: 'Segoe UI', sans-serif;
+    @media(max-width: 1144px) {
+        height: auto;
+        padding: 20px 0;
+    }
+
+    .areaFormulario {
+        flex: 1;
+        padding: 4rem;
+        background: #ffffff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        @media(max-width: 1144px) {
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .logoEmpresa {
+            @media(max-width: 1144px) {
+                text-align: center;
+                margin-top: 22px;
+                padding: 20px 0;
+            }
+        }
+
+        .tituloFormulario {
+            font-size: 2rem;
+            margin-bottom: 0;
+            font-weight: bold;
+            color: $corPrincipal;
+
+            @media(max-width: 1144px) {
+                text-align: center;
+            }
+        }
+
+        .descricaoFormulario {
+            color: #888;
+            margin-bottom: 2rem;
+            margin-top: 0;
+            @media(max-width: 1144px) {
+                text-align: center;
+            }
+        }
+
+        .botoesSociais {
+            display: flex;
+            gap: 1rem;
+
+            .botaoSocial {
+                flex: 1;
+                padding: 0.75rem;
+                border: none;
+                border-radius: 8px;
+                font-weight: 600;
+                cursor: pointer;
+
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                justify-content: center;
+
+                &.google {
+                    color: #333;
+                    background-color: #fff;
+                    border: 1px solid #ddd;
+                }
+
+                &.facebook {
+                    background-color: #3B5998;
+                    color: #fff;
+                }
+            }
+        }
+
+        .linhaSeparadora {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 2rem 0 0;
+
+            .textoSeparador {
+                flex-shrink: 0;
+                padding: 0 1rem;
+                color: #ccc;
+            }
+
+            &::before,
+            &::after {
+                content: "";
+                flex: 1;
+                border-bottom: 1px solid #e0e0e0;
+            }
+
+            &::before {
+                margin-right: 1rem;
+            }
+
+            &::after {
+                margin-left: 1rem;
+            }
+        }
+
+
+        .formularioCadastro {
+            display: flex;
+            flex-direction: column;
+
+            .campo {
+                display: flex;
+                flex-direction: column;
+
+                .labelInput {
+                    margin-top: 1rem;
+                }
+
+                label {
+                    font-weight: 500;
+                    color: #333;
+                }
+
+                input {
+                    padding: 0.75rem;
+                    border: 1px solid #ddd;
+                    border-radius: 8px;
+                    margin-top: 0.25rem;
+
+                    &:focus {
+                        border-color: $corPrincipal;
+                        background-color: #fff;
+                        box-shadow: 0 0 10px rgba(255, 124, 0, 0.3);
+                        outline: none;
+                    }
+
+                    &:active {
+                        background-color: #fafafa;
+                        border-color: $corPrincipal;
+                    }
+                }
+            }
+
+            .linkRecuperarSenha {
+                float: right;
+                font-size: 0.875rem;
+                color: $corPrincipal;
+                text-decoration: none;
+            }
+
+            $corPrincipal: #FF7C00;
+
+            .aceiteTermos {
+                display: flex;
+                align-items: center;
+                margin-top: 1rem;
+
+                input[type="checkbox"] {
+                    appearance: none;
+                    width: 18px;
+                    height: 18px;
+                    border: 2px solid $corPrincipal;
+                    border-radius: 4px;
+                    position: relative;
+                    cursor: pointer;
+                    margin: 0;
+                    padding: 0;
+                    outline: none;
+                    transition: background-color 0.2s ease;
+
+                    &:checked {
+                        background-color: $corPrincipal;
+                    }
+
+                    &:checked::after {
+                        content: "";
+                        position: absolute;
+                        top: 1px;
+                        left: 4px;
+                        width: 4px;
+                        height: 9px;
+                        border: solid white;
+                        border-width: 0 2px 2px 0;
+                        transform: rotate(45deg);
+                    }
+                }
+
+                label {
+                    margin-left: 0.5rem;
+                    font-size: 0.875rem;
+
+                    a {
+                        color: $corPrincipal;
+                        text-decoration: none;
+                    }
+                }
+            }
+
+
+            .botaoLogin {
+                margin-top: 1.5rem;
+                padding: 0.75rem;
+                background-color: $corPrincipal;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-weight: bold;
+                cursor: pointer;
+
+                &:hover {
+                    background: linear-gradient(135deg, #eb5939, #f89d33);
+                }
+            }
+        }
+
+        .textoRodape {
+            margin-top: 1rem;
+            font-size: 0.875rem;
+
+            span {
+                cursor: pointer;
+                color: $corPrincipal;
+                text-decoration: none;
+            }
+        }
+    }
+
+    .areaIlustracao {
+        flex: 1;
+        background-color: #fff;
+        color: white;
+        padding: 0.8rem 0.8rem 0.8rem 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+
+        .area {
+            flex: 1;
+            background-color: #333;
+            border-radius: 12px;
+        }
+
+        h2, p {
+            margin: 0 0 1rem 0;
+        }
+
+        @media(max-width: 1144px) {
+            display: none;
+        }
+    }
+}
+
+.botaoVoltarTopo {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: #ffffff;
+    color: #333;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+
+    @media(max-width: 1144px) {
+        background-color: #333;
+        color: #ffffff;
+    }
+
+    &:hover {
+        background-color: #f1f1f1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+}
+
+.fadeIn {
+    animation: fadeIn 0.3s ease forwards;
+}
+
+.fadeOut {
+    animation: fadeOut 0.3s ease forwards;
+}
+
+.ocultoSuave {
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    transition: all 0.3s ease;
+}
+
+.visivelSuave {
+    opacity: 1;
+    height: auto;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+}

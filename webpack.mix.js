@@ -34,6 +34,13 @@ mix.sass('resources/scss/list.scss', 'public/assets/css').options({
 mix.sass('resources/scss/cart.scss', 'public/assets/css').options({
     processCssUrls: false
 });
+mix.sass('resources/scss/login.scss', 'public/assets/css').options({
+    processCssUrls: false
+});
+mix.sass('resources/scss/order_list.scss', 'public/assets/css').options({
+    processCssUrls: false
+});
+
 
 const partytown = require('@builder.io/partytown/utils');
 

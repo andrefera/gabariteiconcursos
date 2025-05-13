@@ -69,7 +69,7 @@
                     <div class="cardContent">
                         <span class="badge">25%</span>
                         <img
-                            src="https://promantos.com.br/cdn/shop/files/comprar-camisa-camiseta-blusa-do-cruzeiro-nova-lancamento-adidas-da-temporada-2024_25-24_25-i-1-titular-principal-primeira-home-azul-estrelas-masculina-versao-modelo-torcedor-tailande_85247cca-c0ca-49f3-9af3-c303c22b5126_700x.jpg?v=1730852684"
+                            src="https://promantos.com.br/cdn/shop/files/comprarcamisacamisetablusanovalancamentodocruzeirodatemporada2025_2625_26i1titularprincipalprimeirahomeazulbetfairmasculinaversaotorcedortailandesareplicapromantosdudugabigolkaiojorge_700x.png?v=1743769427"
                             alt="Camisa Jogador Corinthians II">
                     </div>
                     <div class="info">
@@ -109,7 +109,7 @@
                     <div class="cardContent">
                         <span class="badge">5%</span>
                         <img
-                            src="https://promantos.com.br/cdn/shop/files/camisa-camiseta-blusa-do-cruzeiro-nova-lancamento-adidas-da-temporada-2025_26-25_26-de-treino-treinamento-adidas-raposa-verde-azul-masculina-versao-modelo-torcedor-tailandesa-replica_7b13c365-d3d1-4cbb-988d-00220076eb5e_700x.jpg?v=1736891803"
+                            src="https://promantos.com.br/cdn/shop/files/B0A54BED-544F-4E76-A75B-15CF1D62D691_700x.jpg?v=1744552590"
                             alt="Camisa Torcedor Cruzeiro Treino">
                     </div>
                     <div class="info">
@@ -191,7 +191,7 @@
                     <div class="cardContent">
                         <span class="badge">25%</span>
                         <img
-                            src="https://promantos.com.br/cdn/shop/files/comprar-camisa-camiseta-blusa-do-cruzeiro-nova-lancamento-adidas-da-temporada-2024_25-24_25-i-1-titular-principal-primeira-home-azul-estrelas-masculina-versao-modelo-torcedor-tailande_85247cca-c0ca-49f3-9af3-c303c22b5126_700x.jpg?v=1730852684"
+                            src="https://promantos.com.br/cdn/shop/files/comprarcamisacamisetablusanovalancamentodocruzeirodatemporada2025_2625_26i1titularprincipalprimeirahomeazulbetfairmasculinaversaotorcedortailandesareplicapromantosdudugabigolkaiojorge_700x.png?v=1743769427"
                             alt="Camisa Jogador Corinthians II">
                     </div>
                     <div class="info">
@@ -231,7 +231,7 @@
                     <div class="cardContent">
                         <span class="badge">5%</span>
                         <img
-                            src="https://promantos.com.br/cdn/shop/files/camisa-camiseta-blusa-do-cruzeiro-nova-lancamento-adidas-da-temporada-2025_26-25_26-de-treino-treinamento-adidas-raposa-verde-azul-masculina-versao-modelo-torcedor-tailandesa-replica_7b13c365-d3d1-4cbb-988d-00220076eb5e_700x.jpg?v=1736891803"
+                            src="https://promantos.com.br/cdn/shop/files/B0A54BED-544F-4E76-A75B-15CF1D62D691_700x.jpg?v=1744552590"
                             alt="Camisa Torcedor Cruzeiro Treino">
                     </div>
                     <div class="info">

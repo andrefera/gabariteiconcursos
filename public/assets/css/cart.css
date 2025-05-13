@@ -33,7 +33,7 @@
   font-weight: 300;
 }
 .cartSection .cart-content .cart-list .cart-item-container {
-  background-color: #f7f7f7;
+  background-color: #fff;
   border-radius: 5px;
   display: flex;
   justify-content: space-between;
@@ -116,7 +116,7 @@
   text-decoration: none;
 }
 .cartSection .cart-content .cart-resume .cart-resume-container {
-  background-color: #f7f7f7;
+  background-color: #fff;
   border-radius: 5px;
   font-size: 0.9rem;
   padding: 1rem 0.75rem;

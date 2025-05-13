@@ -10,6 +10,10 @@ Route::get('/', function () {
     return view('home');
 });
 
+Route::get('/minha-conta', function () {
+    return view('orders.index');
+});
+
 Route::get('/camiseta/camisa-jogador-flamengo', function () {
     return view('details.index');
 });
