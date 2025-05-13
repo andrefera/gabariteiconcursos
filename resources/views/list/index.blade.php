@@ -23,45 +23,171 @@
                         <div class="price-range">R$ 50 - R$ 500</div>
                     </div>
 
-                    <!-- Filtro por Time -->
+                    <!-- Ordenar por -->
+                    <div class="filter-group">
+                        <h4>Ordenar por</h4>
+                        <div class="sort-select" id="sortSelectOrdenar" onclick="toggleDropdown('dropdownMenu')">
+                            Mais vendidos
+                            <svg class="arrow" width="16" height="16" viewBox="0 0 24 24">
+                                <path fill="#ff6600" d="M7 10l5 5 5-5z"/>
+                            </svg>
+                        </div>
+                        <div class="dropdown">
+                            <div class="dropdown-content" id="dropdownMenu">
+                                <a href="#">Mais vendidos</a>
+                                <a href="#">Novidades</a>
+                                <a href="#">Promoções</a>
+                                <a href="#">Preço: menor para maior</a>
+                                <a href="#">Preço: maior para menor</a>
+                            </div>
+                        </div>
+                    </div>
+
+
                     <div class="filter-group">
                         <h4>Time</h4>
-                        <select>
-                            <option value="">Selecione um time</option>
-                            <option value="flamengo">Flamengo</option>
-                            <option value="corinthians">Corinthians</option>
-                            <option value="palmeiras">Palmeiras</option>
-                            <option value="sao_paulo">São Paulo</option>
-                            <option value="cruzeiro">Cruzeiro</option>
-                        </select>
+                        <div class="sort-select" id="sortSelectTime" onclick="toggleDropdown('dropdownTime')">
+                            Time
+                            <svg class="arrow" width="16" height="16" viewBox="0 0 24 24">
+                                <path fill="#ff6600" d="M7 10l5 5 5-5z"/>
+                            </svg>
+                        </div>
+                        <div class="dropdown">
+                            <div class="dropdown-content" id="dropdownTime">
+                                <a href="#">Corinthians</a>
+                                <a href="#">Cruzeiro</a>
+                                <a href="#">Botafogo</a>
+                                <a href="#">São Paulo</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-group checkbox">
+                        <h4>Gênero</h4>
+                        <label>
+                            <input type="checkbox" />
+                            <span class="custom-checkbox"></span>
+                            Masculino
+                        </label>
+                        <label>
+                            <input type="checkbox" />
+                            <span class="custom-checkbox"></span>
+                            Feminino
+                        </label>
+                        <label>
+                            <input type="checkbox" />
+                            <span class="custom-checkbox"></span>
+                            Infantil
+                        </label>
                     </div>
 
                     <!-- Filtro por Tamanho -->
-                    <div class="filter-group">
+                    <div class="filter-group checkbox">
                         <h4>Tamanho</h4>
-                        <label><input type="checkbox"> P</label>
-                        <label><input type="checkbox"> M</label>
-                        <label><input type="checkbox"> G</label>
-                        <label><input type="checkbox"> GG</label>
+                        <label>
+                            <input type="checkbox" />
+                            <span class="custom-checkbox"></span>
+                            P
+                        </label>
+                        <label>
+                            <input type="checkbox" />
+                            <span class="custom-checkbox"></span>
+                            M
+                        </label>
+                        <label>
+                            <input type="checkbox" />
+                            <span class="custom-checkbox"></span>
+                            G
+                        </label>
+                        <label>
+                            <input type="checkbox" />
+                            <span class="custom-checkbox"></span>
+                            GG
+                        </label>
                     </div>
 
-                    <!-- Filtro por Tipo -->
+                    <!-- Temporada -->
                     <div class="filter-group">
-                        <h4>Tipo</h4>
-                        <label><input type="radio" name="tipo"> Torcedor</label>
-                        <label><input type="radio" name="tipo"> Jogador</label>
-                        <label><input type="radio" name="tipo"> Treino</label>
+                        <h4>Temporada</h4>
+                        <div class="sort-select" id="sortSelectTemporada" onclick="toggleDropdown('dropdownTemporada')">
+                            2023/24
+                            <svg class="arrow" width="16" height="16" viewBox="0 0 24 24">
+                                <path fill="#ff6600" d="M7 10l5 5 5-5z"/>
+                            </svg>
+                        </div>
+                        <div class="dropdown">
+                            <div class="dropdown-content" id="dropdownTemporada">
+                                <a href="#">2023/24</a>
+                                <a href="#">2024/25</a>
+                                <a href="#">2025/26</a>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Ordenação -->
-                    <div class="filter-group">
-                        <h4>Ordenar por</h4>
-                        <select class="sort-select">
-                            <option>Mais vendidos</option>
-                            <option>Menor preço</option>
-                            <option>Maior desconto</option>
-                        </select>
+                    <div class="filter-group checkbox">
+                        <h4>Categoria</h4>
+                        <label>
+                            <input type="checkbox" />
+                            <span class="custom-checkbox"></span>
+                            Retro
+                        </label>
+                        <label>
+                            <input type="checkbox" />
+                            <span class="custom-checkbox"></span>
+                            Seleção
+                        </label>
                     </div>
+
+                    <div class="filter-group checkbox">
+                        <h4>Nacional / Internacional</h4>
+                        <label>
+                            <input type="checkbox" />
+                            <span class="custom-checkbox"></span>
+                            Nacional
+                        </label>
+                        <label>
+                            <input type="checkbox" />
+                            <span class="custom-checkbox"></span>
+                            Internacional
+                        </label>
+                    </div>
+
+                    <div class="filter-group">
+                        <h4>Tipo de produto</h4>
+                        <div class="sort-select" id="sortSelectTipo" onclick="toggleDropdown('dropdownTipo')">
+                            Uniforme
+                            <svg class="arrow" width="16" height="16" viewBox="0 0 24 24">
+                                <path fill="#ff6600" d="M7 10l5 5 5-5z"/>
+                            </svg>
+                        </div>
+                        <div class="dropdown">
+                            <div class="dropdown-content" id="dropdownTipo">
+                                <a href="#">Uniforme</a>
+                                <a href="#">Casual</a>
+                                <a href="#">Acessórios</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-group checkbox">
+                        <h4>Nacional / Internacional</h4>
+                        <label>
+                            <input type="checkbox" />
+                            <span class="custom-checkbox"></span>
+                            Torcedor
+                        </label>
+                        <label>
+                            <input type="checkbox" />
+                            <span class="custom-checkbox"></span>
+                            Jogador
+                        </label>
+                        <label>
+                            <input type="checkbox" />
+                            <span class="custom-checkbox"></span>
+                            Treino
+                        </label>
+                    </div>
+
                 </div>
 
                 <div class="productList">
@@ -90,7 +216,7 @@
                             <div class="cardContent">
                                 <span class="badge">25%</span>
                                 <img
-                                    src="https://promantos.com.br/cdn/shop/files/comprar-camisa-camiseta-blusa-do-cruzeiro-nova-lancamento-adidas-da-temporada-2024_25-24_25-i-1-titular-principal-primeira-home-azul-estrelas-masculina-versao-modelo-torcedor-tailande_85247cca-c0ca-49f3-9af3-c303c22b5126_700x.jpg?v=1730852684"
+                                    src="https://promantos.com.br/cdn/shop/files/comprarcamisacamisetablusanovalancamentodocruzeirodatemporada2025_2625_26i1titularprincipalprimeirahomeazulbetfairmasculinaversaotorcedortailandesareplicapromantosdudugabigolkaiojorge_700x.png?v=1743769427"
                                     alt="Camisa Jogador Corinthians II">
                             </div>
                             <div class="info">
@@ -130,7 +256,7 @@
                             <div class="cardContent">
                                 <span class="badge">5%</span>
                                 <img
-                                    src="https://promantos.com.br/cdn/shop/files/camisa-camiseta-blusa-do-cruzeiro-nova-lancamento-adidas-da-temporada-2025_26-25_26-de-treino-treinamento-adidas-raposa-verde-azul-masculina-versao-modelo-torcedor-tailandesa-replica_7b13c365-d3d1-4cbb-988d-00220076eb5e_700x.jpg?v=1736891803"
+                                    src="https://promantos.com.br/cdn/shop/files/B0A54BED-544F-4E76-A75B-15CF1D62D691_700x.jpg?v=1744552590"
                                     alt="Camisa Torcedor Cruzeiro Treino">
                             </div>
                             <div class="info">
@@ -149,7 +275,7 @@
                             <div class="cardContent">
                                 <span class="badge">5%</span>
                                 <img
-                                    src=https://promantos.com.br/cdn/shop/files/camisa-camiseta-blusa-do-botafogo-fogao-reebook-nova-lancamento-da-temporada-ano-2024_25-24_25-i-1-titular-principal-primeira-home-listrada-alvinegra-preta-e-branco-masculina-versao-m_544fe31a-d863-470a-91ed-3d06b62b6b3b_700x.jpg?v=1719517896"
+                                    src=https://promantos.com.br/cdn/shop/files/IMG_1331_700x.jpg?v=1746238379"
                                     alt="Camisa Torcedor Botafogo I">
                             </div>
                             <div class="info">
@@ -168,4 +294,62 @@
             </div>
         </div>
     </section>
+    <script>
+        function toggleDropdown(id) {
+            const dropdown = document.getElementById(id);
+            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+        }
+
+        document.addEventListener("click", function (event) {
+            const allDropdowns = ["dropdownMenu", "dropdownTemporada"];
+            const allButtons = ["sortSelectOrdenar", "sortSelectTemporada"];
+
+            allDropdowns.forEach((id, index) => {
+                const dropdown = document.getElementById(id);
+                const button = document.getElementById(allButtons[index]);
+
+                if (!button.contains(event.target) && !dropdown.contains(event.target)) {
+                    dropdown.style.display = "none";
+                }
+            });
+        });
+
+        // Adiciona listeners para ambas dropdowns
+        function setupDropdown(dropdownId, buttonId) {
+            const links = document.querySelectorAll(`#${dropdownId} a`);
+            links.forEach(link => {
+                link.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    const selectedText = this.textContent;
+                    const button = document.getElementById(buttonId);
+                    button.childNodes[0].nodeValue = selectedText + " ";
+                    document.getElementById(dropdownId).style.display = "none";
+                });
+            });
+        }
+
+        setupDropdown("dropdownMenu", "sortSelectOrdenar");
+        setupDropdown("dropdownTemporada", "sortSelectTemporada");
+        setupDropdown("dropdownTime", "sortSelectTime");
+        setupDropdown("dropdownTipo", "sortSelectTipo");
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const slider = document.querySelector(".price-slider");
+
+            function updateSliderTrack() {
+                const min = parseInt(slider.min);
+                const max = parseInt(slider.max);
+                const value = parseInt(slider.value);
+
+                const percentage = ((value - min) / (max - min)) * 100;
+
+                slider.style.background = `linear-gradient(to right, #ff6600 ${percentage}%, #ddd ${percentage}%)`;
+            }
+
+            slider.addEventListener("input", updateSliderTrack);
+
+            // Atualizar ao carregar a página
+            updateSliderTrack();
+        });
+    </script>
 @endsection

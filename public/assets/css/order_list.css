@@ -1,0 +1,137 @@
+/* minhaConta.scss */
+.minhaConta .container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  padding: 2rem;
+}
+.minhaConta .sidebar {
+  flex: 1 1 200px;
+}
+.minhaConta .sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+.minhaConta .sidebar ul li {
+  margin-bottom: 1rem;
+}
+.minhaConta .sidebar ul li a {
+  text-decoration: none;
+  color: #d00000;
+  font-weight: bold;
+}
+.minhaConta .mainContent {
+  flex: 3 1 700px;
+}
+.minhaConta .mainContent .userGreeting {
+  margin-bottom: 2rem;
+}
+.minhaConta .mainContent .userGreeting h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+.minhaConta .mainContent .userGreeting p {
+  color: #666;
+}
+.minhaConta .mainContent .actionButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.minhaConta .mainContent .actionButtons button {
+  background: #f5f5f5;
+  border: 1px solid #ccc;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+.minhaConta .mainContent .latestOrders {
+  margin-bottom: 2rem;
+}
+.minhaConta .mainContent .latestOrders .orders {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.minhaConta .mainContent .latestOrders .orderCard {
+  border: 1px solid #e0e0e0;
+  padding: 1rem;
+  background: #fff;
+}
+.minhaConta .mainContent .latestOrders .orderCard .orderInfo {
+  margin-bottom: 1rem;
+}
+.minhaConta .mainContent .latestOrders .orderCard .orderInfo p {
+  margin: 0.25rem 0;
+}
+.minhaConta .mainContent .latestOrders .orderCard .orderActions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.minhaConta .mainContent .latestOrders .orderCard .orderActions button {
+  padding: 0.4rem 0.8rem;
+  background: #eee;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+.minhaConta .mainContent .latestOrders .orderCard .deliveryDate {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #999;
+}
+.minhaConta .mainContent .latestOrders .statusEntregue {
+  color: green;
+  font-weight: bold;
+}
+.minhaConta .mainContent .latestOrders .viewAll {
+  margin-top: 1rem;
+  background: #d00000;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+.minhaConta .mainContent .addresses .addressCards {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.minhaConta .mainContent .addresses .addressCard {
+  flex: 1 1 45%;
+  background: #fafafa;
+  padding: 1rem;
+  border: 1px solid #ddd;
+}
+.minhaConta .mainContent .addresses .addressCard h3 {
+  margin-top: 0;
+}
+.minhaConta .mainContent .addresses .addressCard address {
+  font-style: normal;
+  line-height: 1.6;
+}
+.minhaConta .mainContent .userData {
+  margin-top: 2rem;
+}
+.minhaConta .mainContent .userData .userActions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.minhaConta .mainContent .userData .userActions button {
+  padding: 0.5rem 1rem;
+  border: none;
+  cursor: pointer;
+}
+.minhaConta .mainContent .userData .userActions button.edit {
+  background: #007bff;
+  color: white;
+}
+.minhaConta .mainContent .userData .userActions button.changePassword {
+  background: #ffc107;
+  color: black;
+}
+.minhaConta .mainContent .userData .userActions button.deleteAccount {
+  background: #dc3545;
+  color: white;
+}

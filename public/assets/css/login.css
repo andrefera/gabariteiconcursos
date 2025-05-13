@@ -1,0 +1,312 @@
+body {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #eb5939, #f89d33);
+}
+@media (max-width: 1144px) {
+  body {
+    height: auto;
+  }
+}
+
+.containerPrincipal {
+  display: flex;
+  width: 90%;
+  max-width: 1000px;
+  height: 90vh;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  overflow: hidden;
+  font-family: "Segoe UI", sans-serif;
+}
+@media (max-width: 1144px) {
+  .containerPrincipal {
+    height: auto;
+    padding: 20px 0;
+  }
+}
+.containerPrincipal .areaFormulario {
+  flex: 1;
+  padding: 4rem;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+@media (max-width: 1144px) {
+  .containerPrincipal .areaFormulario {
+    border-radius: 20px;
+    padding: 2rem;
+  }
+}
+@media (max-width: 1144px) {
+  .containerPrincipal .areaFormulario .logoEmpresa {
+    text-align: center;
+    margin-top: 22px;
+    padding: 20px 0;
+  }
+}
+.containerPrincipal .areaFormulario .tituloFormulario {
+  font-size: 2rem;
+  margin-bottom: 0;
+  font-weight: bold;
+  color: #FF7C00;
+}
+@media (max-width: 1144px) {
+  .containerPrincipal .areaFormulario .tituloFormulario {
+    text-align: center;
+  }
+}
+.containerPrincipal .areaFormulario .descricaoFormulario {
+  color: #888;
+  margin-bottom: 2rem;
+  margin-top: 0;
+}
+@media (max-width: 1144px) {
+  .containerPrincipal .areaFormulario .descricaoFormulario {
+    text-align: center;
+  }
+}
+.containerPrincipal .areaFormulario .botoesSociais {
+  display: flex;
+  gap: 1rem;
+}
+.containerPrincipal .areaFormulario .botoesSociais .botaoSocial {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+}
+.containerPrincipal .areaFormulario .botoesSociais .botaoSocial.google {
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+.containerPrincipal .areaFormulario .botoesSociais .botaoSocial.facebook {
+  background-color: #3B5998;
+  color: #fff;
+}
+.containerPrincipal .areaFormulario .linhaSeparadora {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 2rem 0 0;
+}
+.containerPrincipal .areaFormulario .linhaSeparadora .textoSeparador {
+  flex-shrink: 0;
+  padding: 0 1rem;
+  color: #ccc;
+}
+.containerPrincipal .areaFormulario .linhaSeparadora::before, .containerPrincipal .areaFormulario .linhaSeparadora::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #e0e0e0;
+}
+.containerPrincipal .areaFormulario .linhaSeparadora::before {
+  margin-right: 1rem;
+}
+.containerPrincipal .areaFormulario .linhaSeparadora::after {
+  margin-left: 1rem;
+}
+.containerPrincipal .areaFormulario .formularioCadastro {
+  display: flex;
+  flex-direction: column;
+}
+.containerPrincipal .areaFormulario .formularioCadastro .campo {
+  display: flex;
+  flex-direction: column;
+}
+.containerPrincipal .areaFormulario .formularioCadastro .campo .labelInput {
+  margin-top: 1rem;
+}
+.containerPrincipal .areaFormulario .formularioCadastro .campo label {
+  font-weight: 500;
+  color: #333;
+}
+.containerPrincipal .areaFormulario .formularioCadastro .campo input {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-top: 0.25rem;
+}
+.containerPrincipal .areaFormulario .formularioCadastro .campo input:focus {
+  border-color: #FF7C00;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(255, 124, 0, 0.3);
+  outline: none;
+}
+.containerPrincipal .areaFormulario .formularioCadastro .campo input:active {
+  background-color: #fafafa;
+  border-color: #FF7C00;
+}
+.containerPrincipal .areaFormulario .formularioCadastro .linkRecuperarSenha {
+  float: right;
+  font-size: 0.875rem;
+  color: #FF7C00;
+  text-decoration: none;
+}
+.containerPrincipal .areaFormulario .formularioCadastro .aceiteTermos {
+  display: flex;
+  align-items: center;
+  margin-top: 1rem;
+}
+.containerPrincipal .areaFormulario .formularioCadastro .aceiteTermos input[type=checkbox] {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #FF7C00;
+  border-radius: 4px;
+  position: relative;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  transition: background-color 0.2s ease;
+}
+.containerPrincipal .areaFormulario .formularioCadastro .aceiteTermos input[type=checkbox]:checked {
+  background-color: #FF7C00;
+}
+.containerPrincipal .areaFormulario .formularioCadastro .aceiteTermos input[type=checkbox]:checked::after {
+  content: "";
+  position: absolute;
+  top: 1px;
+  left: 4px;
+  width: 4px;
+  height: 9px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.containerPrincipal .areaFormulario .formularioCadastro .aceiteTermos label {
+  margin-left: 0.5rem;
+  font-size: 0.875rem;
+}
+.containerPrincipal .areaFormulario .formularioCadastro .aceiteTermos label a {
+  color: #FF7C00;
+  text-decoration: none;
+}
+.containerPrincipal .areaFormulario .formularioCadastro .botaoLogin {
+  margin-top: 1.5rem;
+  padding: 0.75rem;
+  background-color: #FF7C00;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.containerPrincipal .areaFormulario .formularioCadastro .botaoLogin:hover {
+  background: linear-gradient(135deg, #eb5939, #f89d33);
+}
+.containerPrincipal .areaFormulario .textoRodape {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+}
+.containerPrincipal .areaFormulario .textoRodape span {
+  cursor: pointer;
+  color: #FF7C00;
+  text-decoration: none;
+}
+.containerPrincipal .areaIlustracao {
+  flex: 1;
+  background-color: #fff;
+  color: white;
+  padding: 0.8rem 0.8rem 0.8rem 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.containerPrincipal .areaIlustracao .area {
+  flex: 1;
+  background-color: #333;
+  border-radius: 12px;
+}
+.containerPrincipal .areaIlustracao h2, .containerPrincipal .areaIlustracao p {
+  margin: 0 0 1rem 0;
+}
+@media (max-width: 1144px) {
+  .containerPrincipal .areaIlustracao {
+    display: none;
+  }
+}
+
+.botaoVoltarTopo {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: #ffffff;
+  color: #333;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+@media (max-width: 1144px) {
+  .botaoVoltarTopo {
+    background-color: #333;
+    color: #ffffff;
+  }
+}
+.botaoVoltarTopo:hover {
+  background-color: #f1f1f1;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+.fadeIn {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.fadeOut {
+  animation: fadeOut 0.3s ease forwards;
+}
+
+.ocultoSuave {
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+.visivelSuave {
+  opacity: 1;
+  height: auto;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+}
