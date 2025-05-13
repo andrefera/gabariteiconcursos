@@ -25,7 +25,6 @@ class Order extends Model
         'increment_id',
         'user_id',
         'cart_id',
-        'address_id',
         'status',
         'method',
         'total_price',
@@ -76,11 +75,6 @@ class Order extends Model
     public function cart(): BelongsTo
     {
         return $this->belongsTo(Cart::class);
-    }
-
-    public function address(): BelongsTo
-    {
-        return $this->belongsTo(UserAddress::class);
     }
 
     public function coupon(): BelongsTo

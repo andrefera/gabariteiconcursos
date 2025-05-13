@@ -57,6 +57,12 @@
             border-radius: 8px;
         }
 
+        .products {
+            height: 100%;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
         .product {
             display: flex;
             gap: 1rem;
@@ -116,6 +122,10 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 0.5rem;
+        }
+
+        .totals .discount-span {
+            color: #a40000;
         }
 
         input[type="text"], select {
@@ -182,32 +192,21 @@
 <body>
 <div class="container">
     <div class="left">
-        <h2>Resumo do Pedido <small>(2 itens)</small></h2>
-
-        <div class="card product">
-            <img
-                src="https://promantos.com.br/cdn/shop/files/camisa-camiseta-blusa-do-botafogo-fogao-reebook-nova-lancamento-da-temporada-ano-2024_25-24_25-i-1-titular-principal-primeira-home-listrada-alvinegra-preta-e-branco-masculina-versao-m_544fe31a-d863-470a-91ed-3d06b62b6b3b_700x.jpg?v=1719517896&quot;"
-                alt="PlayStation 5">
-            <div class="details">
-                <strong>Camisa Torcedor Botafogo I 2024/25 - Masculina</strong>
-                <small>Qtd: 1</small>
-            </div>
-            <div><strong>R$499,99</strong></div>
+        <h2>Resumo do Pedido <small>({{$cart->totalProducts}} itens)</small></h2>
+        <div class="products">
+            @foreach($cart->products as $product)
+                <div class="card product">
+                    <img src={{$product->imageUrl ?? ''}} alt={{$product->name}}>
+                    <div class="details">
+                        <strong>{{$product->name}}</strong>
+                        <small>Tamanho: <strong>{{$product->size}}</strong> Qtd: {{$product->quantity}}</small>
+                    </div>
+                    <div><strong>{{$product->priceLabel}}</strong></div>
+                </div>
+            @endforeach
         </div>
-
-        <div class="card product">
-            <img
-                src="https://promantos.com.br/cdn/shop/files/camisa-camiseta-blusa-do-botafogo-fogao-reebook-nova-lancamento-da-temporada-ano-2024_25-24_25-i-1-titular-principal-primeira-home-listrada-alvinegra-preta-e-branco-masculina-versao-m_544fe31a-d863-470a-91ed-3d06b62b6b3b_700x.jpg?v=1719517896&quot;"
-                alt="Headset">
-            <div class="details">
-                <strong>Camisa Torcedor Botafogo I 2024/25 - Masculina</strong>
-                <small>Qtd: 1</small>
-            </div>
-            <div><strong>R$99,99</strong></div>
-        </div>
-
         <div class="totals">
-            <div><span>Subtotal</span><span>R$599,98</span></div>
+            <div><span>Subtotal</span><span>{{\App\Support\Util\NumberUtil::formatPrice($cart->subTotal)}}</span></div>
         </div>
 
         <div class="recommended">
@@ -253,7 +252,10 @@
                 <input type="text" id="docNumber" placeholder="CPF" data-msg="Digite um CPF válido">
                 <select id="installments" data-msg="Escolha o número de parcelas">
                     <option value="" disabled>Selecione</option>
-                    <option value="1" selected>1x de R$599,98</option>
+                    @foreach($cart->installments as $installment => $value)
+                        <option value={{$installment}} {{$installment === 1 ? "selected": ""}}>{{$installment}}x
+                            de {{\App\Support\Util\NumberUtil::formatPrice($value)}} {{$installment < 5 ? "Sem juros": ""}}</option>
+                    @endforeach
                 </select>
             </div>
 
@@ -278,9 +280,12 @@
             </div>
 
             <div class="totals">
-                <div><span>Subtotal</span><span>R$599,98</span></div>
-                <div><span>Frete</span><span>R$00,00</span></div>
-                <div><strong>Total</strong><strong>R$599,98</strong></div>
+                <div><span>Produtos</span><span>{{\App\Support\Util\NumberUtil::formatPrice($cart->total)}}</span></div>
+                @if($cart->discount)
+                    <div><span>Descontos</span><span class="discount-span">- {{\App\Support\Util\NumberUtil::formatPrice($cart->discount)}}</span></div>
+                @endif
+                <div><span>Frete</span><span>{{\App\Support\Util\NumberUtil::formatPrice($cart->shipping)}}</span></div>
+                <div><strong>Total</strong><strong>{{\App\Support\Util\NumberUtil::formatPrice($cart->finalPrice)}}</strong></div>
             </div>
 
             <button class="btn" id="submitPayment" type="button">Finalizar Pedido</button>
@@ -462,10 +467,9 @@
         }
 
         let paymentData = {
-            total_price: 100.00,
-            final_price: 100.00,
+            total_price: {{$cart->total}},
             installment_price: 100.00,
-            shipping_price: 100.00,
+            shipping_price: '{{$cart->shipping}}',
             shipping_method: 'correios',
             shipping_company: 'correios',
             shipping_days: 7,

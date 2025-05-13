@@ -14,6 +14,7 @@ Route::get('/camiseta/camisa-jogador-flamengo', function () {
     return view('details.index');
 });
 
+
 Route::get('/carrinho', function () {
     return view('cart.index');
 });
@@ -39,10 +40,7 @@ Route::prefix('auth')->group(function () {
 
 Route::prefix('checkout')->middleware(SessionTokenMiddleware::class)->group(function () {
     Route::get('/', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::get('/payment', [CheckoutController::class, 'payment'])->name('checkout.payment');
     Route::post('pay', [CheckoutController::class, 'pay'])->name('checkout.pay');
-});
-
-Route::get('/checkout-test', function () {
-    return view('checkout-test');
 });
 

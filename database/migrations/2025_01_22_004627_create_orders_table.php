@@ -17,8 +17,6 @@ return new class extends Migration {
             $table->foreign('user_id')->references('id')->on('users');
             $table->unsignedBigInteger('cart_id')->index()->nullable();
             $table->foreign('cart_id')->references('id')->on('carts');
-            $table->unsignedBigInteger('address_id')->nullable();
-            $table->foreign('address_id')->references('id')->on('user_addresses');
             $table->string('status');
             $table->string('method');
             $table->decimal('total_price', 12, 2);

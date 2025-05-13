@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class CartItem extends Model
+class CartShipping extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -18,9 +18,11 @@ class CartItem extends Model
      */
     protected $fillable = [
         'cart_id',
-        'product_id',
-        'size',
-        'quantity',
+        'address_id',
+        'company',
+        'name',
+        'days',
+        'price',
     ];
 
     public function cart(): BelongsTo
@@ -28,8 +30,8 @@ class CartItem extends Model
         return $this->belongsTo(Cart::class);
     }
 
-    public function product(): BelongsTo
+    public function address(): BelongsTo
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(UserAddress::class, 'address_id');
     }
 }

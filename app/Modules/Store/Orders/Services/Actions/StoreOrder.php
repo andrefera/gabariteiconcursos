@@ -2,6 +2,7 @@
 
 namespace App\Modules\Store\Orders\Services\Actions;
 
+use App\Models\Cart;
 use App\Models\Coupon;
 use App\Models\Enums\OrderStatus;
 use App\Models\Enums\PaymentStatus;
@@ -21,20 +22,14 @@ class StoreOrder
 {
 
     public function __construct(
-        public int     $addressId,
         public ?string $cardHash,
         public string  $paymentMethodId,
         public ?string $issuerId,
         public string  $method,
         public int     $installments,
         public float   $totalPrice,
-        public float   $finalPrice,
         public float   $installmentPrice,
         public ?string $coupon,
-        public string  $shippingCompany,
-        public float   $shippingPrice,
-        public string  $shippingMethod,
-        public string  $shippingDays,
         public ?string $ip,
         public ?string $userAgent,
     )
@@ -43,14 +38,13 @@ class StoreOrder
 
     public function execute(): PaymentResponseDTO
     {
+        /**
+         * @var Cart|null $cart
+         */
         $cart = Session::get('cart');
 
         if (!$cart) {
             return new PaymentResponseDTO('Carrinho não encontrado.', false);
-        }
-
-        if (!$cart->address) {
-            return new PaymentResponseDTO('Selecione um endereço de entrega.', false);
         }
 
         $redisKey = "pending_order_{$cart->user->id}";
@@ -65,22 +59,23 @@ class StoreOrder
             $coupon = Coupon::query()->where('code', trim($this->coupon))->first();
             $order = $pendingId ? Order::find($pendingId) : new Order();
 
+            $finalPrice = $this->installmentPrice * $this->installments;
+
             $order->fill([
                 'user_id' => $cart->user->id,
                 'cart_id' => $cart->id,
-                'address_id' => $this->addressId,
                 'status' => OrderStatus::WAITING_PAYMENT->value,
                 'method' => $this->method,
                 'total_price' => $this->totalPrice,
-                'final_price' => $this->finalPrice,
-                'discount' => $this->totalPrice - $this->finalPrice,
+                'final_price' => $this->installmentPrice * $this->installments,
+                'discount' => $this->totalPrice - $finalPrice,
                 'installments' => $this->installments,
                 'installment_price' => $this->installmentPrice,
                 'coupon_id' => $coupon?->id,
-                'shipping_company' => $this->shippingCompany,
-                'shipping_price' => $this->shippingPrice,
-                'shipping_method' => $this->shippingMethod,
-                'shipping_days' => $this->shippingDays,
+                'shipping_company' => $cart->shipping->company,
+                'shipping_price' => $cart->shipping->price,
+                'shipping_method' => $cart->shipping->name,
+                'shipping_days' => $cart->shipping->days,
                 'remote_ip' => $this->ip,
                 'user_agent' => substr($this->userAgent, 0, 510),
             ]);
@@ -118,7 +113,7 @@ class StoreOrder
             $this->paymentMethodId,
             $this->issuerId,
             $this->cardHash,
-            $this->finalPrice,
+            $finalPrice,
             $this->installments,
         ))->execute();
 
@@ -131,7 +126,7 @@ class StoreOrder
             'method' => $this->method,
             'installments' => $this->installments,
             'installment_value' => $this->installmentPrice,
-            'amount' => $this->finalPrice,
+            'amount' => $finalPrice,
             'card_hash' => $this->cardHash,
             'payment_data' => json_decode(json_encode($response), true)
         ]);
@@ -165,20 +160,14 @@ class StoreOrder
     public static function fromRequest(Request $request): self
     {
         return new self(
-            $request->get('address_id'),
             $request->get('token'),
             $request->get('payment_method_id'),
             $request->get('issuerId'),
             $request->get('method'),
             $request->get('installments'),
             $request->get('total_price'),
-            $request->get('final_price'),
             $request->get('installment_price'),
             $request->get('coupon'),
-            $request->get('shipping_company'),
-            $request->get('shipping_price'),
-            $request->get('shipping_method'),
-            $request->get('shipping_days'),
             $request->getClientIp(),
             $request->userAgent()
         );
