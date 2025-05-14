@@ -5,7 +5,7 @@ namespace App\Models\Enums;
 enum PaymentMethod: string
 {
     case  VISA = 'visa';
-    case  MASTERCARD = 'mastercard';
+    case  MASTERCARD = 'master';
     case PIX = 'pix';
 
     //BOLETO

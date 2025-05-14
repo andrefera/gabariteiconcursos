@@ -100,10 +100,10 @@ readonly class Pay
                 ];
 
                 $parameters['additional_info']['shipments']['receiver_address'] = [
-                    'street_name' => $this->order->address->street,
-                    'street_number' => $this->keepOnlyNumbers($this->order->address->number),
-                    'zip_code' => $this->order->address->zip_code,
-                    'apartment' => $this->order->address->complement,
+                    'street_name' => $this->cart->shipping->address->street,
+                    'street_number' => $this->keepOnlyNumbers($this->cart->shipping->address->number),
+                    'zip_code' => $this->cart->shipping->address->zip_code,
+                    'apartment' => $this->cart->shipping->address->complement,
                     'floor' => null,
                 ];
             }
@@ -118,7 +118,7 @@ readonly class Pay
             return new ResponseMercadoPagoDTO($payment, true, $this->issuerId, $this->paymentMethodId);
 
         } catch (Throwable $e) {
-            Log::info($e->getApiResponse()->getContent());
+            Log::info($e->getMessage());
             Log::error($e);
 
             return new ResponseMercadoPagoDTO(null, false, null, null, null);

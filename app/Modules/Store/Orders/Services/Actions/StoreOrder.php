@@ -28,6 +28,7 @@ class StoreOrder
         public string  $method,
         public int     $installments,
         public float   $totalPrice,
+        public float   $finalPrice,
         public float   $installmentPrice,
         public ?string $coupon,
         public ?string $ip,
@@ -59,8 +60,6 @@ class StoreOrder
             $coupon = Coupon::query()->where('code', trim($this->coupon))->first();
             $order = $pendingId ? Order::find($pendingId) : new Order();
 
-            $finalPrice = $this->installmentPrice * $this->installments;
-
             $order->fill([
                 'user_id' => $cart->user->id,
                 'cart_id' => $cart->id,
@@ -68,7 +67,7 @@ class StoreOrder
                 'method' => $this->method,
                 'total_price' => $this->totalPrice,
                 'final_price' => $this->installmentPrice * $this->installments,
-                'discount' => $this->totalPrice - $finalPrice,
+                'discount' => $this->totalPrice - $this->finalPrice,
                 'installments' => $this->installments,
                 'installment_price' => $this->installmentPrice,
                 'coupon_id' => $coupon?->id,
@@ -93,6 +92,7 @@ class StoreOrder
                     $orderItem->product_id = $cartItem->product_id;
                 }
 
+                $orderItem->size = $cartItem->size;
                 $orderItem->quantity = $cartItem->quantity;
                 $orderItem->price = $cartItem->product->getFinalPrice();
                 $orderItem->save();
@@ -113,22 +113,23 @@ class StoreOrder
             $this->paymentMethodId,
             $this->issuerId,
             $this->cardHash,
-            $finalPrice,
+            $this->finalPrice,
             $this->installments,
         ))->execute();
 
         $orderPayment = OrderPayment::query()->where('order_id', $order->id)->first();
         if (!$orderPayment) {
             $orderPayment = new OrderPayment();
+            $orderPayment->order_id = $order->id;
         }
 
         $orderPayment->fill([
             'method' => $this->method,
             'installments' => $this->installments,
             'installment_value' => $this->installmentPrice,
-            'amount' => $finalPrice,
+            'amount' => $this->finalPrice,
             'card_hash' => $this->cardHash,
-            'payment_data' => json_decode(json_encode($response), true)
+            'payment_data' => json_encode($response)
         ]);
         $orderPayment->save();
 
@@ -162,10 +163,11 @@ class StoreOrder
         return new self(
             $request->get('token'),
             $request->get('payment_method_id'),
-            $request->get('issuerId'),
+            $request->get('issuer_id'),
             $request->get('method'),
             $request->get('installments'),
             $request->get('total_price'),
+            $request->get('final_price'),
             $request->get('installment_price'),
             $request->get('coupon'),
             $request->getClientIp(),

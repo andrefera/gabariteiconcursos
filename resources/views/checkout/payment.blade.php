@@ -254,7 +254,7 @@
                     <option value="" disabled>Selecione</option>
                     @foreach($cart->installments as $installment => $value)
                         <option value={{$installment}} {{$installment === 1 ? "selected": ""}}>{{$installment}}x
-                            de {{\App\Support\Util\NumberUtil::formatPrice($value)}} {{$installment < 5 ? "Sem juros": ""}}</option>
+                            de {{\App\Support\Util\NumberUtil::formatPrice($value)}} {{$installment < 5 ? "Sem juros": ("(" . \App\Support\Util\NumberUtil::formatPrice($value * $installment) . ")")}}</option>
                     @endforeach
                 </select>
             </div>
@@ -282,10 +282,16 @@
             <div class="totals">
                 <div><span>Produtos</span><span>{{\App\Support\Util\NumberUtil::formatPrice($cart->total)}}</span></div>
                 @if($cart->discount)
-                    <div><span>Descontos</span><span class="discount-span">- {{\App\Support\Util\NumberUtil::formatPrice($cart->discount)}}</span></div>
+                    <div><span>Descontos</span><span
+                            class="discount-span">- {{\App\Support\Util\NumberUtil::formatPrice($cart->discount)}}</span>
+                    </div>
                 @endif
+                <div><span>SubTotal</span><span>{{\App\Support\Util\NumberUtil::formatPrice($cart->subTotal)}}</span>
+                </div>
                 <div><span>Frete</span><span>{{\App\Support\Util\NumberUtil::formatPrice($cart->shipping)}}</span></div>
-                <div><strong>Total</strong><strong>{{\App\Support\Util\NumberUtil::formatPrice($cart->finalPrice)}}</strong></div>
+                <div>
+                    <strong>Total</strong><strong>{{\App\Support\Util\NumberUtil::formatPrice($cart->finalPrice)}}</strong>
+                </div>
             </div>
 
             <button class="btn" id="submitPayment" type="button">Finalizar Pedido</button>
@@ -467,17 +473,11 @@
         }
 
         let paymentData = {
-            total_price: {{$cart->total}},
-            installment_price: 100.00,
-            shipping_price: '{{$cart->shipping}}',
-            shipping_method: 'correios',
-            shipping_company: 'correios',
-            shipping_days: 7,
+            total_price: parseFloat('{{$cart->total}}'),
+            final_price: parseFloat('{{$cart->subTotal}}'),
+            installments: 1,
+            installment_price: parseFloat('{{$cart->subTotal}}'),
             payment_method_id: paymentMethod === "credit_card" ? "visa" : (paymentMethod === "pix" ? "pix" : "bolbradesco"),
-            email: "comprador@email.com",
-            document: paymentMethod === "credit_card"
-                ? document.getElementById('docNumber').value.replace(/[^\d]+/g, '')
-                : document.getElementById('cpf').value.replace(/[^\d]+/g, ''),
             method: paymentMethod
         };
 
@@ -485,7 +485,15 @@
             try {
                 const token = await createCardToken();
                 paymentData.token = token;
-                paymentData.installments = document.getElementById("installments").value;
+
+                let installment = parseInt(document.getElementById("installments").value)
+                let installments = @json($cart->installments);
+                let installmentPrice = installments[installment];
+
+                paymentData.installments = installment;
+                paymentData.installment_price = installmentPrice;
+                paymentData.final_price = installmentPrice * installment;
+
 
                 const bin = cardNumber.value.replace(/\D/g, '').substring(0, 6);
 
@@ -493,7 +501,7 @@
 
                 if (paymentMethods && paymentMethods.results.length > 0) {
                     paymentData.payment_method_id = paymentMethods.results[0].id;
-                    paymentData.issuer = paymentMethods.results[0].issuer.id;
+                    paymentData.issuer_id = paymentMethods.results[0].issuer.id;
                 }
 
             } catch (error) {

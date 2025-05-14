@@ -29,7 +29,7 @@ readonly class CartDTO
         $totalProducts = $products->sum('quantity');
         $price = $products->sum('price');
         $specialPrice = $products->sum('specialPrice');
-        $shipping = 0;
+        $shipping = $cart->shipping?->price ?? 0;
         $finalPrice = $specialPrice + $shipping;
 
         $maxInstallments = self::getInstallmentValue($specialPrice + $shipping);
