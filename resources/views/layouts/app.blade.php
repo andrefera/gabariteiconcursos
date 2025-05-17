@@ -10,4 +10,5 @@
     @yield('content')
 </div>
 @include('layouts.footer')
+<script src="{{ asset('js/auth.js') }}"></script>
 </body>

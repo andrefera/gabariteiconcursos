@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Store\CartController;
 use App\Http\Controllers\Store\CheckoutController;
 use App\Http\Middleware\Jwt;
 use App\Http\Middleware\SessionTokenMiddleware;
@@ -18,9 +19,13 @@ Route::get('/camiseta/camisa-jogador-flamengo', function () {
     return view('details.index');
 });
 
-
-Route::get('/carrinho', function () {
-    return view('cart.index');
+// Cart Routes
+Route::prefix('carrinho')->middleware(SessionTokenMiddleware::class)->group(function () {
+    Route::get('/', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/adicionar', [CartController::class, 'addItem'])->name('cart.add');
+    Route::put('/item/{item}', [CartController::class, 'updateItem'])->name('cart.update');
+    Route::delete('/item/{item}', [CartController::class, 'removeItem'])->name('cart.remove');
+    Route::delete('/limpar', [CartController::class, 'clear'])->name('cart.clear');
 });
 
 Route::get('/camisetas', function () {
@@ -40,6 +45,12 @@ Route::prefix('auth')->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->middleware(Jwt::class);
     Route::post('change-password', [AuthController::class, 'changePassword'])->middleware(Jwt::class);
     Route::get('me', [AuthController::class, 'me']);
+    
+    // Social Login Routes
+    Route::get('google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
+    Route::get('google/callback', [AuthController::class, 'handleGoogleCallback']);
+    Route::get('facebook', [AuthController::class, 'redirectToFacebook'])->name('auth.facebook');
+    Route::get('facebook/callback', [AuthController::class, 'handleFacebookCallback']);
 });
 
 Route::prefix('checkout')->middleware(SessionTokenMiddleware::class)->group(function () {

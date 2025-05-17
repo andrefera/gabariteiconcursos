@@ -5,7 +5,6 @@ namespace App\Modules\Store\Carts\DTO;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Modules\Store\CartItems\DTO\CartItemDTO;
-use App\Support\Util\NumberUtil;
 
 readonly class CartDTO
 {

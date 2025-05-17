@@ -17,25 +17,25 @@ class SessionTokenMiddleware
     {
         $cartToken = $request->cookie('session_token') ?: Str::uuid();
 
-        $cart = Cart::query()->where('id', 2)->first();
+        $cart = Cart::query()->where('token', $cartToken)->first();
 
-//        if($cart && $cart->status !== CartStatus::OPEN->value) {
-//            Log::info("Change session token {$cart->id} {$cart->status}");
-//            $cartToken = Str::uuid();
-//            $cart = null;
-//        } else {
-//
-//            if ($cart && $cart->user) {
-//                $user = JWTAuth::parseToken()->authenticate();
-//                if ($user) {
-//                    if ($user->id !== $cart->user_id) {
-//                        Log::info("Change session token {$user->id} !== {$cart->user_id}");
-//                        $cartToken = Str::uuid();
-//                        Cart::cloneCart($user->id, $cartToken);
-//                    }
-//                }
-//            }
-//        }
+        if($cart && $cart->status !== CartStatus::OPEN->value) {
+            Log::info("Change session token {$cart->id} {$cart->status}");
+            $cartToken = Str::uuid();
+            $cart = null;
+        } else {
+
+            if ($cart && $cart->user) {
+                $user = JWTAuth::parseToken()->authenticate();
+                if ($user) {
+                    if ($user->id !== $cart->user_id) {
+                        Log::info("Change session token {$user->id} !== {$cart->user_id}");
+                        $cartToken = Str::uuid();
+                        Cart::cloneCart($user->id, $cartToken);
+                    }
+                }
+            }
+        }
 
         Session::put('sessionToken', $cartToken);
         Session::put('cart', $cart);

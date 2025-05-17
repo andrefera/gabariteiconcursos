@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Session;
 
-class StoreOrder
+readonly class StoreOrder
 {
 
     public function __construct(
