@@ -4,6 +4,7 @@ namespace App\Models\Enums;
 
 enum OrderStatus: string
 {
+    case NEW = 'new';
     case WAITING_PAYMENT = 'waiting_payment';
     case PAID = 'paid';
     case IN_SEPARATION = 'in_separation';

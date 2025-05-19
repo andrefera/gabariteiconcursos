@@ -5,7 +5,6 @@ namespace App\Modules\Store\CartItems\Services;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
-use App\Modules\Store\Carts\DTO\CartDTO;
 
 class CartItemService
 {
@@ -46,7 +45,7 @@ class CartItemService
         $item->delete();
     }
 
-    public function validateCartItem(CartDTO $cart, CartItem $item): bool
+    public function validateCartItem(Cart $cart, CartItem $item): bool
     {
         return $cart->id === $item->cart_id;
     }

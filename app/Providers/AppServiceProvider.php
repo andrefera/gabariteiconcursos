@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
-use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Auth;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,12 +22,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::composer('*', function ($view) {
-            try {
-                $user = JWTAuth::parseToken()->authenticate();
-                $view->with('currentUser', $user);
-            } catch (\Exception $e) {
-                $view->with('currentUser', null);
-            }
+            $view->with('currentUser', Auth::user());
         });
     }
 }

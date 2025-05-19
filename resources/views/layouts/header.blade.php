@@ -16,10 +16,27 @@
             </div>
         </div>
         <div class="userMenuContainer">
-            <a class="imgIcon" href="{{ route('login') }}">
-                <img src="{{ asset('images/icons/user-icon.png') }}" width="18" height="18" alt="User Icon" class="searchIcon">
-                Entrar / Criar conta
-            </a>
+            @auth
+                <div class="userMenu">
+                    <div class="userMenuTrigger">
+                        <img src="{{ asset('images/icons/user-icon.png') }}" width="18" height="18" alt="User Icon" class="searchIcon">
+                        <span>{{ Auth::user()->name }}</span>
+                    </div>
+                    <div class="userMenuDropdown">
+                        <a href="/minha-conta">Minha Conta</a>
+                        <a href="/meus-pedidos">Meus Pedidos</a>
+                        <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
+                            @csrf
+                            <button type="submit" class="logout-button">Sair</button>
+                        </form>
+                    </div>
+                </div>
+            @else
+                <a class="imgIcon" href="{{ route('login') }}">
+                    <img src="{{ asset('images/icons/user-icon.png') }}" width="18" height="18" alt="User Icon" class="searchIcon">
+                    Entrar / Criar conta
+                </a>
+            @endauth
         </div>
         <a class="imgIcon" href="/carrinho">
             <img src="{{ asset('images/icons/cart-icon.png') }}" width="20" height="20" alt="Cart Icon" class="searchIcon">
@@ -35,6 +52,7 @@
 }
 
 .userMenuDropdown {
+    text-align: end;
     display: none;
     position: absolute;
     top: 100%;
@@ -50,6 +68,7 @@
 .userMenuDropdown a {
     display: block;
     padding: 8px 16px;
+    margin-right: 0 !important;
     color: #333;
     text-decoration: none;
     transition: background-color 0.2s;
@@ -67,6 +86,26 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    cursor: pointer;
+}
+
+.userMenuTrigger span {
+    color: #333;
+}
+
+.logout-button {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    padding: 8px 16px;
+    color: #333;
+    cursor: pointer;
+    font: inherit;
+}
+
+.logout-button:hover {
+    background-color: #f5f5f5;
 }
 </style>
 

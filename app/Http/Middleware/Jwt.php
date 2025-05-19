@@ -21,7 +21,24 @@ class Jwt
     public function handle(Request $request, Closure $next): Response
     {
         try {
-            $user = JWTAuth::parseToken()->authenticate();
+            // Try to get token from Authorization header first
+            $token = JWTAuth::getToken();
+            
+            // If no token in header, try to get from cookie
+            if (!$token && $request->cookie('jwt_token')) {
+                $token = $request->cookie('jwt_token');
+                JWTAuth::setToken($token);
+            }
+            
+            if (!$token) {
+                throw new Exception('Token não encontrado');
+            }
+
+            $user = JWTAuth::authenticate($token);
+            
+            if (!$user) {
+                throw new Exception('Usuário não encontrado');
+            }
 
             if (str_starts_with($request->path(), 'api/admin') && $user->role !== UserRole::ADMIN->value) {
                 return response()->json(['msg' => 'Acesso não autorizado'], 403);
@@ -32,9 +49,8 @@ class Jwt
         } catch (TokenInvalidException $e) {
             return response()->json(['msg' => 'Token inválido'], 401);
         } catch (Exception $e) {
-            return response()->json(['msg' => 'Token não encontrado'], 401);
+            return response()->json(['msg' => $e->getMessage()], 401);
         }
-
 
         return $next($request);
     }

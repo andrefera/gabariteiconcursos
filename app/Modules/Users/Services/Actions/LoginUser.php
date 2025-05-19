@@ -33,17 +33,26 @@ readonly class LoginUser
         $user = JWTAuth::user();
 
         if (str_starts_with($this->path, 'api/admin') && $user->role !== UserRole::ADMIN->value) {
-
+            JWTAuth::invalidate($token);
             return [
                 'success' => false,
                 'msg' => 'Acesso não autorizado!',
             ];
         }
 
+        // Configure token in cookie
+        $cookie = cookie('jwt_token', $token, 60 * 24 * 7); // 7 days
+
         return [
             'success' => true,
             'token' => $token,
-            'name' => $user->name
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->role
+            ],
+            'cookie' => $cookie
         ];
     }
 

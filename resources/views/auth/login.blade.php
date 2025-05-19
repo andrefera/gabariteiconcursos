@@ -31,14 +31,14 @@
         @endif
 
         <div class="botoesSociais">
-            <button class="botaoSocial google">
-                <img src="{{ asset('images/google.png') }}" width="20" height="20" alt="Ellon Sports Logo">
+            <a href="{{ route('auth.google') }}" class="botaoSocial google">
+                <img src="{{ asset('images/google.png') }}" width="20" height="20" alt="Google Logo">
                 Entrar com Google
-            </button>
-            <button class="botaoSocial facebook">
-                <img src="{{ asset('images/facebook.png') }}" width="20" height="20" alt="Ellon Sports Logo">
+            </a>
+            <a href="{{ route('auth.facebook') }}" class="botaoSocial facebook">
+                <img src="{{ asset('images/facebook.png') }}" width="20" height="20" alt="Facebook Logo">
                 Entrar com Facebook
-            </button>
+            </a>
         </div>
 
         <div class="linhaSeparadora">
@@ -49,25 +49,25 @@
             @csrf
             <div class="campo visivelSuave" id="grupoNome">
                 <label class="labelInput" for="nome">Nome</label>
-                <input type="text" id="nome" name="name" placeholder="Seu nome" required="required" data-register-only="true" value="{{ old('name') }}"/>
+                <input type="text" id="nome" name="name" placeholder="Seu nome" value="{{ old('name') }}" class="register-field"/>
             </div>
             <div class="campo visivelSuave">
                 <label class="labelInput" for="email">E-mail</label>
-                <input type="email" id="email" name="email" placeholder="seuemail@empresa.com" required value="{{ old('email') }}"/>
+                <input type="email" id="email" name="email" placeholder="seuemail@empresa.com" value="{{ old('email') }}"/>
             </div>
             <div class="campo visivelSuave">
                 <label class="labelInput" for="senha">
                     Senha
                     <a href="#" class="linkRecuperarSenha" id="esqueceuSenha">Esqueceu a senha?</a>
                 </label>
-                <input type="password" id="senha" name="password" placeholder="mín. 8 caracteres" required/>
+                <input type="password" id="senha" name="password" placeholder="mín. 8 caracteres"/>
             </div>
             <div class="campo visivelSuave" id="grupoConfirmaSenha">
                 <label class="labelInput" for="confirmaSenha">Confirmar Senha</label>
-                <input type="password" id="confirmaSenha" name="password_confirmation" placeholder="Digite sua senha novamente" required data-register-only="true"/>
+                <input type="password" id="confirmaSenha" name="password_confirmation" placeholder="Digite sua senha novamente" class="register-field"/>
             </div>
             <div class="aceiteTermos" id="grupoTermos">
-                <input type="checkbox" id="termos" required data-register-only="true"/>
+                <input type="checkbox" id="termos" class="register-field"/>
                 <label for="termos">Concordo com os <a href="#">Termos & Privacidade</a></label>
             </div>
 
@@ -81,7 +81,6 @@
 
     <div class="areaIlustracao">
         <div class="area">
-
         </div>
     </div>
 </div>
@@ -102,45 +101,42 @@
 
     let modoCadastro = true;
 
+    // Hide register-only fields initially
+    document.querySelectorAll('.register-field').forEach(field => {
+        field.required = modoCadastro;
+    });
+
     function alternarModo(e) {
         e.preventDefault();
         modoCadastro = !modoCadastro;
 
         [formTitulo, formDescricao, formulario].forEach(el => el.classList.add('fadeOut'));
 
-        // Get all inputs that are register-only
-        const registerOnlyInputs = document.querySelectorAll('[data-register-only="true"]');
-
         setTimeout(() => {
             if (modoCadastro) {
                 formTitulo.textContent = 'Comece Agora';
                 formDescricao.textContent = 'Crie sua conta e comece a renovar seu guarda-roupa com nossos produtos.';
                 rodapeTexto.innerHTML = 'Já tem uma conta? <span id="alternarFormulario">Entrar</span>';
-                grupoNome.classList.remove('ocultoSuave');
-                grupoNome.classList.add('visivelSuave');
-                grupoConfirmaSenha.classList.remove('ocultoSuave');
-                grupoConfirmaSenha.classList.add('visivelSuave');
-                grupoTermos.classList.remove('ocultoSuave');
-                grupoTermos.classList.add('visivelSuave');
+                grupoNome.style.display = 'block';
+                grupoConfirmaSenha.style.display = 'block';
+                grupoTermos.style.display = 'block';
                 esqueceuSenha.style.display = 'none';
                 botaoPrincipal.textContent = 'Cadastrar';
-                // Make register-only fields required
-                registerOnlyInputs.forEach(input => input.required = true);
             } else {
                 formTitulo.textContent = 'Bem-vindo de volta';
                 formDescricao.textContent = 'Acesse sua conta para acompanhar pedidos e aproveitar nossas ofertas exclusivas.';
                 rodapeTexto.innerHTML = 'Novo por aqui? <span id="alternarFormulario">Criar conta</span>';
-                grupoNome.classList.remove('visivelSuave');
-                grupoNome.classList.add('ocultoSuave');
-                grupoConfirmaSenha.classList.remove('visivelSuave');
-                grupoConfirmaSenha.classList.add('ocultoSuave');
-                grupoTermos.classList.remove('visivelSuave');
-                grupoTermos.classList.add('ocultoSuave');
+                grupoNome.style.display = 'none';
+                grupoConfirmaSenha.style.display = 'none';
+                grupoTermos.style.display = 'none';
                 esqueceuSenha.style.display = 'inline';
                 botaoPrincipal.textContent = 'Entrar';
-                // Remove required from register-only fields
-                registerOnlyInputs.forEach(input => input.required = false);
             }
+
+            // Toggle required attribute for register-only fields
+            document.querySelectorAll('.register-field').forEach(field => {
+                field.required = modoCadastro;
+            });
 
             [formTitulo, formDescricao, formulario].forEach(el => {
                 el.classList.remove('fadeOut');
@@ -159,24 +155,27 @@
         
         const formData = {
             email: document.getElementById('email').value,
-            password: document.getElementById('senha').value
+            password: document.getElementById('senha').value,
+            _token: token
         };
 
         if (modoCadastro) {
             formData.name = document.getElementById('nome').value;
             formData.password_confirmation = document.getElementById('confirmaSenha').value;
 
-            // Validate if passwords match
+            if (!document.getElementById('termos').checked) {
+                alert('Por favor, aceite os termos e condições para continuar.');
+                return;
+            }
+
             if (formData.password !== formData.password_confirmation) {
                 alert('As senhas não coincidem. Por favor, verifique.');
                 return;
             }
         }
 
-        const url = modoCadastro ? '{{ route("auth.register") }}' : '{{ route("auth.login") }}';
-
         try {
-            const response = await fetch(url, {
+            const response = await fetch(modoCadastro ? '{{ route("register.submit") }}' : '{{ route("login.submit") }}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -185,13 +184,14 @@
                 body: JSON.stringify(formData)
             });
 
-            const data = await response.json();
+            if (response.redirected) {
+                window.location.href = response.url;
+                return;
+            }
 
+            const data = await response.json();
+            
             if (data.success) {
-                // Save JWT token in localStorage
-                if (data.token) {
-                    localStorage.setItem('jwt_token', data.token);
-                }
                 window.location.href = '/';
             } else {
                 alert(data.message || (modoCadastro ? 'Erro ao criar conta.' : 'Erro ao fazer login. Verifique suas credenciais.'));

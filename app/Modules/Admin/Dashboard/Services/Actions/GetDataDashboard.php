@@ -22,7 +22,7 @@ class GetDataDashboard
                 $query->whereNotNull('paid_at');
                 $query->where('status', OrderPaymentStatus::PAID->value);
             })
-            ->whereNotIn('status', [OrderStatus::PENDING, OrderStatus::CANCELLED, OrderStatus::REFUNDED])
+            ->whereNotIn('status', [OrderStatus::NEW->value, OrderStatus::CANCELLED->value, OrderStatus::REFUNDED->value])
             ->where('created_at', '>=', Carbon::now()->startOfMonth())
             ->get();
 

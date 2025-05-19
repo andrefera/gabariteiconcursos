@@ -4,14 +4,13 @@ namespace App\Modules\Store\Carts\Services;
 
 use App\Models\Cart;
 use App\Models\Enums\CartStatus;
-use App\Modules\Store\Carts\DTO\CartDTO;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
 class CartService
 {
-    public function getCart(): ?CartDTO
+    public function getCart(): ?Cart
     {
         $token = Session::get('sessionToken');
         if (!$token) {
@@ -19,27 +18,29 @@ class CartService
         }
 
         $cart = Cart::where('token', $token)
-            ->where('status', 'active')
+            ->where('status', CartStatus::OPEN->value)
             ->first();
 
-        return $cart ? CartDTO::fromCart($cart) : null;
+        return $cart;
     }
 
     public function getOrCreateCart(): Cart
     {
         $cart = $this->getCart();
-        
+
         if (!$cart) {
             $token = Session::get('sessionToken') ?: Str::uuid();
-            Session::put('sessionToken', $token);
-            
+
             $cart = Cart::create([
                 'token' => $token,
                 'status' => CartStatus::OPEN->value,
                 'user_id' => Auth::id()
             ]);
+
+            Session::put('sessionToken', $token);
+            Session::put('cart', $cart);
         }
-        
+
         return $cart;
     }
 
@@ -47,4 +48,4 @@ class CartService
     {
         $cart->items()->delete();
     }
-} 
+}

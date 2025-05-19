@@ -13,9 +13,9 @@ use App\Modules\Store\MercadoPago\Services\Actions\Pay;
 use App\Modules\Store\Orders\DTO\PaymentResponseDTO;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Session;
 
 readonly class StoreOrder
@@ -48,22 +48,29 @@ readonly class StoreOrder
             return new PaymentResponseDTO('Carrinho não encontrado.', false);
         }
 
-        $redisKey = "pending_order_{$cart->user->id}";
+        $cacheKey = "pending_order_{$cart->user->id}";
 
         DB::beginTransaction();
 
         try {
             $cart->refresh();
 
-            $pendingId = Redis::get($redisKey);
+            $pendingId = Cache::get($cacheKey);
+            
+            // Validate cart items stock
+            foreach ($cart->items as $item) {
+                if (!$item->product->checkStock($item->quantity)) {
+                    throw new Exception("Produto {$item->product->name} não possui estoque suficiente.");
+                }
+            }
 
-            $coupon = Coupon::query()->where('code', trim($this->coupon))->first();
+            $coupon = $this->coupon ? Coupon::query()->where('code', trim($this->coupon))->first() : null;
             $order = $pendingId ? Order::find($pendingId) : new Order();
 
             $order->fill([
                 'user_id' => $cart->user->id,
                 'cart_id' => $cart->id,
-                'status' => OrderStatus::WAITING_PAYMENT->value,
+                'status' => OrderStatus::NEW->value,
                 'method' => $this->method,
                 'total_price' => $this->totalPrice,
                 'final_price' => $this->installmentPrice * $this->installments,
@@ -77,8 +84,7 @@ readonly class StoreOrder
                 'shipping_days' => $cart->shipping->days,
                 'remote_ip' => $this->ip,
                 'user_agent' => substr($this->userAgent, 0, 510),
-            ]);
-            $order->save();
+            ])->save();
 
             foreach ($cart->items as $cartItem) {
                 $orderItem = OrderItem::query()
@@ -142,14 +148,14 @@ readonly class StoreOrder
         $order->save();
 
         if ($invalid) {
-            Redis::set($redisKey, $order->id, 'EX', 3600);
+            Cache::put($cacheKey, $order->id, 3600);
             return new PaymentResponseDTO($response->message, false);
         }
 
         if ($response->success) {
-            Redis::set($redisKey, null);
+            Cache::forget($cacheKey);
         } else {
-            Redis::set($redisKey, $order->id, 'EX', 3600);
+            Cache::put($cacheKey, $order->id, 3600);
         }
 
         $cart->close();

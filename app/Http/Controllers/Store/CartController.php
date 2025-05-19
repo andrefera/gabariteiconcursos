@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CartItem;
 use App\Modules\Store\CartItems\DTO\CartItemDTO;
 use App\Modules\Store\CartItems\Services\CartItemService;
+use App\Modules\Store\Carts\DTO\CartDTO;
 use App\Modules\Store\Carts\Services\CartService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -21,7 +22,7 @@ class CartController extends Controller
     public function index(): View
     {
         $cart = $this->cartService->getCart();
-        return view('cart.index', ['cart' => $cart]);
+        return view('cart.index', ['cart' => $cart ? CartDTO::fromCart($cart) : null]);
     }
 
     public function addItem(Request $request): JsonResponse
