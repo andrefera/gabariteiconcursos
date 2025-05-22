@@ -30,8 +30,9 @@ Route::middleware('web')->group(function () {
         
         Route::prefix('checkout')->middleware(CheckUserProfile::class)->group(function () {
             Route::get('/endereco', [CheckoutController::class, 'index'])->name('checkout.index');
-            Route::post('/calculate-shipping', [CheckoutController::class, 'calculateShipping'])->name('checkout.calculate-shipping');
+            Route::get('/calculate-shipping/{address}', [CheckoutController::class, 'calculateShipping'])->name('checkout.calculate-shipping');
             Route::delete('/address', [CheckoutController::class, 'deleteAddress'])->name('checkout.delete-address');
+            Route::post('/save-shipping', [CheckoutController::class, 'saveShipping'])->name('checkout.save-shipping');
             Route::get('/pagamento', [CheckoutController::class, 'payment'])->name('checkout.payment');
             Route::post('pay', [CheckoutController::class, 'pay'])->name('checkout.pay');
         });

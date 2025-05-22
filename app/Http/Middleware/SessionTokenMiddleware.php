@@ -32,7 +32,7 @@ class SessionTokenMiddleware
                     if ($user->id !== $cart->user_id) {
                         Log::info("Change session token {$user->id} !== {$cart->user_id}");
                         $cartToken = Str::uuid();
-                        Cart::cloneCart($user->id, $cartToken);
+                        $cart = Cart::cloneCart($cart, $user->id, $cartToken);
                     }
                 }
             }

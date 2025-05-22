@@ -30,21 +30,6 @@
             </div>
         @endif
 
-        <div class="botoesSociais">
-            <a href="{{ route('auth.google') }}" class="botaoSocial google">
-                <img src="{{ asset('images/google.png') }}" width="20" height="20" alt="Google Logo">
-                Entrar com Google
-            </a>
-            <a href="{{ route('auth.facebook') }}" class="botaoSocial facebook">
-                <img src="{{ asset('images/facebook.png') }}" width="20" height="20" alt="Facebook Logo">
-                Entrar com Facebook
-            </a>
-        </div>
-
-        <div class="linhaSeparadora">
-            <span class="textoSeparador">ou</span>
-        </div>
-
         <form class="formularioCadastro" id="formulario" method="POST">
             @csrf
             <div class="campo visivelSuave" id="grupoNome">

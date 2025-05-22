@@ -18,9 +18,7 @@ readonly class CartDTO
         public ?float $discount,
         public float  $shipping,
         public array  $installments,
-    )
-    {
-    }
+    ) {}
 
     public static function fromCart(Cart $cart): self
     {
@@ -28,7 +26,7 @@ readonly class CartDTO
         $totalProducts = $products->sum('quantity');
         $price = $products->sum('price');
         $specialPrice = $products->sum('specialPrice');
-        $shipping = $cart->shipping?->price ?? 0;
+        $shipping = $cart->shipping()?->price ?? 0;
         $finalPrice = $specialPrice + $shipping;
 
         $maxInstallments = self::getInstallmentValue($specialPrice + $shipping);

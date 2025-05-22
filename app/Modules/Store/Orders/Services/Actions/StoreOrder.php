@@ -53,16 +53,17 @@ readonly class StoreOrder
         DB::beginTransaction();
 
         try {
-            $cart->refresh();
 
+            $cart->refresh();
+            
             $pendingId = Cache::get($cacheKey);
             
             // Validate cart items stock
-            foreach ($cart->items as $item) {
-                if (!$item->product->checkStock($item->quantity)) {
-                    throw new Exception("Produto {$item->product->name} não possui estoque suficiente.");
-                }
-            }
+            //foreach ($cart->items as $item) {
+           //     if (!$item->product->checkStock($item->quantity)) {
+           //         throw new Exception("Produto {$item->product->name} não possui estoque suficiente.");
+           //     }
+           // }
 
             $coupon = $this->coupon ? Coupon::query()->where('code', trim($this->coupon))->first() : null;
             $order = $pendingId ? Order::find($pendingId) : new Order();
@@ -78,10 +79,10 @@ readonly class StoreOrder
                 'installments' => $this->installments,
                 'installment_price' => $this->installmentPrice,
                 'coupon_id' => $coupon?->id,
-                'shipping_company' => $cart->shipping->company,
-                'shipping_price' => $cart->shipping->price,
-                'shipping_method' => $cart->shipping->name,
-                'shipping_days' => $cart->shipping->days,
+                'shipping_company' => $cart->shipping()->company,
+                'shipping_price' => $cart->shipping()->price,
+                'shipping_method' => $cart->shipping()->name,
+                'shipping_days' => $cart->shipping()->days,
                 'remote_ip' => $this->ip,
                 'user_agent' => substr($this->userAgent, 0, 510),
             ])->save();
@@ -108,6 +109,7 @@ readonly class StoreOrder
             DB::commit();
         } catch (Exception $exception) {
             Log::error("Erro ao processar pedido: " . $exception->getMessage());
+            Log::error($exception);
             DB::rollBack();
 
             return new PaymentResponseDTO('Erro ao processar pedido: ' . $exception->getMessage(), false);

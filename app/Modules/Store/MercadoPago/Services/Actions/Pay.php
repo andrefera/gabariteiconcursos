@@ -100,10 +100,10 @@ readonly class Pay
                 ];
 
                 $parameters['additional_info']['shipments']['receiver_address'] = [
-                    'street_name' => $this->cart->shipping->address->street,
-                    'street_number' => $this->keepOnlyNumbers($this->cart->shipping->address->number),
-                    'zip_code' => $this->cart->shipping->address->zip_code,
-                    'apartment' => $this->cart->shipping->address->complement,
+                    'street_name' => $this->cart->shipping()->address->street,
+                    'street_number' => $this->keepOnlyNumbers($this->cart->shipping()->address->number),
+                    'zip_code' => $this->cart->shipping()->address->zip_code,
+                    'apartment' => $this->cart->shipping()->address->complement,
                     'floor' => null,
                 ];
             }
@@ -112,6 +112,7 @@ readonly class Pay
 
             Log::info(json_encode($parameters, JSON_PRETTY_PRINT));
             $payment = $this->paymentClient->create($parameters);
+            Log::info(json_encode($payment, JSON_PRETTY_PRINT));
 
             Log::info("--------------------------");
 

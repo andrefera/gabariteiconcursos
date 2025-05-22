@@ -741,7 +741,7 @@ document.addEventListener('DOMContentLoaded', function() {
         shippingMethodsList.innerHTML = '<div class="loading-shipping">Calculando frete...</div>';
         
         try {
-            const response = await fetch('/api/addresses/' + addressId + '/shipping', {
+            const response = await fetch('/checkout/calculate-shipping/' + addressId, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -758,11 +758,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             shippingMethodsList.innerHTML = shippingOptions.map(option => `
-                <div class="shipping-method" data-price="${option.price}">
-                    <input type="radio" name="shipping_method" value="${option.service}">
+                <div class="shipping-method" 
+                     data-price="${option.price}"
+                     data-days="${option.days}"
+                     data-company="${option.company}">
+                    <input type="radio" name="shipping_method" value="${option.name}">
                     <div class="shipping-method-info">
-                        <div>${option.service}</div>
-                        <div>Prazo de entrega: ${option.deadline}</div>
+                        <div>${option.company} - ${option.name}</div>
+                        <div>Prazo de entrega: ${option.days}</div>
                     </div>
                     <div class="shipping-method-price">
                         R$ ${(option.price).toFixed(2).replace('.', ',')}
@@ -1036,6 +1039,62 @@ document.addEventListener('DOMContentLoaded', function() {
             updateContinueButton();
         }
     });
+
+    // Adiciona o evento de clique no botão de continuar
+    document.querySelector('.btn-complete-order').addEventListener('click', async function() {
+        const addressId = document.querySelector('input[name="shipping_address"]:checked').value;
+        const shippingMethod = document.querySelector('input[name="shipping_method"]:checked');
+        const shippingMethodContainer = shippingMethod.closest('.shipping-method');
+        
+        if (!addressId || !shippingMethod) {
+            showToast('Selecione um endereço e método de envio', true);
+            return;
+        }
+
+        showLoading();
+
+        try {
+            const response = await fetch('/checkout/save-shipping', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    address_id: addressId,
+                    shipping_method: shippingMethod.value,
+                    shipping_price: parseFloat(shippingMethodContainer.dataset.price),
+                    shipping_days: parseInt(shippingMethodContainer.dataset.days),
+                    shipping_company: shippingMethodContainer.dataset.company
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                window.location.href = '/checkout/pagamento';
+            } else {
+                showToast(data.message || 'Erro ao salvar informações de envio', true);
+            }
+        } catch (error) {
+            console.error('Erro:', error);
+            showToast('Erro ao processar sua solicitação', true);
+        } finally {
+            hideLoading();
+        }
+    });
+
+    function showToast(message, isError = false) {
+        Toastify({
+            text: message,
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "right",
+            backgroundColor: isError ? "#dc3545" : "#28a745",
+        }).showToast();
+    }
 });
 </script>
 @endsection 

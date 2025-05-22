@@ -43,10 +43,10 @@ class AuthController extends Controller
 
         try {
             $credentials = $request->only('email', 'password');
-            
+
             if (Auth::attempt($credentials)) {
                 $request->session()->regenerate();
-                
+
                 // If the user was trying to access a protected page, redirect them there
                 return redirect()->intended('/');
             }
@@ -84,7 +84,7 @@ class AuthController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'required|string|min:6|confirmed',
         ]);
 
         $user = User::create([
@@ -94,6 +94,7 @@ class AuthController extends Controller
         ]);
 
         Auth::login($user);
+        $request->session()->regenerate();
 
         return redirect('/');
     }
@@ -191,7 +192,6 @@ class AuthController extends Controller
                 Auth::login($user);
                 return redirect('/');
             }
-
         } catch (Exception $e) {
             Log::error('Google login error: ' . $e->getMessage());
             if (request()->is('api/*')) {
@@ -241,7 +241,6 @@ class AuthController extends Controller
                 Auth::login($user);
                 return redirect('/');
             }
-
         } catch (Exception $e) {
             Log::error('Facebook login error: ' . $e->getMessage());
             if (request()->is('api/*')) {
