@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Modules\Admin\Category\DTO\EditCategoryDTO;
 use App\Modules\Admin\Category\Services\Actions\CreateOrUpdateCategory;
+use App\Modules\Admin\Orders\Services\Actions\MercadoPagoWebhookHandlerAction;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Modules\Admin\Orders\Services\Actions\ListOrders;
 use Exception;
