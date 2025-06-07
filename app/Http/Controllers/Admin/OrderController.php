@@ -12,6 +12,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -51,6 +52,19 @@ class OrderController extends Controller
     {
         $pdf = Pdf::loadView(self::BASE_VIEW . '.shipping_label')->setPaper('a4');
         return $pdf->download('etiquetas.pdf');
+    }
+
+    public function webhookMercadoPago(Request $request): JsonResponse
+    {
+        Log::info("------Mercado Pago Webhook------");
+        Log::info(json_encode($request->all(), JSON_PRETTY_PRINT));
+        $params = $request->all();
+        if(isset($params['type']) && isset($params['data']['id'])) {
+            (new MercadoPagoWebhookHandlerAction($params['type'], $params['data']['id']))->execute();
+        }
+        Log::info("--------------------------------");
+
+        return response()->json(['ok']);
     }
 
 }

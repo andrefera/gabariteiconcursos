@@ -54,3 +54,7 @@ Route::prefix('admin')->group(function () {
         });
     });
 });
+
+Route::prefix('mercadopago')->group(function () {
+    Route::post('/webhook', [OrderController::class, 'webhookMercadoPago']);
+});

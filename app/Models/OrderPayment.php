@@ -24,6 +24,7 @@ class OrderPayment extends Model
         'amount',
         'card_hash',
         'payment_data',
+        'transaction_id',
     ];
 
     protected $casts = [

@@ -17,6 +17,7 @@ enum OrderStatus: string
     public static function toPortuguese(string $type): string
     {
         return match ($type) {
+            self::NEW->value => 'Novo',
             self::WAITING_PAYMENT->value => 'Aguardando Pagamento',
             self::PAID->value => 'Pago',
             self::IN_SEPARATION->value => 'Em Separação',

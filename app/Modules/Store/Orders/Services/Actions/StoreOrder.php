@@ -137,13 +137,12 @@ readonly class StoreOrder
             'installment_value' => $this->installmentPrice,
             'amount' => $this->finalPrice,
             'card_hash' => $this->cardHash,
-            'payment_data' => json_encode($response)
+            'payment_data' => json_encode($response),
+            'transaction_id' => $response->id
         ]);
         $orderPayment->save();
 
-        $invalid = $response->status === PaymentStatus::REFUSED->value
-            || $response->status === PaymentStatus::CHARGEDBACK->value || $response->status === PaymentStatus::REJECTED->value
-            || $response->status === PaymentStatus::ERROR_INFRASTRUCTURE->value;
+        $invalid = !in_array($response->status, [PaymentStatus::PAID->value, PaymentStatus::WAITING_PAYMENT->value]);
 
         $order->refresh();
         $order->changeStatus($response->status);

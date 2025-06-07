@@ -1,8 +1,14 @@
 @extends('layouts.app')
 @section('title', 'Ellon Sports | Pagamento')
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<!-- Toastify -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
 @section('content')
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -36,7 +42,8 @@
             }
         }
 
-        .left, .right {
+        .left,
+        .right {
             max-width: 600px;
             width: 100%;
         }
@@ -79,7 +86,8 @@
             color: #777;
         }
 
-        .discount, .recommended {
+        .discount,
+        .recommended {
             background: #f8f8f8;
             padding: 1rem;
             border-radius: 8px;
@@ -128,7 +136,8 @@
             color: #a40000;
         }
 
-        input[type="text"], select {
+        input[type="text"],
+        select {
             width: 100%;
             padding: 0.6rem;
             margin-bottom: 1rem;
@@ -187,14 +196,46 @@
         .cpf-field {
             text-align: center;
         }
+
+        /* Estilo para os toasts */
+        .toastify {
+            padding: 12px 20px;
+            color: #fff;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .toastify.success {
+            background: #28a745;
+        }
+
+        .toastify.error {
+            background: #dc3545;
+        }
+
+        /* Error Toast */
+        .error-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #ff4444;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 10000;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
     </style>
 </head>
+
 <body>
-<div class="container">
-    <div class="left">
-        <h2>Resumo do Pedido <small>({{$cart->totalProducts}} itens)</small></h2>
-        <div class="products">
-            @foreach($cart->products as $product)
+    <div class="container">
+        <div class="left">
+            <h2>Resumo do Pedido <small>({{$cart->totalProducts}} itens)</small></h2>
+            <div class="products">
+                @foreach($cart->products as $product)
                 <div class="card product">
                     <img src={{$product->imageUrl ?? ''}} alt={{$product->name}}>
                     <div class="details">
@@ -203,106 +244,115 @@
                     </div>
                     <div><strong>{{$product->priceLabel}}</strong></div>
                 </div>
-            @endforeach
-        </div>
-        <div class="totals">
-            <div><span>Subtotal</span><span>{{\App\Support\Util\NumberUtil::formatPrice($cart->subTotal)}}</span></div>
-        </div>
-
-        <div class="recommended">
-            <div class="add-to-cart">
-                <img
-                    src="https://promantos.com.br/cdn/shop/files/camisa-camiseta-blusa-do-botafogo-fogao-reebook-nova-lancamento-da-temporada-ano-2024_25-24_25-i-1-titular-principal-primeira-home-listrada-alvinegra-preta-e-branco-masculina-versao-m_544fe31a-d863-470a-91ed-3d06b62b6b3b_700x.jpg?v=1719517896&quot;"
-                    alt="Headset">
-                <div>
-                    <strong>Camisa Torcedor São Paulo Treino 2025/26 - Masculina</strong><br>
-                    <del>R$599,99</del>
-                    <strong style="color: red;">R$320,99</strong><br>
-                </div>
+                @endforeach
             </div>
-            <button class="btn" style="margin-top: 0.5rem;">Compre Junto</button>
-        </div>
-    </div>
-
-    <div class="right">
-        <h2>Pagamento</h2>
-
-        <form id="paymentForm">
-            <div class="payment-options">
-                <button type="button" data-method="credit_card">Cartão de Crédito</button>
-                <button type="button" data-method="pix">Pix</button>
-                <button type="button" data-method="ticket">Boleto</button>
+            <div class="totals">
+                <div><span>Subtotal</span><span>{{\App\Support\Util\NumberUtil::formatPrice($cart->subTotal)}}</span></div>
             </div>
 
-            <input id="paymentMethod" type="hidden" value="credit_card">
-            <div class="card-fields" id="card-fields">
-                <div class="credit-card">
-                    <input type="text" id="cardNumber" placeholder="Número do Cartão"
-                           data-msg="Digite um número de cartão válido">
-
-                    <div class="payment-methods" id="card-icons">
-                        <img src="{{ asset('images/icons/visa.svg') }}" alt="Visa" width="60" height="50">
-                        <img src="{{ asset('images/icons/mastercard.svg') }}" alt="Mastercard" width="60" height="50">
+            <div class="recommended">
+                <div class="add-to-cart">
+                    <img
+                        src="https://promantos.com.br/cdn/shop/files/camisa-camiseta-blusa-do-botafogo-fogao-reebook-nova-lancamento-da-temporada-ano-2024_25-24_25-i-1-titular-principal-primeira-home-listrada-alvinegra-preta-e-branco-masculina-versao-m_544fe31a-d863-470a-91ed-3d06b62b6b3b_700x.jpg?v=1719517896&quot;"
+                        alt="Headset">
+                    <div>
+                        <strong>Camisa Torcedor São Paulo Treino 2025/26 - Masculina</strong><br>
+                        <del>R$599,99</del>
+                        <strong style="color: red;">R$320,99</strong><br>
                     </div>
                 </div>
-                <input type="text" id="cardExpiration" placeholder="MM/AA" data-msg="Informe a validade do cartão">
-                <input type="text" id="cardCVV" placeholder="CVV" data-msg="Digite o CVV (3 ou 4 dígitos)">
-                <input type="text" id="cardHolderName" placeholder="Nome no Cartão"
-                       data-msg="Digite o nome impresso no cartão">
-                <input type="text" id="docNumber" placeholder="CPF" data-msg="Digite um CPF válido">
-                <select id="installments" data-msg="Escolha o número de parcelas">
-                    <option value="" disabled>Selecione</option>
-                    @foreach($cart->installments as $installment => $value)
+                <button class="btn" style="margin-top: 0.5rem;">Compre Junto</button>
+            </div>
+        </div>
+
+        <div class="right">
+            <h2>Pagamento</h2>
+
+            <form id="paymentForm">
+                <div class="payment-options">
+                    <button type="button" data-method="credit_card">Cartão de Crédito</button>
+                    <button type="button" data-method="pix">Pix</button>
+                    <button type="button" data-method="ticket">Boleto</button>
+                </div>
+
+                <input id="paymentMethod" type="hidden" value="credit_card">
+                <div class="card-fields" id="card-fields">
+                    <div class="credit-card">
+                        <input type="text" id="cardNumber" placeholder="Número do Cartão"
+                            data-msg="Digite um número de cartão válido">
+
+                        <div class="payment-methods" id="card-icons">
+                            <img src="{{ asset('images/icons/visa.svg') }}" alt="Visa" width="60" height="50">
+                            <img src="{{ asset('images/icons/mastercard.svg') }}" alt="Mastercard" width="60" height="50">
+                        </div>
+                    </div>
+                    <input type="text" id="cardExpiration" placeholder="MM/AA" data-msg="Informe a validade do cartão">
+                    <input type="text" id="cardCVV" placeholder="CVV" data-msg="Digite o CVV (3 ou 4 dígitos)">
+                    <input type="text" id="cardHolderName" placeholder="Nome no Cartão"
+                        data-msg="Digite o nome impresso no cartão">
+                    <input type="text" id="docNumber" placeholder="CPF" data-msg="Digite um CPF válido">
+                    <select id="installments" data-msg="Escolha o número de parcelas">
+                        <option value="" disabled>Selecione</option>
+                        @foreach($cart->installments as $installment => $value)
                         <option value={{$installment}} {{$installment === 1 ? "selected": ""}}>{{$installment}}x
                             de {{\App\Support\Util\NumberUtil::formatPrice($value)}} {{$installment < 5 ? "Sem juros": ("(" . \App\Support\Util\NumberUtil::formatPrice($value * $installment) . ")")}}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div id="pixFields" class="cpf-field" style="display: none;">
-                <p><strong>Após a compra, um QR Code será gerado para pagamento via PIX.</strong></p>
-            </div>
-
-            <div id="ticketFields" class="cpf-field" style="display: none;">
-                <p><strong>Após a compra, um boleto será gerado para pagamento.</strong></p>
-            </div>
-
-            <div id="cpf-field" style="display: none;">
-                <input type="text" placeholder="CPF" id="cpf">
-            </div>
-
-            <div class="discount">
-                <strong>Cupom</strong>
-                <div class="couponLabel">
-                    <input type="text">
-                    <button id="applyCoupon" type="button">Aplicar</button>
+                        @endforeach
+                    </select>
                 </div>
-            </div>
 
-            <div class="totals">
-                <div><span>Produtos</span><span>{{\App\Support\Util\NumberUtil::formatPrice($cart->total)}}</span></div>
-                @if($cart->discount)
+                <div id="pixFields" class="cpf-field" style="display: none;">
+                    <p><strong>Após a compra, um QR Code será gerado para pagamento via PIX.</strong></p>
+                </div>
+
+                <div id="ticketFields" class="cpf-field" style="display: none;">
+                    <p><strong>Após a compra, um boleto será gerado para pagamento.</strong></p>
+                </div>
+
+                <div id="cpf-field" style="display: none;">
+                    <input type="text" placeholder="CPF" id="cpf">
+                </div>
+
+                <div class="discount">
+                    <strong>Cupom</strong>
+                    <div class="couponLabel">
+                        <input type="text">
+                        <button id="applyCoupon" type="button">Aplicar</button>
+                    </div>
+                </div>
+
+                <div class="totals">
+                    <div><span>Produtos</span><span>{{\App\Support\Util\NumberUtil::formatPrice($cart->total)}}</span></div>
+                    @if($cart->discount)
                     <div><span>Descontos</span><span
                             class="discount-span">- {{\App\Support\Util\NumberUtil::formatPrice($cart->discount)}}</span>
                     </div>
-                @endif
-                <div><span>SubTotal</span><span>{{\App\Support\Util\NumberUtil::formatPrice($cart->subTotal)}}</span>
+                    @endif
+                    <div><span>SubTotal</span><span>{{\App\Support\Util\NumberUtil::formatPrice($cart->subTotal)}}</span>
+                    </div>
+                    <div><span>Frete</span><span>{{\App\Support\Util\NumberUtil::formatPrice($cart->shipping)}}</span></div>
+                    <div>
+                        <strong>Total</strong><strong>{{\App\Support\Util\NumberUtil::formatPrice($cart->finalPrice)}}</strong>
+                    </div>
                 </div>
-                <div><span>Frete</span><span>{{\App\Support\Util\NumberUtil::formatPrice($cart->shipping)}}</span></div>
-                <div>
-                    <strong>Total</strong><strong>{{\App\Support\Util\NumberUtil::formatPrice($cart->finalPrice)}}</strong>
-                </div>
-            </div>
 
-            <button class="btn" id="submitPayment" type="button">Finalizar Pedido</button>
-        </form>
+                <button class="btn" id="submitPayment" type="button">Finalizar Pedido</button>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<div id="error-toast" class="error-toast" style="display: none;">
+    <div class="error-content">
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="error-message"></span>
     </div>
 </div>
-</body>
-</html>
 
 <script src="https://sdk.mercadopago.com/js/v2"></script>
 <script src="https://unpkg.com/imask"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
 <script>
     IMask(document.getElementById('cardNumber'), {
@@ -325,8 +375,7 @@
                 maxLength: 2
             }
         }
-    });
-    ;
+    });;
 
     IMask(document.getElementById('cardCVV'), {
         mask: '0000'
@@ -390,7 +439,9 @@
     });
 
 
-    const mp = new MercadoPago("TEST-0de9a30b-3ac2-408d-b2bf-7c50fba3625f", {locale: "pt-BR"});
+    const mp = new MercadoPago("TEST-0de9a30b-3ac2-408d-b2bf-7c50fba3625f", {
+        locale: "pt-BR"
+    });
 
     function isValidCPF(cpf) {
         cpf = cpf.replace(/[^\d]+/g, '');
@@ -421,7 +472,18 @@
         return /^\d{4}$/.test(cardExpiration.replaceAll('/', ''));
     }
 
-    document.getElementById("submitPayment").onclick = async function (e) {
+    function showToast(message, isError = false) {
+        Toastify({
+            text: message,
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "right",
+            backgroundColor: isError ? "#dc3545" : "#28a745",
+        }).showToast();
+    }
+
+    document.getElementById("submitPayment").onclick = async function(e) {
         let paymentMethod = document.getElementById("paymentMethod").value;
         let cardNumber = document.getElementById('cardNumber');
         let cardExpiration = document.getElementById('cardExpiration');
@@ -497,7 +559,9 @@
 
                 const bin = cardNumber.value.replace(/\D/g, '').substring(0, 6);
 
-                const paymentMethods = await mp.getPaymentMethods({bin});
+                const paymentMethods = await mp.getPaymentMethods({
+                    bin
+                });
 
                 if (paymentMethods && paymentMethods.results.length > 0) {
                     paymentData.payment_method_id = paymentMethods.results[0].id;
@@ -511,42 +575,50 @@
         }
 
         fetch("/checkout/pay", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify(paymentData)
-        })
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify(paymentData)
+            })
             .then(response => response.json())
             .then(data => {
+                if (data.success === false) {
+                    showToast(data.message || 'Erro ao processar pagamento.', true);
+                    return;
+                }
+                if (data.success === true && data.orderId) {
+                    window.location.href = `/checkout/pagamento-confirmado/${data.orderId}`;
+                    return;
+                }
                 document.getElementById("paymentResponse").innerHTML = `<p>${data.message}</p>`;
-
-                if (data.qr_code) {
-                    document.getElementById("paymentResponse").innerHTML += `<img src="data:image/png;base64,${data.qr_code}" alt="QR Code PIX">`;
-                }
-
-                if (data.boleto_url) {
-                    document.getElementById("paymentResponse").innerHTML += `<a href="${data.boleto_url}" target="_blank">Baixar Boleto</a>`;
-                }
             })
-            .catch(error => console.error(error));
+            .catch(error => {
+                showToast('Erro inesperado ao processar pagamento.', true);
+                console.error(error);
+            });
 
         async function createCardToken() {
             return new Promise((resolve, reject) => {
+                console.log({
+                    cardNumber: cardNumber.value.replace(/\D/g, ''),
+                    cardholderName: cardHolderName.value,
+                    securityCode: cvv.value.trim(),
+                    cardExpirationMonth: cardExpiration.value.split("/")[0],
+                    cardExpirationYear: `20${cardExpiration.value.split("/")[1]}`,
+                    identificationType: 'CPF',
+                    identificationNumber: carDocNumber.value.replaceAll('.', '').replaceAll('-', ''),
+                });
                 mp.createCardToken({
                     cardNumber: cardNumber.value.replace(/\D/g, ''),
+                    cardholderName: cardHolderName.value,
                     securityCode: cvv.value.trim(),
-                    expirationMonth: cardExpiration.value.split("/")[0],
-                    expirationYear: `20${cardExpiration.value.split("/")[1]}`,
-                    cardholder: {
-                        name: cardHolderName.value,
-                        identification: {
-                            type: 'CPF',
-                            number: carDocNumber.value.replaceAll('.', '').replaceAll('-', ''),
-                        },
-                    },
+                    cardExpirationMonth: cardExpiration.value.split("/")[0],
+                    cardExpirationYear: `20${cardExpiration.value.split("/")[1]}`,
+                    identificationType: 'CPF',
+                    identificationNumber: carDocNumber.value.replaceAll('.', '').replaceAll('-', ''),
                 }).then(response => {
                     resolve(response.id);
                 }).catch(error => {
@@ -556,7 +628,5 @@
         }
 
     };
-
-
 </script>
 @endsection

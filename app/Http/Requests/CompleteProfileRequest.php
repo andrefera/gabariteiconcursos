@@ -17,7 +17,7 @@ class CompleteProfileRequest extends FormRequest
     public function rules()
     {
         return [
-            'document' => ['required', new ValidCpf],
+            'document' => 'required',
             'phone' => ['required', new ValidPhone],
             'billing_address.street' => 'required|string|min:3',
             'billing_address.number' => 'required|string',

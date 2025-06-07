@@ -19,21 +19,19 @@ class SessionTokenMiddleware
 
         $cart = Cart::query()->where('token', $cartToken)->first();
 
-        if($cart && $cart->status !== CartStatus::OPEN->value) {
+        if ($cart && $cart->status !== CartStatus::OPEN->value) {
             Log::info("Change session token {$cart->id} {$cart->status}");
             $cartToken = Str::uuid();
             $cart = null;
         } else {
             // Check if cart belongs to a user and if we're authenticated
-            if ($cart && $cart->user) {
-                $user = Auth::user();
-                if ($user) {
-                    // If the cart belongs to a different user, create a new cart
-                    if ($user->id !== $cart->user_id) {
-                        Log::info("Change session token {$user->id} !== {$cart->user_id}");
-                        $cartToken = Str::uuid();
-                        $cart = Cart::cloneCart($cart, $user->id, $cartToken);
-                    }
+            $user = Auth::user();
+            if ($user && $cart) {
+                // If the cart belongs to a different user, create a new cart
+                if ($user->id !== $cart->user_id) {
+                    Log::info("Change session token {$user->id} !== {$cart->user_id}");
+                    $cartToken = Str::uuid();
+                    $cart = Cart::cloneCart($cart, $user->id, $cartToken);
                 }
             }
         }

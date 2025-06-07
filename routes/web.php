@@ -35,6 +35,7 @@ Route::middleware('web')->group(function () {
             Route::post('/save-shipping', [CheckoutController::class, 'saveShipping'])->name('checkout.save-shipping');
             Route::get('/pagamento', [CheckoutController::class, 'payment'])->name('checkout.payment');
             Route::post('pay', [CheckoutController::class, 'pay'])->name('checkout.pay');
+            Route::get('/pagamento-confirmado/{id}', [CheckoutController::class, 'confirmacaoPagamento'])->name('checkout.confirmacao');
         });
     });
 

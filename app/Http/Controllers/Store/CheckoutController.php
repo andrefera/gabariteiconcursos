@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\UserAddress;
 use App\Modules\Store\Carts\DTO\CartDTO;
 use App\Modules\Store\Orders\Services\Actions\StoreOrder;
+use App\Support\Util\ShippingUtil;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
@@ -46,6 +47,7 @@ class CheckoutController extends Controller
         $cart = Session::get('cart');
         
         $cacheKey = "shipping_" . $address->zip_code . "_" . $cart->total;
+        $zipCode = str_replace(['-', '.'], '', $address->zip_code);
 
         try {
             // Preparar os dados para a API do Melhor Envio
@@ -54,7 +56,7 @@ class CheckoutController extends Controller
                     'postal_code' => '37131652' // CEP de origem (seu depósito/loja)
                 ],
                 'to' => [
-                    'postal_code' => str_replace(['-', '.'], '', $address->zip_code)
+                    'postal_code' => $zipCode
                 ],
                 'packages' => [
                     [
@@ -103,29 +105,8 @@ class CheckoutController extends Controller
         } catch (\Exception $e) {
             Log::error('Erro ao calcular frete:', ['error' => $e->getMessage()]);
             
-            // Em caso de erro, retorna opções padrão
-            $fallbackOptions = [
-                [
-                    'name' => 'PAC',
-                    'price' => 8.50,
-                    'days' => 5,
-                    'company' => 'Correios',
-                ],
-                [
-                    'name' => 'SEDEX',
-                    'price' => 12.50,
-                    'days' => 2,
-                    'company' => 'Correios',
-                ],
-                [
-                    'name' => 'Mini Envios',
-                    'price' => 6.50,
-                    'days' => 7,
-                    'company' => 'Correios',
-                ]
-            ];
+            $fallbackOptions = ShippingUtil::getDefaultShipping($zipCode);
 
-            // Cache the fallback rates for 30 minutes
             Cache::put($cacheKey, $fallbackOptions, 1800);
 
             return response()->json($fallbackOptions);
@@ -218,5 +199,49 @@ class CheckoutController extends Controller
     public function pending()
     {
         return view('checkout.pending');
+    }
+
+    public function confirmacaoPagamento($id)
+    {
+        $order = \App\Models\Order::with(['items', 'payments'])->find($id);
+        if (!$order) {
+            return view('checkout.pagamento-confirmado', ['order' => null]);
+        }
+
+        $paymentStatus = $order->status;
+        $paymentStatusLabel = \App\Models\Enums\OrderStatus::toPortuguese($paymentStatus);
+        $payment = $order->payments()->orderByDesc('id')->first();
+        $paymentMethod = $payment->method ?? null;
+        $paymentData = $payment ? json_decode($payment->payment_data ?? '{}', true) : [];
+
+        // PIX
+        $pixQrCode = $paymentData['pixData'] ?? $paymentData['pix_qr_code'] ?? null;
+        $pixCode = $paymentData['pixQrCode'] ?? $paymentData['pix_code'] ?? null;
+        // Boleto
+        $boletoBarcode = $paymentData['ticketBarcode'] ?? $paymentData['boleto_barcode'] ?? null;
+        $boletoUrl = $paymentData['ticketUrl'] ?? $paymentData['boleto_url'] ?? null;
+
+        $orderSummary = [
+            'payment_status' => $paymentStatus,
+            'payment_status_label' => $paymentStatusLabel,
+            'payment_method' => $paymentMethod,
+            'pix_qr_code' => $pixQrCode,
+            'pix_code' => $pixCode,
+            'boleto_barcode' => $boletoBarcode,
+            'boleto_url' => $boletoUrl,
+            'final_price' => $order->final_price,
+            'shipping_price' => $order->shipping_price,
+            'items' => $order->items->map(function($item) {
+                return [
+                    'product_name' => $item->product->name ?? '',
+                    'size' => $item->size,
+                    'quantity' => $item->quantity,
+                    'price_label' => \App\Support\Util\NumberUtil::formatPrice($item->price),
+                ];
+            }),
+            'payment_message' => $paymentData['message'] ?? null,
+        ];
+
+        return view('checkout.pagamento-confirmado', ['order' => (object)$orderSummary]);
     }
 }
