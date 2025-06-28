@@ -27,8 +27,10 @@ class SessionTokenMiddleware
             // Check if cart belongs to a user and if we're authenticated
             $user = Auth::user();
             if ($user && $cart) {
-                // If the cart belongs to a different user, create a new cart
-                if ($user->id !== $cart->user_id) {
+                if (!$cart->user_id) {
+                    $cart->user_id = $user->id;
+                    $cart->save();
+                } elseif ($user->id !== $cart->user_id) {
                     Log::info("Change session token {$user->id} !== {$cart->user_id}");
                     $cartToken = Str::uuid();
                     $cart = Cart::cloneCart($cart, $user->id, $cartToken);
@@ -40,7 +42,7 @@ class SessionTokenMiddleware
         Session::put('cart', $cart);
 
         return tap($next($request), function ($response) use ($cartToken) {
-            $response->headers->setCookie(cookie('session_token', $cartToken, (((int) env('SESSION_TOKEN_DAYS', 7)) * 1440), null, null, true));
+            $response->headers->setCookie(cookie('session_token', $cartToken, (((int)env('SESSION_TOKEN_DAYS', 7)) * 1440), null, null, true));
         });
     }
 }

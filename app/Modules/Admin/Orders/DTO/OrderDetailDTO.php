@@ -5,7 +5,7 @@ namespace App\Modules\Admin\Orders\DTO;
 use App\Models\Enums\OrderStatus;
 use App\Models\Order;
 use App\Models\OrderItem;
-use App\Modules\Admin\Products\DTO\ProductDetailDTO;
+use App\Modules\Admin\OrderItems\DTO\OrderItemDTO;
 use Carbon\Carbon;
 
 readonly class OrderDetailDTO
@@ -17,7 +17,7 @@ readonly class OrderDetailDTO
         public string $email,
         public string $status,
         public string $total,
-        public array  $products,
+        public array  $items,
         public string $created_at,
     )
     {
@@ -25,9 +25,9 @@ readonly class OrderDetailDTO
 
     public static function fromOrder(Order $order): self
     {
-        $products = $order->items()->get()->map(function (OrderItem $orderItem) {
-            return ProductDetailDTO::fromProduct($orderItem->product);
-        })->toArray();
+        $items = $order->items()->get()->map(function (OrderItem $orderItem) {
+            return OrderItemDTO::fromOrderItem($orderItem);
+        })->all();
 
         return new self(
             $order->id,
@@ -36,7 +36,7 @@ readonly class OrderDetailDTO
             $order->user->email,
             OrderStatus::toPortuguese($order->status),
             "R$" . number_format($order->final_price, 2, ',', '.'),
-            $products,
+            $items,
             Carbon::parse($order->created_at)->setTimezone('America/Sao_Paulo')->format('d/m/Y H:i'),
         );
     }

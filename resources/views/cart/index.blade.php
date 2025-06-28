@@ -18,6 +18,7 @@
                     <span class="items">Item(s)</span>
                     <span>Quantidade</span>
                     <span>Valor Unitário</span>
+                    <span>Valor Total</span>
                 </div>
                 @foreach($cart->products as $item)
                 <div class="cart-item-container" data-item-id="{{ $item->id }}">
@@ -39,13 +40,23 @@
                             </div>
                             <button class="remove-text btn_exclude" onclick="removeItem({{ $item->id }})">Excluir Item</button>
                         </div>
+{{--                        <div class="cart-item-value">--}}
+{{--                            <div class="cart-item-content">--}}
+{{--                                @if($item->specialPrice && $item->specialPrice < $item->price)--}}
+{{--                                    <span class="original-price">R$ {{ number_format($item->price, 2, ',', '.') }}</span>--}}
+{{--                                    <span class="special-price">R$ {{ number_format($item->specialPrice, 2, ',', '.') }}</span>--}}
+{{--                                    @else--}}
+{{--                                    <span class="total-price">R$ {{ number_format($item->price, 2, ',', '.') }}</span>--}}
+{{--                                    @endif--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
                         <div class="cart-item-value">
                             <div class="cart-item-content">
                                 @if($item->specialPrice && $item->specialPrice < $item->price)
-                                    <span class="original-price">R$ {{ number_format($item->price, 2, ',', '.') }}</span>
-                                    <span class="special-price">R$ {{ number_format($item->specialPrice, 2, ',', '.') }}</span>
+                                    <span class="original-price">R$ {{ number_format($item->price * $item->quantity, 2, ',', '.') }}</span>
+                                    <span class="special-price">R$ {{ number_format($item->specialPrice * $item->quantity, 2, ',', '.') }}</span>
                                     @else
-                                    <span class="total-price">R$ {{ number_format($item->price, 2, ',', '.') }}</span>
+                                    <span class="total-price">R$ {{ number_format($item->price * $item->quantity, 2, ',', '.') }}</span>
                                     @endif
                             </div>
                         </div>

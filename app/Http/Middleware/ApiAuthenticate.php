@@ -14,15 +14,15 @@ class ApiAuthenticate
     public function handle(Request $request, Closure $next)
     {
         try {
-            $token = $request->header('Authorization');
-            
+            $token = $request->header('Authorization') ?: $request->get('token');
+
             if (!$token) {
                 return response()->json(['error' => 'Token não fornecido'], 401);
             }
 
             $token = str_replace('Bearer ', '', $token);
             JWTAuth::setToken($token);
-            
+
             $user = JWTAuth::authenticate();
             if (!$user) {
                 return response()->json(['error' => 'Usuário não encontrado'], 401);
@@ -38,4 +38,4 @@ class ApiAuthenticate
             return response()->json(['error' => 'Erro na autenticação'], 401);
         }
     }
-} 
+}

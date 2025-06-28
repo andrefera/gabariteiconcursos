@@ -22,13 +22,13 @@ Route::middleware('web')->group(function () {
         Route::get('/minha-conta', function () {
             return view('orders.index');
         });
-        
+
         Route::post('logout', [AuthController::class, 'logoutWeb'])->name('logout');
-        
+
         Route::get('profile/complete', [ProfileController::class, 'complete'])->name('profile.complete');
         Route::post('profile/complete', [ProfileController::class, 'completeStore'])->name('profile.complete.store');
-        
-        Route::prefix('checkout')->middleware(CheckUserProfile::class)->group(function () {
+
+        Route::prefix('checkout')->middleware([CheckUserProfile::class, SessionTokenMiddleware::class])->group(function () {
             Route::get('/endereco', [CheckoutController::class, 'index'])->name('checkout.index');
             Route::get('/calculate-shipping/{address}', [CheckoutController::class, 'calculateShipping'])->name('checkout.calculate-shipping');
             Route::delete('/address', [CheckoutController::class, 'deleteAddress'])->name('checkout.delete-address');
@@ -64,7 +64,7 @@ Route::middleware('web')->group(function () {
     Route::prefix('auth')->group(function () {
         Route::post('change-password', [AuthController::class, 'changePassword'])->middleware('auth');
         Route::get('me', [AuthController::class, 'me']);
-        
+
         // Social Login Routes
         Route::get('google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
         Route::get('google/callback', [AuthController::class, 'handleGoogleCallback']);

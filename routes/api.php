@@ -51,6 +51,7 @@ Route::prefix('admin')->group(function () {
             Route::post('/delete/{order}', [OrderController::class, 'destroy'])->name('order.destroy');
             Route::get('/filter', [OrderController::class, 'filter'])->name('order.filter');
             Route::get('/shipping-labels', [OrderController::class, 'downloadShippingLabels'])->name('order.shipping.labels');
+            Route::post('/update-status', [OrderController::class, 'updateStatus'])->name('order.update.status');
         });
     });
 });

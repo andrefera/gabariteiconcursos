@@ -28,4 +28,13 @@ enum OrderStatus: string
             self::CANCELLED->value => 'Cancelado',
         };
     }
+
+    public static function exist(?string $type): bool
+    {
+        return match ($type) {
+            self::NEW->value, self::WAITING_PAYMENT->value, self::PAID->value, self::IN_SEPARATION->value, self::WAITING_FOR_CARRIER->value,
+            self::IN_TRANSPORT->value, self::DELIVERED->value, self::REFUNDED->value, self::CANCELLED->value => true,
+            default => false,
+        };
+    }
 }

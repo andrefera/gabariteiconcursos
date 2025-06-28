@@ -18,7 +18,7 @@ class GetDataDashboard
     public function execute(): DashboardDTO
     {
         $orders = Order::query()
-            ->whereHas('payment', function ($query) {
+            ->whereHas('payments', function ($query) {
                 $query->whereNotNull('paid_at');
                 $query->where('status', OrderPaymentStatus::PAID->value);
             })

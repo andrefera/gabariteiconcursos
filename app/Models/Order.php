@@ -118,6 +118,10 @@ class Order extends Model
                 $this->cancelled_at = new Carbon();
                 $this->refunded_at = new Carbon();
                 break;
+            case OrderStatus::WAITING_FOR_CARRIER->value:
+                $this->status = OrderStatus::WAITING_FOR_CARRIER->value;
+                $this->cancelled_at = null;
+                break;
             default:
                 $this->status = OrderStatus::NEW->value;
                 break;

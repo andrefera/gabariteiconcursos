@@ -48,22 +48,22 @@ readonly class StoreOrder
             return new PaymentResponseDTO('Carrinho não encontrado.', false);
         }
 
+        $cart->refresh();
+
         $cacheKey = "pending_order_{$cart->user->id}";
 
         DB::beginTransaction();
 
         try {
 
-            $cart->refresh();
-            
             $pendingId = Cache::get($cacheKey);
-            
+
             // Validate cart items stock
-            //foreach ($cart->items as $item) {
-           //     if (!$item->product->checkStock($item->quantity)) {
-           //         throw new Exception("Produto {$item->product->name} não possui estoque suficiente.");
-           //     }
-           // }
+            foreach ($cart->items as $item) {
+                if (!$item->product->checkStock($item->size, $item->quantity) || !$item->product->updateStock($item->size, $item->quantity)) {
+                    throw new Exception("Produto {$item->product->name} não possui estoque suficiente.");
+                }
+            }
 
             $coupon = $this->coupon ? Coupon::query()->where('code', trim($this->coupon))->first() : null;
             $order = $pendingId ? Order::find($pendingId) : new Order();

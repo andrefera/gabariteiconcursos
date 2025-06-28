@@ -24,8 +24,12 @@ readonly class CartDTO
     {
         $products = $cart->items->map(fn(CartItem $cartItem) => CartItemDTO::fromCartItem($cartItem));
         $totalProducts = $products->sum('quantity');
-        $price = $products->sum('price');
-        $specialPrice = $products->sum('specialPrice');
+        $price = $products->sum(function (CartItemDTO $cartItem) {
+            return $cartItem->price * $cartItem->quantity;
+        });
+        $specialPrice = $products->sum(function (CartItemDTO $cartItem) {
+            return $cartItem->specialPrice * $cartItem->quantity;
+        });
         $shipping = $cart->shipping()?->price ?? 0;
         $finalPrice = $specialPrice + $shipping;
 
