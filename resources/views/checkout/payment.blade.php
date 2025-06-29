@@ -250,19 +250,19 @@
                 <div><span>Subtotal</span><span>{{\App\Support\Util\NumberUtil::formatPrice($cart->subTotal)}}</span></div>
             </div>
 
-            <div class="recommended">
-                <div class="add-to-cart">
-                    <img
-                        src="https://promantos.com.br/cdn/shop/files/camisa-camiseta-blusa-do-botafogo-fogao-reebook-nova-lancamento-da-temporada-ano-2024_25-24_25-i-1-titular-principal-primeira-home-listrada-alvinegra-preta-e-branco-masculina-versao-m_544fe31a-d863-470a-91ed-3d06b62b6b3b_700x.jpg?v=1719517896&quot;"
-                        alt="Headset">
-                    <div>
-                        <strong>Camisa Torcedor São Paulo Treino 2025/26 - Masculina</strong><br>
-                        <del>R$599,99</del>
-                        <strong style="color: red;">R$320,99</strong><br>
-                    </div>
-                </div>
-                <button class="btn" style="margin-top: 0.5rem;">Compre Junto</button>
-            </div>
+{{--            <div class="recommended">--}}
+{{--                <div class="add-to-cart">--}}
+{{--                    <img--}}
+{{--                        src="https://promantos.com.br/cdn/shop/files/camisa-camiseta-blusa-do-botafogo-fogao-reebook-nova-lancamento-da-temporada-ano-2024_25-24_25-i-1-titular-principal-primeira-home-listrada-alvinegra-preta-e-branco-masculina-versao-m_544fe31a-d863-470a-91ed-3d06b62b6b3b_700x.jpg?v=1719517896&quot;"--}}
+{{--                        alt="Headset">--}}
+{{--                    <div>--}}
+{{--                        <strong>Camisa Torcedor São Paulo Treino 2025/26 - Masculina</strong><br>--}}
+{{--                        <del>R$599,99</del>--}}
+{{--                        <strong style="color: red;">R$320,99</strong><br>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--                <button class="btn" style="margin-top: 0.5rem;">Compre Junto</button>--}}
+{{--            </div>--}}
         </div>
 
         <div class="right">

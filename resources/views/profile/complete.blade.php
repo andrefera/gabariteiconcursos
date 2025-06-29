@@ -24,11 +24,11 @@
             @csrf
             <div class="form-group">
                 <label for="document">CPF</label>
-                <input type="text" 
-                       id="document" 
-                       name="document" 
-                       class="form-control @error('document') is-invalid @enderror" 
-                       value="{{ old('document', $user->document) }}" 
+                <input type="text"
+                       id="document"
+                       name="document"
+                       class="form-control @error('document') is-invalid @enderror"
+                       value="{{ old('document', $user->document) }}"
                        required>
                 @error('document')
                     <div class="invalid-feedback">{{ $message }}</div>
@@ -37,11 +37,11 @@
 
             <div class="form-group">
                 <label for="phone">Telefone</label>
-                <input type="text" 
-                       id="phone" 
-                       name="phone" 
-                       class="form-control @error('phone') is-invalid @enderror" 
-                       value="{{ old('phone', $user->phone) }}" 
+                <input type="text"
+                       id="phone"
+                       name="phone"
+                       class="form-control @error('phone') is-invalid @enderror"
+                       value="{{ old('phone', $user->phone) }}"
                        required>
                 @error('phone')
                     <div class="invalid-feedback">{{ $message }}</div>
@@ -50,63 +50,63 @@
 
             <div class="form-group">
                 <label for="billing_address">Endereço de Cobrança</label>
-                <input type="text" 
-                       id="street" 
-                       name="billing_address[street]" 
-                       class="form-control @error('billing_address.street') is-invalid @enderror" 
-                       placeholder="Rua" 
-                       value="{{ old('billing_address.street', $address['street']) }}" 
+                <input type="text"
+                       id="street"
+                       name="billing_address[street]"
+                       class="form-control @error('billing_address.street') is-invalid @enderror"
+                       placeholder="Rua"
+                       value="{{ old('billing_address.street', $address['street']) }}"
                        required>
                 @error('billing_address.street')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
 
-                <input type="text" 
-                       id="number" 
-                       name="billing_address[number]" 
-                       class="form-control @error('billing_address.number') is-invalid @enderror" 
-                       placeholder="Número" 
-                       value="{{ old('billing_address.number', $address['number']) }}" 
+                <input type="text"
+                       id="number"
+                       name="billing_address[number]"
+                       class="form-control @error('billing_address.number') is-invalid @enderror"
+                       placeholder="Número"
+                       value="{{ old('billing_address.number', $address['number']) }}"
                        required>
                 @error('billing_address.number')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
 
-                <input type="text" 
-                       id="complement" 
-                       name="billing_address[complement]" 
-                       class="form-control @error('billing_address.complement') is-invalid @enderror" 
-                       placeholder="Complemento" 
+                <input type="text"
+                       id="complement"
+                       name="billing_address[complement]"
+                       class="form-control @error('billing_address.complement') is-invalid @enderror"
+                       placeholder="Complemento"
                        value="{{ old('billing_address.complement', $address['complement']) }}">
                 @error('billing_address.complement')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
 
-                <input type="text" 
-                       id="neighborhood" 
-                       name="billing_address[neighborhood]" 
-                       class="form-control @error('billing_address.neighborhood') is-invalid @enderror" 
-                       placeholder="Bairro" 
-                       value="{{ old('billing_address.neighborhood', $address['neighborhood']) }}" 
+                <input type="text"
+                       id="neighborhood"
+                       name="billing_address[neighborhood]"
+                       class="form-control @error('billing_address.neighborhood') is-invalid @enderror"
+                       placeholder="Bairro"
+                       value="{{ old('billing_address.neighborhood', $address['neighborhood']) }}"
                        required>
                 @error('billing_address.neighborhood')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
 
-                <input type="text" 
-                       id="city" 
-                       name="billing_address[city]" 
-                       class="form-control @error('billing_address.city') is-invalid @enderror" 
-                       placeholder="Cidade" 
-                       value="{{ old('billing_address.city', $address['city']) }}" 
+                <input type="text"
+                       id="city"
+                       name="billing_address[city]"
+                       class="form-control @error('billing_address.city') is-invalid @enderror"
+                       placeholder="Cidade"
+                       value="{{ old('billing_address.city', $address['city']) }}"
                        required>
                 @error('billing_address.city')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
 
-                <select id="state" 
-                        name="billing_address[state]" 
-                        class="form-control @error('billing_address.state') is-invalid @enderror" 
+                <select id="state"
+                        name="billing_address[state]"
+                        class="form-control @error('billing_address.state') is-invalid @enderror"
                         required>
                     <option value="">Selecione o estado</option>
                     <option value="AC" {{ old('billing_address.state', $address['state']) == 'AC' ? 'selected' : '' }}>Acre</option>
@@ -141,12 +141,12 @@
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
 
-                <input type="text" 
-                       id="zipcode" 
-                       name="billing_address[zipcode]" 
-                       class="form-control @error('billing_address.zipcode') is-invalid @enderror" 
-                       placeholder="CEP" 
-                       value="{{ old('billing_address.zipcode', $address['zipcode']) }}" 
+                <input type="text"
+                       id="zipcode"
+                       name="billing_address[zipcode]"
+                       class="form-control @error('billing_address.zipcode') is-invalid @enderror"
+                       placeholder="CEP"
+                       value="{{ old('billing_address.zipcode', $address['zipcode']) }}"
                        required>
                 @error('billing_address.zipcode')
                     <div class="invalid-feedback">{{ $message }}</div>
@@ -240,7 +240,6 @@
 </style>
 
 <script src="https://unpkg.com/imask"></script>
-<!-- Add Toastify JS -->
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script>
     // Function to show toast message
@@ -270,7 +269,7 @@
         // Show error messages and mark fields as invalid
         if (typeof errors === 'object') {
             Object.keys(errors).forEach(key => {
-                const field = document.querySelector(`[name="${key}"]`) || 
+                const field = document.querySelector(`[name="${key}"]`) ||
                             document.querySelector(`[name="${key.replace('.', '][')}]`);
                 if (field) {
                     field.classList.add('is-invalid');
@@ -313,7 +312,7 @@
     // Validate CPF
     function validateCPF(cpf) {
         cpf = cpf.replace(/[^\d]/g, '');
-        
+
         if (cpf.length !== 11) return false;
         if (/^(\d)\1+$/.test(cpf)) return false;
 
@@ -379,7 +378,7 @@
     // Form submission
     document.getElementById('profileForm').addEventListener('submit', async function(e) {
         e.preventDefault();
-        
+
         // Client-side validation
         const cpf = document.getElementById('document').value;
         const phone = document.getElementById('phone').value;
@@ -407,7 +406,7 @@
 
             const formData = new FormData(this);
             const formDataObj = {};
-            
+
             // Convert FormData to object with nested structure
             formData.forEach((value, key) => {
                 // Handle billing_address[field] format
@@ -449,7 +448,7 @@
             }
 
             showToast('Perfil atualizado com sucesso!');
-            
+
             // Redirect if needed
             if (data.redirect) {
                 window.location.href = data.redirect;
@@ -464,7 +463,7 @@
     let zipcodeField = document.getElementById('zipcode');
     zipcodeField.addEventListener('blur', async function() {
         const cep = this.value.replace(/\D/g, '');
-        
+
         if (cep.length !== 8) {
             this.classList.add('is-invalid');
             clearAddressFields();
@@ -476,10 +475,10 @@
         try {
             setAddressFieldsDisabled(true);
             zipcodeField.style.backgroundColor = '#f8f9fa';
-            
+
             const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
             const data = await response.json();
-            
+
             if (data.erro) {
                 this.classList.add('is-invalid');
                 showToast('CEP não encontrado', true);
@@ -492,7 +491,7 @@
             addressFields.street.value = data.logradouro || '';
             addressFields.neighborhood.value = data.bairro || '';
             addressFields.city.value = data.localidade || '';
-            
+
             // Set state in select element
             if (data.uf) {
                 addressFields.state.value = data.uf.toUpperCase();
@@ -513,7 +512,7 @@
             });
 
             this.classList.remove('is-invalid');
-            
+
             // Foca no campo número se o logradouro foi preenchido
             if (data.logradouro) {
                 document.getElementById('number').focus();
@@ -526,7 +525,7 @@
                     addressFields.city,
                     addressFields.state
                 ].find(field => !field.value);
-                
+
                 if (firstEmptyField) {
                     firstEmptyField.focus();
                 }
@@ -547,4 +546,4 @@
         });
     });
 </script>
-@endsection 
+@endsection

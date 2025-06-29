@@ -91,9 +91,9 @@ class Order extends Model
         return $this->hasMany(OrderPayment::class);
     }
 
-    public function changeStatus(string $status): bool
+    public function changeStatus(string $status, bool $parse = true): bool
     {
-        $newStatus = $this->parseStatus($status);
+        $newStatus = $parse ? $this->parseStatus($status) : $status;
 
         if ($this->status === $newStatus) {
             return false;

@@ -14,7 +14,7 @@
             <!-- Seção de Endereços -->
             <div class="addresses-section">
                 <h2>Endereço de Entrega</h2>
-                
+
                 <!-- Botão Adicionar Novo Endereço -->
                 <button type="button" class="add-address-btn" onclick="openAddressModal()">
                     <i class="fas fa-plus"></i> Adicionar Novo Endereço
@@ -25,8 +25,8 @@
                     @foreach($addresses as $address)
                     <div class="address-card" data-address-id="{{ $address->id }}">
                         <div class="address-select">
-                            <input type="radio" 
-                                   name="shipping_address" 
+                            <input type="radio"
+                                   name="shipping_address"
                                    value="{{ $address->id }}"
                                    {{ $address->is_default ? 'checked' : '' }}>
                         </div>
@@ -66,7 +66,7 @@
                     <form id="addressForm" class="modal-body">
                         @csrf
                         <input type="hidden" id="addressId" name="id">
-                        
+
                         <div class="form-group">
                             <label for="zip_code">CEP</label>
                             <input type="text" id="zip_code" name="zip_code" class="form-control" required>
@@ -172,7 +172,7 @@
         <!-- Coluna da direita: Resumo do Pedido -->
         <div class="order-summary">
             <h2>Resumo do Pedido</h2>
-        
+
             <!-- Valores -->
             <div class="order-totals">
                 <div class="total-line">
@@ -197,11 +197,11 @@
 
             <!-- Cupom de Desconto -->
             <div class="coupon-section">
-                <input type="text" 
-                       id="coupon-code" 
-                       placeholder="Digite seu cupom"
-                       class="form-control">
-                <button class="btn-apply-coupon">Aplicar</button>
+{{--                <input type="text" --}}
+{{--                       id="coupon-code" --}}
+{{--                       placeholder="Digite seu cupom"--}}
+{{--                       class="form-control">--}}
+{{--                <button class="btn-apply-coupon">Aplicar</button>--}}
             </div>
 
             <!-- Botão de Finalizar -->
@@ -306,7 +306,7 @@
     align-items: flex-start;
 }
 
-.btn-edit, 
+.btn-edit,
 .btn-delete {
     background: none;
     border: none;
@@ -714,7 +714,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const shippingMethodsList = document.querySelector('.shipping-methods-list');
     const btnCompleteOrder = document.querySelector('.btn-complete-order');
     let selectedShippingMethod = null;
-    
+
     // Valores iniciais do carrinho
     const initialValues = {
         subtotal: parseFloat("{{ $cart->subTotal }}"),
@@ -730,7 +730,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Função para calcular e atualizar totais
     function updateTotals(shippingPrice) {
         const total = initialValues.subtotal - initialValues.discount + shippingPrice;
-        
+
         document.getElementById('shipping-cost').textContent = formatPrice(shippingPrice);
         document.querySelector('.grand-total span:last-child').textContent = formatPrice(total);
     }
@@ -739,7 +739,7 @@ document.addEventListener('DOMContentLoaded', function() {
     async function calculateShipping(addressId) {
         showLoading();
         shippingMethodsList.innerHTML = '<div class="loading-shipping">Calculando frete...</div>';
-        
+
         try {
             const response = await fetch('/checkout/calculate-shipping/' + addressId, {
                 method: 'GET',
@@ -751,14 +751,14 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             const shippingOptions = await response.json();
-            
+
             if (!shippingOptions.length) {
                 shippingMethodsList.innerHTML = '<div class="loading-shipping">Não foi possível calcular o frete para este endereço.</div>';
                 return;
             }
 
             shippingMethodsList.innerHTML = shippingOptions.map(option => `
-                <div class="shipping-method" 
+                <div class="shipping-method"
                      data-price="${option.price}"
                      data-days="${option.days}"
                      data-company="${option.company}">
@@ -778,7 +778,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 radio.addEventListener('change', function(e) {
                     const shippingMethod = e.target.closest('.shipping-method');
                     const shippingPrice = parseFloat(shippingMethod.dataset.price);
-                    
+
                     updateTotals(shippingPrice);
                     selectedShippingMethod = e.target.value;
                     btnCompleteOrder.disabled = false;
@@ -817,18 +817,18 @@ document.addEventListener('DOMContentLoaded', function() {
         const modal = document.getElementById('addressModal');
         const form = document.getElementById('addressForm');
         const modalTitle = document.getElementById('modalTitle');
-        
+
         // Limpa o formulário
         form.reset();
         document.getElementById('addressId').value = '';
-        
+
         if (addressId) {
             modalTitle.textContent = 'Editar Endereço';
             loadAddress(addressId);
         } else {
             modalTitle.textContent = 'Novo Endereço';
         }
-        
+
         modal.style.display = 'block';
     }
 
@@ -842,7 +842,7 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const response = await fetch(`/api/addresses/${addressId}`);
             const address = await response.json();
-            
+
             document.getElementById('addressId').value = address.id;
             document.getElementById('zip_code').value = address.zip_code;
             document.getElementById('street').value = address.street;
@@ -861,12 +861,12 @@ document.addEventListener('DOMContentLoaded', function() {
     window.confirmDeleteAddress = function(addressId) {
         const modal = document.getElementById('confirmModal');
         const btnConfirm = document.getElementById('confirmDelete');
-        
+
         modal.style.display = 'block';
-        
+
         // Remove listener anterior se existir
         btnConfirm.replaceWith(btnConfirm.cloneNode(true));
-        
+
         // Adiciona novo listener
         document.getElementById('confirmDelete').addEventListener('click', async () => {
             await deleteAddress(addressId);
@@ -909,12 +909,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Manipulador do formulário de endereço
     document.getElementById('addressForm').addEventListener('submit', async function(e) {
         e.preventDefault();
-        
+
         const formData = new FormData(this);
         const addressId = formData.get('id');
         const method = addressId ? 'PUT' : 'POST';
         const url = addressId ? `/api/addresses/${addressId}` : '/api/addresses';
-        
+
         try {
             const response = await fetch(url, {
                 method: method,
@@ -951,7 +951,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Auto preenchimento do endereço pelo CEP
     document.getElementById('zip_code').addEventListener('blur', async function() {
         const cep = this.value.replace(/\D/g, '');
-        
+
         if (cep.length !== 8) {
             showToast('CEP inválido', true);
             return;
@@ -960,7 +960,7 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
             const data = await response.json();
-            
+
             if (data.erro) {
                 showToast('CEP não encontrado', true);
                 return;
@@ -985,7 +985,7 @@ document.addEventListener('DOMContentLoaded', function() {
     window.onclick = function(event) {
         const addressModal = document.getElementById('addressModal');
         const confirmModal = document.getElementById('confirmModal');
-        
+
         if (event.target === addressModal) {
             closeAddressModal();
         }
@@ -1030,7 +1030,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const addressSelected = document.querySelector('input[name="shipping_address"]:checked');
         const shippingSelected = document.querySelector('input[name="shipping_method"]:checked');
         const continueButton = document.querySelector('.btn-complete-order');
-        
+
         continueButton.disabled = !(addressSelected && shippingSelected);
     }
 
@@ -1045,7 +1045,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const addressId = document.querySelector('input[name="shipping_address"]:checked').value;
         const shippingMethod = document.querySelector('input[name="shipping_method"]:checked');
         const shippingMethodContainer = shippingMethod.closest('.shipping-method');
-        
+
         if (!addressId || !shippingMethod) {
             showToast('Selecione um endereço e método de envio', true);
             return;
@@ -1097,4 +1097,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
-@endsection 
+@endsection

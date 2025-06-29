@@ -27,7 +27,7 @@ class GetDataDashboard
             ->get();
 
         $finalPrice = "R$" . number_format($orders->sum('final_price'), 2, ',', '.');
-        $totalFreight = "R$" . number_format($orders->sum('freight'), 2, ',', '.');
+        $totalFreight = "R$" . number_format($orders->sum('shipping_price') +($orders->count() * 2), 2, ',', '.');
 
         $costTotal = $orders->map(function ($order) {
             return $order->items->sum(function ($item) {

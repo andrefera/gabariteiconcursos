@@ -5,39 +5,44 @@ namespace App\Modules\Store\CartItems\Services;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class CartItemService
 {
-    public function addItem(Cart $cart, array $item): void
+    public function addItem(Cart $cart, array $item): bool
     {
-        $product = Product::findOrFail($item['product_id']);
+        try {
+            $product = Product::query()->find($item['product_id']);
 
-        // Check if the item already exists in the cart
-        $cartItem = $cart->items()->where('product_id', $product->id)
-            ->where('size', $item['size'])
-            ->first();
+            if (!$product->checkStock($item['size'], $item['quantity'])) {
+                return false;
+            }
 
-        if ($cartItem) {
-            $cartItem->update([
-                'quantity' => $cartItem->quantity + $item['quantity']
+            $cart->items()->updateOrCreate(['product_id' => $product->id, 'size' => $item['size']], [
+                'quantity' => $item['quantity'],
+                'price' => $product->price
             ]);
-            
-            return;
+
+        } catch (Throwable $exception) {
+            Log::info("Erro ao adicionar item no carrinho: " . $exception->getMessage());
+            return false;
         }
 
-         $cart->items()->create([
-            'product_id' => $product->id,
-            'quantity' => $item['quantity'],
-            'size' => $item['size'],
-            'price' => $product->price
-        ]);
+        return true;
     }
 
-    public function updateQuantity(CartItem $item, int $quantity): void
+    public function updateQuantity(CartItem $item, int $quantity): bool
     {
+        if (!$item->product->checkStock($item->size, $quantity)) {
+            return false;
+        }
+
         $item->update([
             'quantity' => $quantity
         ]);
+
+        return true;
     }
 
     public function removeItem(CartItem $item): void
@@ -49,4 +54,4 @@ class CartItemService
     {
         return $cart->id === $item->cart_id;
     }
-} 
+}

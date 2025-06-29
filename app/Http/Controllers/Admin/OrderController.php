@@ -85,7 +85,7 @@ class OrderController extends Controller
                 ->whereIn('id', $ids)
                 ->get()
                 ->map(function (Order $order) use ($status) {
-                    $order->changeStatus($status);
+                    $order->changeStatus($status, false);
                     $order->save();
 
                     return $order;

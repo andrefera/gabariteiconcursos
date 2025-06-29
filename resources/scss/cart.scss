@@ -96,10 +96,39 @@
                         width: 35%;
 
                         .remove-text {
-                            color: #3754db;
+                            color: #ff0000;
                             cursor: pointer;
                             font-size: .9rem;
                             margin: 1.2rem 0 .5rem;
+                            border: none;
+                            background-color: #fff;
+                        }
+
+                        .quantity-controls{
+                            display: flex;
+                            flex-direction: column;
+                            background-color: #fff;
+
+                            .quantity-number {
+                                text-align: center;
+                                width: 30px;
+                                border-radius: 7px;
+                            }
+
+                            .quantity-btn {
+                                border: none;
+                                cursor: pointer;
+                                background-color: #fff;
+                                font-weight: 700;
+
+                                &.plus {
+                                    font-size: 25px;
+                                }
+
+                                &.minus {
+                                    font-size: 30px;
+                                }
+                            }
                         }
                     }
 
