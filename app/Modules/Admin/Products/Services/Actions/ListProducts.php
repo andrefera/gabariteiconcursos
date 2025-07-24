@@ -6,7 +6,6 @@ use App\Modules\Admin\Products\DTO\ListProductsDTO;
 use App\Support\Util\ElasticSearchUtil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 readonly class ListProducts
 {
@@ -34,7 +33,6 @@ readonly class ListProducts
             ]
         ];
 
-        Log::info($query);
 
         $start = ($this->page - 1) * $this->limit;
 
@@ -69,12 +67,9 @@ readonly class ListProducts
 
         if ($this->name) {
             $must->push([
-                'match' => [
-                    'name' => [
-                        'query' => $this->name,
-                        'operator' => 'and',
-                        'fuzziness' => 'AUTO',
-                    ]
+                'query_string' => [
+                    'query' => '*' . $this->name . '*',
+                    'fields' => ['name'],
                 ]
             ]);
         }
@@ -108,7 +103,7 @@ readonly class ListProducts
             $request->get('name'),
             $request->get('sku'),
             $request->get('type'),
-            !$request->get('is_active') ? null : $request->get('is_active') === 'true',
+            !$request->get('is_active') ? null : $request->get('is_active') == 'true',
             $request->get('team_name'),
             $request->get('category'),
             $request->get('gender'),

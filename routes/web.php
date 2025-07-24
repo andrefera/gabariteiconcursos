@@ -7,6 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\CheckUserProfile;
 use App\Http\Middleware\SessionTokenMiddleware;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Store\ProductSearchController;
 
 Route::middleware('web')->group(function () {
     Route::get('/', function () {
@@ -81,5 +82,7 @@ Route::middleware('web')->group(function () {
             Route::delete('/{address}', [App\Http\Controllers\Api\AddressController::class, 'destroy']);
         });
     });
+
+    Route::get('/search/products', [ProductSearchController::class, 'search']);
 });
 

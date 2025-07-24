@@ -10,10 +10,10 @@
         </div>
         <div class="searchGroup">
             <div class="searchInput">
-                <input type="text" placeholder="Pesquise por algum produto">
-                <img src="{{ asset('images/icons/search-icon.svg') }}" width="16" height="16" alt="Search Icon"
-                     class="searchIcon">
+                <input type="text" id="product-search-input" placeholder="Pesquise por algum produto" autocomplete="off">
+                <img src="{{ asset('images/icons/search-icon.svg') }}" width="16" height="16" alt="Search Icon" class="searchIcon">
             </div>
+            <div id="search-results-dropdown" class="search-results-dropdown" style="display:none;"></div>
         </div>
         <div class="userMenuContainer">
             @auth
@@ -107,28 +107,85 @@
 .logout-button:hover {
     background-color: #f5f5f5;
 }
+
+.search-results-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    border: 1px solid #eee;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    z-index: 1001;
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 10px;
+}
+.search-result-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+}
+.search-result-item:last-child {
+    border-bottom: none;
+}
+.search-result-item img {
+    border-radius: 4px;
+    background: #f5f5f5;
+}
+.no-results {
+    padding: 10px;
+    color: #888;
+}
+.searchGroup {
+    position: relative;
+}
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const userMenu = document.querySelector('.userMenu');
-    if (userMenu) {
-        userMenu.addEventListener('click', function(e) {
-            const dropdown = this.querySelector('.userMenuDropdown');
-            if (dropdown.style.display === 'block') {
-                dropdown.style.display = 'none';
-            } else {
-                dropdown.style.display = 'block';
-            }
-        });
+    const input = document.getElementById('product-search-input');
+    const dropdown = document.getElementById('search-results-dropdown');
+    let timeout = null;
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!userMenu.contains(e.target)) {
-                const dropdown = userMenu.querySelector('.userMenuDropdown');
-                dropdown.style.display = 'none';
-            }
-        });
-    }
+    input.addEventListener('input', function() {
+        clearTimeout(timeout);
+        const query = this.value.trim();
+        if (query.length < 2) {
+            dropdown.style.display = 'none';
+            dropdown.innerHTML = '';
+            return;
+        }
+        timeout = setTimeout(() => {
+            fetch(`/search/products?q=${encodeURIComponent(query)}`)
+                .then(res => res.json())
+                .then(products => {
+                    if (products.length === 0) {
+                        dropdown.innerHTML = '<div class="no-results">Nenhum produto encontrado.</div>';
+                    } else {
+                        dropdown.innerHTML = products.map(product => `
+                            <a class="search-result-item" href="${product.url}">
+                                <img src="${product.image ?? '/images/no-image.png'}" alt="${product.name}" width="50" height="70">
+                                <div>
+                                    <strong>${product.name}</strong><br>
+                                    <span>${product.sku ?? ''}</span>
+                                </div>
+                            </a>
+                        `).join('');
+                    }
+                    dropdown.style.display = 'block';
+                });
+        }, 300); // debounce
+    });
+
+    // Esconde o dropdown ao clicar fora
+    document.addEventListener('click', function(e) {
+        if (!dropdown.contains(e.target) && e.target !== input) {
+            dropdown.style.display = 'none';
+        }
+    });
 });
 </script>
