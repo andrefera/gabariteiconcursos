@@ -35,20 +35,25 @@ class Cart extends Model
         return $this->hasMany(CartItem::class);
     }
 
-    public function shipping(): HasOne
+    public function shippings(): HasMany
     {
-        return $this->hasOne(CartShipping::class);
+        return $this->hasMany(CartShipping::class, 'cart_id', 'id');
     }
 
-    public function cloneCart(?string $userId, string $sessionToken): self
+    public function shipping(): ?CartShipping
     {
-        $newCart = $this->replicate();
+        return $this->shippings()->orderBy('created_at', 'desc')->first();
+    }
+
+    public static function cloneCart(self $cart, ?string $userId, string $sessionToken): self
+    {
+        $newCart = $cart->replicate();
 
         $newCart->user_id = $userId;
         $newCart->token = $sessionToken;
         $newCart->save();
 
-        foreach ($this->items as $item) {
+        foreach ($cart->items as $item) {
             $newItem = $item->replicate();
             $newItem->cart_id = $newCart->id;
             $newItem->save();

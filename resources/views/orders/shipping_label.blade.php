@@ -58,24 +58,24 @@
 <body>
 
 <div class="etiquetas-container">
-    @for ($i = 1; $i <= 100; $i++)
+    @foreach($orders as $key => $order)
         <div class="etiqueta">
             <div class="logo-container">
                 <img src="{{ public_path('logo.png') }}" class="logo" alt="Logo">
             </div>
-            <p><span class="bold">Pedido:</span> #{{ 2900 + $i }}</p>
-            <p><span class="bold">Realizado em:</span> 10/03/2025</p>
+            <p><span class="bold">Pedido:</span> #{{ $order->increment_id }}</p>
+            <p><span class="bold">Realizado em:</span> {{$order->created_at}}</p>
             <p class="bold">Destinatário:</p>
-            <p class="margin">Nome Exemplo {{ $i }}</p>
-            <p class="margin">Rua Exemplo, {{ $i }}00</p>
-            <p class="margin">Bairro Exemplo0</p>
-            <p class="margin">Cidade Exemplo, Estado Exemplo, 00000-000</p>
+            <p class="margin">{{ $order->user_name }}</p>
+            <p class="margin">{{$order->street}}, {{ $order->number }}</p>
+            <p class="margin">{{$order->neighborhood}}</p>
+            <p class="margin">{{$order->city}}, {{$order->state}}, {{$order->zip_code}}</p>
             <p class="margin">Brasil</p>
         </div>
-        @if($i % 6 == 0)
+        @if($key > 0 && $key % 6 == 0)
             <div class="limitation"></div>
         @endif
-    @endfor
+    @endforeach
 </div>
 
 </body>

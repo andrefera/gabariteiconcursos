@@ -8,8 +8,8 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 class SessionTokenMiddleware
 {
@@ -17,31 +17,32 @@ class SessionTokenMiddleware
     {
         $cartToken = $request->cookie('session_token') ?: Str::uuid();
 
-        $cart = Cart::query()->where('id', 2)->first();
+        $cart = Cart::query()->where('token', $cartToken)->first();
 
-//        if($cart && $cart->status !== CartStatus::OPEN->value) {
-//            Log::info("Change session token {$cart->id} {$cart->status}");
-//            $cartToken = Str::uuid();
-//            $cart = null;
-//        } else {
-//
-//            if ($cart && $cart->user) {
-//                $user = JWTAuth::parseToken()->authenticate();
-//                if ($user) {
-//                    if ($user->id !== $cart->user_id) {
-//                        Log::info("Change session token {$user->id} !== {$cart->user_id}");
-//                        $cartToken = Str::uuid();
-//                        Cart::cloneCart($user->id, $cartToken);
-//                    }
-//                }
-//            }
-//        }
+        if ($cart && $cart->status !== CartStatus::OPEN->value) {
+            Log::info("Change session token {$cart->id} {$cart->status}");
+            $cartToken = Str::uuid();
+            $cart = null;
+        } else {
+            // Check if cart belongs to a user and if we're authenticated
+            $user = Auth::user();
+            if ($user && $cart) {
+                if (!$cart->user_id) {
+                    $cart->user_id = $user->id;
+                    $cart->save();
+                } elseif ($user->id !== $cart->user_id) {
+                    Log::info("Change session token {$user->id} !== {$cart->user_id}");
+                    $cartToken = Str::uuid();
+                    $cart = Cart::cloneCart($cart, $user->id, $cartToken);
+                }
+            }
+        }
 
         Session::put('sessionToken', $cartToken);
         Session::put('cart', $cart);
 
-        return tap($next($request), function ($response) use ($request, $cartToken) {
-            $response->headers->setCookie(cookie('session_token', $cartToken, (((int) env('SESSION_TOKEN_DAYS', 7)) * 1440), null, null, true));
+        return tap($next($request), function ($response) use ($cartToken) {
+            $response->headers->setCookie(cookie('session_token', $cartToken, (((int)env('SESSION_TOKEN_DAYS', 7)) * 1440), null, null, true));
         });
     }
 }

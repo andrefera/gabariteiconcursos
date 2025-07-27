@@ -25,9 +25,7 @@ readonly class ProductDetailDTO
         public string  $categories,
         public ?string $image_url,
         public string  $created_at,
-    )
-    {
-    }
+    ) {}
 
     public static function fromProduct(Product $product): self
     {
@@ -53,22 +51,7 @@ readonly class ProductDetailDTO
 
     public static function fromArray(array $product): self
     {
-        return new self(
-            $product['id'],
-            $product['name'],
-            $product['sku'],
-            $product['url'],
-            "R$" . number_format($product['price'], 2, ',', '.'),
-            $product['special_price'] ? ("R$" . number_format($product['special_price'], 2, ',', '.')) : null,
-            $product['type'],
-            $product['is_active'],
-            $product['team_name'],
-            $product['gender'],
-            $product['season'],
-            $product['stock'],
-            collect($product['categories'] ?? [])->join(', '),
-            null,
-            $product['created_at'],
-        );
+        $model = Product::query()->find($product['id']);
+        return self::fromProduct($model);
     }
 }

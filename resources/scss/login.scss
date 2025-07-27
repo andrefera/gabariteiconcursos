@@ -102,7 +102,7 @@ body {
             display: flex;
             align-items: center;
             text-align: center;
-            margin: 2rem 0 0;
+            margin: 1rem 0 0;
 
             .textoSeparador {
                 flex-shrink: 0;
@@ -341,6 +341,5 @@ body {
 .visivelSuave {
     opacity: 1;
     height: auto;
-    margin-top: 1rem;
     transition: all 0.3s ease;
 }

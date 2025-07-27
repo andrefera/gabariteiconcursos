@@ -18,16 +18,16 @@ class GetDataDashboard
     public function execute(): DashboardDTO
     {
         $orders = Order::query()
-            ->whereHas('payment', function ($query) {
+            ->whereHas('payments', function ($query) {
                 $query->whereNotNull('paid_at');
                 $query->where('status', OrderPaymentStatus::PAID->value);
             })
-            ->whereNotIn('status', [OrderStatus::PENDING, OrderStatus::CANCELLED, OrderStatus::REFUNDED])
+            ->whereNotIn('status', [OrderStatus::NEW->value, OrderStatus::CANCELLED->value, OrderStatus::REFUNDED->value])
             ->where('created_at', '>=', Carbon::now()->startOfMonth())
             ->get();
 
         $finalPrice = "R$" . number_format($orders->sum('final_price'), 2, ',', '.');
-        $totalFreight = "R$" . number_format($orders->sum('freight'), 2, ',', '.');
+        $totalFreight = "R$" . number_format($orders->sum('shipping_price') +($orders->count() * 2), 2, ',', '.');
 
         $costTotal = $orders->map(function ($order) {
             return $order->items->sum(function ($item) {

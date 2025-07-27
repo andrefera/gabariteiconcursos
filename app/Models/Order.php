@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Order extends Model
@@ -87,14 +86,14 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
-    public function payment(): HasOne
+    public function payments(): HasMany
     {
-        return $this->hasOne(OrderPayment::class);
+        return $this->hasMany(OrderPayment::class);
     }
 
-    public function changeStatus(string $status): bool
+    public function changeStatus(string $status, bool $parse = true): bool
     {
-        $newStatus = $this->parseStatus($status);
+        $newStatus = $parse ? $this->parseStatus($status) : $status;
 
         if ($this->status === $newStatus) {
             return false;
@@ -110,20 +109,21 @@ class Order extends Model
                 $this->cancelled_at = null;
                 $this->paid_at = new Carbon();
                 break;
+            case OrderStatus::WAITING_PAYMENT->value:
+                $this->status = OrderStatus::WAITING_PAYMENT->value;
+                $this->cancelled_at = null;
+                break;
             case OrderStatus::REFUNDED->value:
                 $this->status = OrderStatus::REFUNDED->value;
                 $this->cancelled_at = new Carbon();
                 $this->refunded_at = new Carbon();
-                $this->cancel();
                 break;
-            case OrderStatus::DELIVERED->value:
-                $this->status = OrderStatus::DELIVERED->value;
+            case OrderStatus::WAITING_FOR_CARRIER->value:
+                $this->status = OrderStatus::WAITING_FOR_CARRIER->value;
                 $this->cancelled_at = null;
-                $this->delivered_at = new Carbon();
                 break;
             default:
-                $this->status = OrderStatus::WAITING_PAYMENT->value;
-                $this->cancelled_at = null;
+                $this->status = OrderStatus::NEW->value;
                 break;
         }
 

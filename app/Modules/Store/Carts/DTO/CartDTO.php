@@ -5,7 +5,6 @@ namespace App\Modules\Store\Carts\DTO;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Modules\Store\CartItems\DTO\CartItemDTO;
-use App\Support\Util\NumberUtil;
 
 readonly class CartDTO
 {
@@ -19,17 +18,19 @@ readonly class CartDTO
         public ?float $discount,
         public float  $shipping,
         public array  $installments,
-    )
-    {
-    }
+    ) {}
 
     public static function fromCart(Cart $cart): self
     {
         $products = $cart->items->map(fn(CartItem $cartItem) => CartItemDTO::fromCartItem($cartItem));
         $totalProducts = $products->sum('quantity');
-        $price = $products->sum('price');
-        $specialPrice = $products->sum('specialPrice');
-        $shipping = 0;
+        $price = $products->sum(function (CartItemDTO $cartItem) {
+            return $cartItem->price * $cartItem->quantity;
+        });
+        $specialPrice = $products->sum(function (CartItemDTO $cartItem) {
+            return $cartItem->specialPrice * $cartItem->quantity;
+        });
+        $shipping = $cart->shipping()?->price ?? 0;
         $finalPrice = $specialPrice + $shipping;
 
         $maxInstallments = self::getInstallmentValue($specialPrice + $shipping);

@@ -46,7 +46,7 @@ readonly class RegisterUser
         $user = User::create([
             'name' => $this->name,
             'email' => $this->email,
-            'password' => Hash::make(trim($this->password)),
+            'password' => Hash::make($this->password),
         ]);
 
         $token = JWTAuth::fromUser($user);

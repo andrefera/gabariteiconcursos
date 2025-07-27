@@ -97,4 +97,27 @@ class Product extends Model
     {
         return $this->belongsToMany(Category::class, 'product_categories');
     }
+
+    public function checkStock(string $sizeItem, int $quantity): bool
+    {
+        $size = $this->sizes()->where('name', $sizeItem)->first();
+        if (!$size) {
+            return false;
+        }
+
+        return $size->stock >= $quantity;
+    }
+
+    public function updateStock(string $sizeItem, int $quantity): bool
+    {
+        $size = $this->sizes()->where('name', $sizeItem)->first();
+        if (!$size || $size->stock < $quantity) {
+            return false;
+        }
+
+        $size->stock -= $quantity;
+        $size->save();
+
+        return true;
+    }
 }
