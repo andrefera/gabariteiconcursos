@@ -41,6 +41,16 @@ mix.sass('resources/scss/order_list.scss', 'public/assets/css').options({
     processCssUrls: false
 });
 
+mix.combine([
+    'resources/lib/swiper/swiper.min.css',
+], 'public/assets/css/plugins.css');
+
+mix.combine([
+    'resources/lib/swiper/swiper.min.js',
+], 'public/assets/js/swiper.min.js');
+
+mix.js('resources/js/home.js', 'public/assets/js/home.min.js');
+
 
 const partytown = require('@builder.io/partytown/utils');
 

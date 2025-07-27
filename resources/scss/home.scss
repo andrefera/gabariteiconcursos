@@ -53,55 +53,73 @@ body {
 // Estilos para seção de equipe
 .teamSection {
     margin-top: 25px;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 20px;
 
-    .teamGroup {
+    .swiper-container {
+        width: 100%;
+        padding-bottom: 52px;
+        padding-top: 32px;
+        position: relative;
+    }
+
+    .swiper-wrapper {
+        align-items: center;
+    }
+
+    .swiper-slide {
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
+        align-items: center;
+        height: auto;
+    }
 
-        .team {
-            border: 5px solid transparent;
-            border-radius: 50%;
-            display: flex;
-            padding: 15px;
-            background-color: #f9f9f9;
-            width: 120px;
-            height: 120px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            background: linear-gradient(#f9f9f9, #f9f9f9) padding-box,
+    .team {
+        border: 5px solid transparent;
+        border-radius: 50%;
+        display: flex;
+        padding: 16px; // intermediário
+        background-color: #f9f9f9;
+        width: 140px; // intermediário
+        height: 140px; // intermediário
+        transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(#f9f9f9, #f9f9f9) padding-box,
             linear-gradient(45deg, #ff4e1a, #FF7C00) border-box;
 
-            &:hover {
-                transform: scale(1.1);
-                box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-                background-color: #eaeaea;
-            }
-
-            img {
-                width: 100%;
-                height: 100%;
-                object-fit: contain;
-                object-position: center;
-            }
+        &:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            background-color: #eaeaea;
         }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+        }
+    }
+
+    .swiper-pagination-teams {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        z-index: 10;
     }
 }
 
 .destaques {
-    padding: 20px 0;
 
     .grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 20px;
+        padding-bottom: 50px;
     }
 
     .card {
@@ -179,24 +197,32 @@ body {
 }
 
 .optionsProduct {
-    padding: 20px 0;
+    padding-bottom: 20px;
 
     .alignOptions {
         display: flex;
         justify-content: space-between;
 
+        @media (max-width: 1180px) {
+            flex-direction: column;
+            align-items: center;
+        }
+
         .option {
-            overflow: hidden; /* Garante que o efeito não ultrapasse a área */
+            overflow: hidden;
+            /* Garante que o efeito não ultrapasse a área */
             display: inline-block;
 
             img {
                 max-width: 475px;
                 width: 100%;
-                transition: transform 0.3s ease-in-out; /* Efeito suave */
+                transition: transform 0.3s ease-in-out;
+                /* Efeito suave */
             }
 
             &:hover img {
-                transform: scale(1.1); /* Aumenta levemente o tamanho */
+                transform: scale(1.1);
+                /* Aumenta levemente o tamanho */
             }
         }
     }
@@ -224,6 +250,12 @@ body {
     .features-grid {
         display: flex;
         justify-content: space-between;
+        gap: 20px;
+
+        @media (max-width: 768px) {
+            flex-direction: column;
+            gap: 30px;
+        }
 
         .feature-card {
             display: flex;
@@ -231,16 +263,50 @@ body {
             gap: 14px;
             max-width: 350px;
             width: 100%;
+            padding: 20px;
+            border-radius: 12px;
+
+            @media (max-width: 768px) {
+                max-width: 100%;
+                padding: 25px;
+                text-align: center;
+                flex-direction: column;
+                gap: 20px;
+            }
+
+
+            img {
+                @media (max-width: 768px) {
+                    width: 60px;
+                    height: 60px;
+                }
+            }
 
             .featureGroup {
+                @media (max-width: 768px) {
+                    text-align: center;
+                }
 
                 p {
                     font-size: 16px;
                     font-weight: 600;
+                    margin-bottom: 8px;
+                    color: #333;
+
+                    @media (max-width: 768px) {
+                        font-size: 18px;
+                        margin-bottom: 12px;
+                    }
                 }
 
                 span {
                     font-size: 14px;
+                    color: #666;
+                    line-height: 1.5;
+
+                    @media (max-width: 768px) {
+                        font-size: 15px;
+                    }
                 }
             }
         }
@@ -255,6 +321,7 @@ body {
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 20px;
         margin-top: 20px;
+        padding-bottom: 50px; // Espaço para paginação no mobile
     }
 
     .review-card {
@@ -319,5 +386,55 @@ body {
     }
 }
 
+.s-slide-hero {
+    .swiper-container {
+        width: 100%;
+        max-width: 100vw;
+        height: auto;
+        margin: 0 auto;
+        position: relative;
+        aspect-ratio: 16/5; // Mantém proporção larga e responsiva
+        background: #222;
+    }
 
+    .swiper-slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain; // Mostra a imagem inteira, sem cortar
+        border-radius: 18px;
+        background: #222;
+    }
 
+    .swiper-pagination-banner {
+        display: none !important;
+    }
+}
+
+.swiper-pagination,
+.swiper-pagination-teams,
+.swiper-pagination-destaques {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    z-index: 10;
+    bottom: 0;
+    margin-top: 10px;
+}
+
+.swiper-pagination-bullet {
+    background: #FF7C00 !important; // laranja forçado
+    opacity: 0.5;
+    width: 10px !important;
+    height: 10px !important;
+    margin: 0 3px !important;
+    border-radius: 50%;
+    transition: opacity 0.2s;
+    display: inline-block;
+}
+
+.swiper-pagination-bullet-active {
+    opacity: 1;
+    background: #FF7C00 !important; // laranja forçado
+    box-shadow: 0 0 0 2px #fff;
+}

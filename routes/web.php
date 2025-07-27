@@ -14,6 +14,14 @@ Route::get('/minha-conta', function () {
     return view('orders.index');
 });
 
+Route::get('/meus-dados', function () {
+    return view('orders.data');
+});
+
+Route::get('/meus-pedidos', function () {
+    return view('orders.orders');
+});
+
 Route::get('/camiseta/camisa-jogador-flamengo', function () {
     return view('details.index');
 });
