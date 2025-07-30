@@ -6,8 +6,8 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li><a href="#">Início</a></li>
-                <li><a href="/camisetas">Camisetas</a></li>
-                <li class="active">Camisa Jogador Flamengo | 2024/25</li>
+                <li><a href="/shirts">Camisetas</a></li>
+                <li class="active">{{$product->name}}</li>
             </ol>
         </nav>
     </div>
@@ -17,28 +17,28 @@
                 <div class="imageArea">
                     <div class="imageMain">
                         <img width="600" height="600"
-                             src="{{ asset('https://promantos.com.br/cdn/shop/files/E0FFA9E0-E91B-40E8-95F9-4C95F7A592D7_600x.jpg?v=1731013907') }}"
+                             src="{{ $product->images[0]->url ?? asset('https://promantos.com.br/cdn/shop/files/E0FFA9E0-E91B-40E8-95F9-4C95F7A592D7_600x.jpg?v=1731013907') }}"
                              alt="Ellon Sports Banner">
                     </div>
                     <div class="otherImages">
                         <div class="otherImage">
                             <img
-                                src="{{ asset('https://promantos.com.br/cdn/shop/files/camisa-camiseta-blusa-do-flamengo-nova-lancamento-da-temporada-2024_25-24_25-i-1-titular-principal-primeira-home-vermelha-e-preta-rubro-negra-listrada-masculina-versao-modelo-jogador_1770296b-038a-4f2f-9e69-7545b94c9ab6_130x.jpg?v=1711750264') }}"
+                                src="{{ $product->images[0]->url ?? asset('https://promantos.com.br/cdn/shop/files/camisa-camiseta-blusa-do-flamengo-nova-lancamento-da-temporada-2024_25-24_25-i-1-titular-principal-primeira-home-vermelha-e-preta-rubro-negra-listrada-masculina-versao-modelo-jogador_1770296b-038a-4f2f-9e69-7545b94c9ab6_130x.jpg?v=1711750264') }}"
                                 alt="Ellon Sports Banner">
                         </div>
                         <div class="otherImage">
                             <img
-                                src="{{ asset('https://promantos.com.br/cdn/shop/files/1F114692-6679-4C04-96AA-FFD3F50850E7_600x.png?v=1714416123') }}"
+                                src="{{ $product->images[0]->url ?? asset('https://promantos.com.br/cdn/shop/files/1F114692-6679-4C04-96AA-FFD3F50850E7_600x.png?v=1714416123') }}"
                                 alt="Ellon Sports Banner">
                         </div>
                         <div class="otherImage">
                             <img
-                                src="{{ asset('https://promantos.com.br/cdn/shop/files/1B615CE0-111C-429A-AC68-23E66C7D5FDE_600x.png?v=1714416123') }}"
+                                src="{{ $product->images[0]->url ?? asset('https://promantos.com.br/cdn/shop/files/1B615CE0-111C-429A-AC68-23E66C7D5FDE_600x.png?v=1714416123') }}"
                                 alt="Ellon Sports Banner">
                         </div>
                         <div class="otherImage">
                             <img
-                                src="{{ asset('https://promantos.com.br/cdn/shop/files/camisa-camiseta-blusa-do-flamengo-nova-lancamento-da-temporada-2024_25-24_25-i-1-titular-principal-primeira-home-vermelha-e-preta-rubro-negra-listrada-masculina-versao-modelo-jogador_f4115a4b-e150-4d98-9996-4e133afcb6ff_600x.jpg?v=1714416123') }}"
+                                src="{{ $product->images[0]->url ?? asset('https://promantos.com.br/cdn/shop/files/camisa-camiseta-blusa-do-flamengo-nova-lancamento-da-temporada-2024_25-24_25-i-1-titular-principal-primeira-home-vermelha-e-preta-rubro-negra-listrada-masculina-versao-modelo-jogador_f4115a4b-e150-4d98-9996-4e133afcb6ff_600x.jpg?v=1714416123') }}"
                                 alt="Ellon Sports Banner">
                         </div>
                     </div>
@@ -46,21 +46,24 @@
 
                 <div class="textArea">
                     <div class="firstStep">
-                        <h1 class="title">Camisa Jogador Flamengo | 2024/25 - Paixão Pelo Mengão</h1>
+                        <h1 class="title">{{$product->name}}</h1>
                         <div class="stars">★★★★★
                             <p>(121)</p>
                         </div>
                     </div>
                     <div class="secondStep">
                         <div class="priceGroup">
-                            <div class="discountArea">
-                                <span class="totalPrice">de R$ 525,60</span>
-                                <span class="offer">43% OFF</span>
-                            </div>
+                            @if($product->special_price && $product->discount_percentage)
+                                <div class="discountArea">
+                                    <span class="totalPrice">de {{$product->price}}</span>
+                                    <span class="offer">{{$product->discount_percentage}} OFF</span>
+                                </div>
+                            @endif
                             <div class="group">
                                 <div class="alignPrice">
-                                    <p class="price">12x de R$ 24,75</p>
-                                    <span class="specialPrice">ou R$ 297,00 à vista</span>
+                                    <p class="price">{{$product->installment_price}}</p>
+                                    <span
+                                        class="specialPrice">ou {{$product->special_price ?? $product->price}} à vista</span>
                                 </div>
                             </div>
                         </div>
@@ -68,10 +71,9 @@
                     <div class="thirdStep">
                         <p class="choose">Escolha sua medida</p>
                         <div class="buttons">
-                            <button class="active btnMeasure">P</button>
-                            <button class="btnMeasure">M</button>
-                            <button class="btnMeasure">G</button>
-                            <button class="btnMeasure">GG</button>
+                            @foreach($product->sizes as $key => $size)
+                                <button class="btnMeasure">{{$size->name}}</button>
+                            @endforeach
                         </div>
                         <button class="tableMeasure">
                             <img width="22" height="22" src="{{ asset('images/icons/regua-icon.png') }}" alt="regua">
@@ -103,25 +105,20 @@
     <section class="descriptionSection">
         <div class="alignSection">
             <hr>
-            <p class="title">Descrição</p>
-            <p class="description">
-                Essa armadura vai te cair bem, tricolor! Essa Camisa Fluminense II 24/25 s/n°Jogador Umbro Masculina é a
-                escolha perfeita para demonstrar a paixão pelo Tricolor das Laranjeiras com estilo e conforto. Feita em
-                poliéster, a peça é leve e respirável, ideal para curtir uma vitória no Maraca e para o dia a dia.
-                Predominantemente branca, a camisa do Fluminense apresenta gola V e mangas curtas, dando um ar de
-                modernidade a esta versão da camisa do Flu. As listras em verde e grená, presentes na parte frontal e
-                nas costas, trazem as cores históricas do Fluminense, reforçando a identidade tricolor. Por fim, essa
-                camisa de time conta com um pequeno patch com o tema “Paixão Carioca” - representando o mar, céu e
-                areia, celebrando a cultura e beleza do Rio de Janeiro. Clube com mais história, sei que não há. Adquira
-                já, tricolor!
-            </p>
+            @if($product->description)
+                <p class="title">Descrição</p>
+                <p class="description">{{$product->description}}</p>
+            @endif
+
             <div class="informations">
                 <div class="groupInfo">
-                    <p><span>Nome:</span> Camisa Jogador Flamengo | 2024/25 - Paixão Pelo Mengão</p>
-                    <p><span>Gênero:</span> Masculino</p>
+                    <p><span>Nome:</span> {{$product->name}}</p>
+                    <p><span>Gênero:</span> {{$product->gender}}</p>
                     <p><span>Indicado para:</span> Jogo</p>
-                    <p><span>Clube:</span> Nacional</p>
-                    <p><span>Time:</span> Fluminense RJ</p>
+                    @if($product->team)
+                        <p><span>Time:</span> {{$product->team}}</p>
+                    @endif
+
                 </div>
                 <div class="groupInfo">
                     <p><span>Gola:</span> Gola V</p>
@@ -379,7 +376,7 @@
                     <li><a href="/busca/creatina-1kg">
                             creatina 1kg
                         </a></li>
-                    <li><a href="/camisetas/masculino">
+                    <li><a href="/shirts/masculino">
                             camiseta masculina
                         </a></li>
                     <li><a href="/mochilas/masculino">
@@ -481,9 +478,71 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        // Fade-in já existente
         const elements = document.querySelectorAll('.fade-in');
         elements.forEach(element => {
             element.classList.add('show');
+        });
+
+        // Seleção de tamanho
+        let selectedSize = null;
+        document.querySelectorAll('.btnMeasure').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelectorAll('.btnMeasure').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                selectedSize = this.textContent.trim();
+            });
+        });
+
+        // Controle de quantidade
+        let quantity = 1;
+        const quantityDisplay = document.querySelector('.quantity');
+        const btnsQtd = document.querySelectorAll('.btnQtd');
+        btnsQtd[0].addEventListener('click', function () {
+            if (quantity > 1) {
+                quantity--;
+                quantityDisplay.textContent = quantity;
+            }
+        });
+        btnsQtd[1].addEventListener('click', function () {
+            quantity++;
+            quantityDisplay.textContent = quantity;
+        });
+
+        // Adicionar ao Carrinho
+        document.querySelector('.btnCart').addEventListener('click', async function () {
+            const productId = "{{ $product->id }}";
+            if (!selectedSize) {
+                alert('Selecione um tamanho!');
+                return;
+            }
+            // CSRF token do Laravel
+            const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            try {
+                const response = await fetch("{{ route('cart.add') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    },
+                    body: JSON.stringify({
+                        product_id: productId,
+                        size: selectedSize,
+                        quantity: quantity
+                    })
+                });
+                if (response.ok) {
+                    // Sucesso: pode redirecionar ou mostrar mensagem
+                    alert('Produto adicionado ao carrinho!');
+                    // window.location.href = '/cart'; // descomente se quiser redirecionar
+                } else {
+                    const data = await response.json();
+                    alert(data.message || 'Erro ao adicionar ao carrinho.');
+                }
+            } catch (e) {
+                alert('Erro ao adicionar ao carrinho.');
+            }
         });
     });
 </script>

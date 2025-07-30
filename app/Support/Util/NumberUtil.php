@@ -8,4 +8,14 @@ readonly class NumberUtil
     {
         return "R$" . number_format($price, 2, ',', '.');
     }
+
+    public static function calculateDiscountPercentage(float $price, ?float $specialPrice): ?string
+    {
+
+        if (!$price || !$specialPrice || $specialPrice >= $price) {
+            return null;
+        }
+
+        return intval((($price - $specialPrice) / $price) * 100, 2) . "%";
+    }
 }

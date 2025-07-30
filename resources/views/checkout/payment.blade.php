@@ -590,7 +590,7 @@
                     return;
                 }
                 if (data.success === true && data.orderId) {
-                    window.location.href = `/checkout/pagamento-confirmado/${data.orderId}`;
+                    window.location.href = `/checkout/payment-confirmed/${data.orderId}`;
                     return;
                 }
                 document.getElementById("paymentResponse").innerHTML = `<p>${data.message}</p>`;

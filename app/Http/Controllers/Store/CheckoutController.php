@@ -29,7 +29,7 @@ class CheckoutController extends Controller
     {
         $cart = Session::get('cart');
         if (!$cart) {
-            return redirect()->to('/carrinho');
+            return redirect()->to('/cart');
         }
 
         $user = Auth::user();
@@ -45,7 +45,7 @@ class CheckoutController extends Controller
     public function calculateShipping(UserAddress $address)
     {
         $cart = Session::get('cart');
-        
+
         $cacheKey = "shipping_" . $address->zip_code . "_" . $cart->total;
         $zipCode = str_replace(['-', '.'], '', $address->zip_code);
 
@@ -101,10 +101,10 @@ class CheckoutController extends Controller
             }
 
             throw new \Exception('Não foi possível calcular o frete.');
-            
+
         } catch (\Exception $e) {
             Log::error('Erro ao calcular frete:', ['error' => $e->getMessage()]);
-            
+
             $fallbackOptions = ShippingUtil::getDefaultShipping($zipCode);
 
             Cache::put($cacheKey, $fallbackOptions, 1800);
@@ -121,7 +121,7 @@ class CheckoutController extends Controller
 
         $address = UserAddress::where('user_id', Auth::user()->id)
             ->findOrFail($request->address_id);
-            
+
         $address->delete();
 
         return response()->json([
@@ -150,7 +150,7 @@ class CheckoutController extends Controller
 
         try {
             $cart->shippings()->delete(); // Remove shipping anterior se existir
-            
+
             $cart->shippings()->create([
                 'address_id' => $request->address_id,
                 'name' => $request->shipping_method,
@@ -175,7 +175,7 @@ class CheckoutController extends Controller
     {
         $cart = Session::get('cart');
         if (!$cart) {
-            return redirect()->to('/carrinho');
+            return redirect()->to('/cart');
         }
 
         return view('checkout.payment', ['cart' => CartDTO::fromCart($cart)]);
@@ -205,7 +205,7 @@ class CheckoutController extends Controller
     {
         $order = \App\Models\Order::with(['items', 'payments'])->find($id);
         if (!$order) {
-            return view('checkout.pagamento-confirmado', ['order' => null]);
+            return view('checkout.payment-confirmed', ['order' => null]);
         }
 
         $paymentStatus = $order->status;
@@ -242,6 +242,6 @@ class CheckoutController extends Controller
             'payment_message' => $paymentData['message'] ?? null,
         ];
 
-        return view('checkout.pagamento-confirmado', ['order' => (object)$orderSummary]);
+        return view('checkout.payment-confirmed', ['order' => (object)$orderSummary]);
     }
 }

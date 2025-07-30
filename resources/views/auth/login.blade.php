@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{!! asset('assets/css/login.css') !!}">
 </head>
 <body>
-<button onclick="window.scrollTo({ top: 0, behavior: 'smooth' });" class="botaoVoltarTopo">
+<button id="botaoVoltar" class="botaoVoltarTopo">
     ⬅ Voltar
 </button>
 
@@ -45,7 +45,7 @@
                     Senha
                     <a href="#" class="linkRecuperarSenha" id="esqueceuSenha">Esqueceu a senha?</a>
                 </label>
-                <input type="password" id="senha" name="password" placeholder="mín. 8 caracteres"/>
+                <input type="password" id="senha" name="password" placeholder="mín. 6 caracteres"/>
             </div>
             <div class="campo visivelSuave" id="grupoConfirmaSenha">
                 <label class="labelInput" for="confirmaSenha">Confirmar Senha</label>
@@ -71,6 +71,14 @@
 </div>
 
 <script>
+    document.getElementById('botaoVoltar').onclick = function() {
+        if (document.referrer && !document.referrer.endsWith('/')) {
+            window.history.back();
+        } else {
+            window.location.href = '/';
+        }
+    };
+
     const alternarLink = document.getElementById('alternarFormulario');
     const formTitulo = document.getElementById('formTitulo');
     const formDescricao = document.getElementById('formDescricao');
@@ -137,7 +145,7 @@
     // Handle form submission
     formulario.addEventListener('submit', async function(e) {
         e.preventDefault();
-        
+
         const formData = {
             email: document.getElementById('email').value,
             password: document.getElementById('senha').value,
@@ -150,6 +158,11 @@
 
             if (!document.getElementById('termos').checked) {
                 alert('Por favor, aceite os termos e condições para continuar.');
+                return;
+            }
+
+            if (!formData.password || formData.password.length < 6) {
+                alert('A senha precisa ter no mínimo 6 caracteres.');
                 return;
             }
 
@@ -175,7 +188,7 @@
             }
 
             const data = await response.json();
-            
+
             if (data.success) {
                 window.location.href = '/';
             } else {

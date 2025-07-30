@@ -1073,7 +1073,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = await response.json();
 
             if (data.success) {
-                window.location.href = '/checkout/pagamento';
+                window.location.href = '/checkout/payment';
             } else {
                 showToast(data.message || 'Erro ao salvar informações de envio', true);
             }
