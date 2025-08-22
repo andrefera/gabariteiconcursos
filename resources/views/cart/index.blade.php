@@ -8,7 +8,7 @@
                 <div class="empty-cart">
                     <h1>Seu carrinho está vazio</h1>
                     <p>Você ainda não adicionou nenhum produto ao seu carrinho.</p>
-                    <a href="/camisetas" class="btn-continue">Continuar Comprando</a>
+                    <a href="/shirts" class="btn-continue">Continuar Comprando</a>
                 </div>
             @else
                 <h1>Carrinho de Compras ({{ $cart->totalProducts }})</h1>
@@ -76,7 +76,7 @@
                         @endforeach
                     </div>
                     <div class="cart-resume">
-                        <a href="/camisetas" class="keep-buying">Continuar comprando</a>
+                        <a href="/shirts" class="keep-buying">Continuar comprando</a>
                         <div class="cart-resume-container">
                             <h4>Resumo do pedido</h4>
                             <div class="divisor"></div>
@@ -170,7 +170,7 @@
             function updateQuantity(itemId, newQuantity) {
                 if (!newQuantity || newQuantity < 1) return;
 
-                fetch(`/carrinho/item/${itemId}`, {
+                fetch(`/cart/item/${itemId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -210,7 +210,7 @@
             function removeItem(itemId) {
                 if (!confirm('Tem certeza que deseja remover este item do carrinho?')) return;
 
-                fetch(`/carrinho/item/${itemId}`, {
+                fetch(`/cart/item/${itemId}`, {
                     method: 'DELETE',
                     headers: {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content

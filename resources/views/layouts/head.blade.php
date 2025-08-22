@@ -28,7 +28,7 @@
               href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap">
     </noscript>
 
-    <link rel="icon" type="image/png" href="favicon.ico">
+    <link rel="icon" type="image/png" href="{{ asset('favicon.ico') }}">
     <link rel="stylesheet" href="{!! asset('assets/css/header.css') !!}">
     <link rel="stylesheet" href="{!! asset('assets/css/footer.css') !!}">
     <link rel="stylesheet" href="{!! asset('assets/css/main.css') !!}">
