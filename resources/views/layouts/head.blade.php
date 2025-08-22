@@ -30,6 +30,7 @@
 
     <link rel="icon" type="image/png" href="favicon.ico">
     <link rel="stylesheet" href="{!! asset('assets/css/header.css') !!}">
+    <link rel="stylesheet" href="{!! asset('assets/css/footer.css') !!}">
     <link rel="stylesheet" href="{!! asset('assets/css/main.css') !!}">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="HandheldFriendly" content="true">
@@ -73,4 +74,5 @@
         }
     }
     </script>
+    <script src="{{ asset('assets/js/header.min.js') }}?v={{ env('STATIC_VERSION', time()) }}" defer></script>
 </head>

@@ -5,11 +5,13 @@
             justify-content: space-between;
             gap: 170px;
 
+            // Estilos para a galeria de imagens do produto
             .imageArea {
                 display: grid;
                 grid-template-columns: 1fr; // Apenas uma coluna, tudo centralizado
                 gap: 15px;
                 justify-items: center;
+                position: relative;
 
                 .imageMain {
                     width: 100%;
@@ -21,19 +23,56 @@
                     padding: 25px;
                     border-radius: 21px;
                     box-shadow: 0 1px 5px 0 #00000014;
+                    transition: all 0.3s ease;
+
+                    &:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+                    }
 
                     img {
                         cursor: pointer;
                         border-radius: 16px;
                         width: 100%;
                         height: auto;
+                        display: block;
+                        transition: transform 0.3s ease;
+
+                        &:hover {
+                            transform: scale(1.02);
+                        }
+                    }
+
+                    .zoom-indicator {
+                        position: absolute;
+                        top: 15px;
+                        right: 15px;
+                        background: rgba(0, 0, 0, 0.8);
+                        color: white;
+                        padding: 10px;
+                        border-radius: 50%;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        z-index: 10;
+                        backdrop-filter: blur(10px);
+
+                        &:hover {
+                            background: rgba(0, 0, 0, 0.9);
+                            transform: scale(1.1);
+                        }
+
+                        svg {
+                            width: 20px;
+                            height: 20px;
+                        }
                     }
                 }
 
                 .otherImages {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); // Responsivo para organizar as imagens menores
-                    gap: 10px;
+                    display: flex;
+                    gap: 12px;
+                    margin-top: 16px;
+                    flex-wrap: wrap;
                     justify-content: center;
                     width: 100%;
                     max-width: 600px;
@@ -47,11 +86,30 @@
                         padding: 10px;
                         border-radius: 21px;
                         box-shadow: 0 1px 5px 0 #00000014;
+                        border: 2px solid transparent;
+                        transition: all 0.3s ease;
+                        position: relative;
+
+                        &:hover {
+                            transform: translateY(-2px);
+                            border-color: #007bff;
+                        }
+
+                        &.active {
+                            border-color: #007bff;
+                            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+                        }
 
                         img {
                             border-radius: 16px;
                             width: 100%;
                             max-width: 120px; // Mantém o tamanho reduzido das imagens menores
+                            display: block;
+                            transition: transform 0.2s ease;
+                        }
+
+                        &:hover img {
+                            transform: scale(1.05);
                         }
                     }
                 }
@@ -662,5 +720,146 @@ hr {
             }
         }
     }
+}
+
+// Estilos responsivos para a galeria
+@media (max-width: 768px) {
+    .imageArea {
+        .otherImages {
+            gap: 8px;
+
+            .otherImage {
+                flex: 0 0 calc(25% - 6px);
+            }
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .imageArea {
+        .otherImages {
+            .otherImage {
+                flex: 0 0 calc(33.333% - 6px);
+            }
+        }
+    }
+}
+
+// Estilos para o PhotoSwipe
+.pswp {
+    background: rgba(0, 0, 0, 0.95);
+
+    .pswp__bg {
+        background: rgba(0, 0, 0, 0.95);
+    }
+
+    .pswp__top-bar {
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+    }
+
+    .pswp__counter {
+        color: white;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .pswp__button {
+        color: white;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        width: 44px;
+        height: 44px;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        svg {
+            width: 20px;
+            height: 20px;
+        }
+    }
+
+    .pswp__img {
+        border-radius: 8px;
+    }
+}
+
+// Animações para as imagens
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.imageArea {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+// Indicadores visuais para interatividade
+.imageMain::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+    pointer-events: none;
+}
+
+.imageMain:hover::before {
+    transform: translateX(100%);
+}
+
+// Tooltip personalizado
+.imageMain img[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+// Estados de carregamento
+.imageMain.loading {
+    position: relative;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 30px;
+        height: 30px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #007bff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 

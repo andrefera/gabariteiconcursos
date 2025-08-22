@@ -40,16 +40,22 @@ mix.sass('resources/scss/login.scss', 'public/assets/css').options({
 mix.sass('resources/scss/order_list.scss', 'public/assets/css').options({
     processCssUrls: false
 });
+mix.sass('resources/scss/footer.scss', 'public/assets/css').options({
+    processCssUrls: false
+});
 
+// Apenas Swiper
 mix.combine([
-    'resources/lib/swiper/swiper.min.css',
+    'resources/lib/swiper/swiper.min.css'
 ], 'public/assets/css/plugins.css');
 
 mix.combine([
-    'resources/lib/swiper/swiper.min.js',
-], 'public/assets/js/swiper.min.js');
+    'resources/lib/swiper/swiper.min.js'
+], 'public/assets/js/plugins.min.js');
 
 mix.js('resources/js/home.js', 'public/assets/js/home.min.js');
+mix.js('resources/js/header.js', 'public/assets/js/header.min.js');
+mix.js('resources/js/detail.js', 'public/assets/js/detail.min.js');
 
 
 const partytown = require('@builder.io/partytown/utils');

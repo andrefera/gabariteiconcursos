@@ -1,6 +1,8 @@
 @extends('layouts.app')
 @section('title', 'Ellon Sports | Para Torcedores Apaixonados')
 <link rel="stylesheet" href="{!! asset('assets/css/detail.css') !!}">
+<link rel="stylesheet" href="{!! asset('assets/css/plugins.css') !!}">
+
 @section('content')
     <div class="alignSection">
         <nav aria-label="breadcrumb">
@@ -15,31 +17,32 @@
         <div class="alignSection">
             <div class="productArea">
                 <div class="imageArea">
+                    <!-- Container da imagem principal -->
                     <div class="imageMain">
                         <img width="600" height="600"
-                             src="{{ asset('https://promantos.com.br/cdn/shop/files/E0FFA9E0-E91B-40E8-95F9-4C95F7A592D7_600x.jpg?v=1731013907') }}"
-                             alt="Ellon Sports Banner">
+                             src="https://promantos.com.br/cdn/shop/files/E0FFA9E0-E91B-40E8-95F9-4C95F7A592D7_600x.jpg?v=1731013907"
+                             alt="Camisa Jogador Flamengo - Vista Frontal"
+                             class="main-product-image"
+                             id="mainImage">
                     </div>
+
+                    <!-- Miniaturas das imagens -->
                     <div class="otherImages">
-                        <div class="otherImage">
-                            <img
-                                src="{{ asset('https://promantos.com.br/cdn/shop/files/camisa-camiseta-blusa-do-flamengo-nova-lancamento-da-temporada-2024_25-24_25-i-1-titular-principal-primeira-home-vermelha-e-preta-rubro-negra-listrada-masculina-versao-modelo-jogador_1770296b-038a-4f2f-9e69-7545b94c9ab6_130x.jpg?v=1711750264') }}"
-                                alt="Ellon Sports Banner">
+                        <div class="otherImage active" data-index="0">
+                            <img src="https://promantos.com.br/cdn/shop/files/E0FFA9E0-E91B-40E8-95F9-4C95F7A592D7_600x.jpg?v=1731013907"
+                                 alt="Camisa Jogador Flamengo - Vista Frontal">
                         </div>
-                        <div class="otherImage">
-                            <img
-                                src="{{ asset('https://promantos.com.br/cdn/shop/files/1F114692-6679-4C04-96AA-FFD3F50850E7_600x.png?v=1714416123') }}"
-                                alt="Ellon Sports Banner">
+                        <div class="otherImage" data-index="1">
+                            <img src="https://promantos.com.br/cdn/shop/files/1F114692-6679-4C04-96AA-FFD3F50850E7_600x.png?v=1714416123"
+                                 alt="Camisa Jogador Flamengo - Detalhes">
                         </div>
-                        <div class="otherImage">
-                            <img
-                                src="{{ asset('https://promantos.com.br/cdn/shop/files/1B615CE0-111C-429A-AC68-23E66C7D5FDE_600x.png?v=1714416123') }}"
-                                alt="Ellon Sports Banner">
+                        <div class="otherImage" data-index="2">
+                            <img src="https://promantos.com.br/cdn/shop/files/1B615CE0-111C-429A-AC68-23E66C7D5FDE_600x.png?v=1714416123"
+                                 alt="Camisa Jogador Flamengo - Costas">
                         </div>
-                        <div class="otherImage">
-                            <img
-                                src="{{ asset('https://promantos.com.br/cdn/shop/files/camisa-camiseta-blusa-do-flamengo-nova-lancamento-da-temporada-2024_25-24_25-i-1-titular-principal-primeira-home-vermelha-e-preta-rubro-negra-listrada-masculina-versao-modelo-jogador_f4115a4b-e150-4d98-9996-4e133afcb6ff_600x.jpg?v=1714416123') }}"
-                                alt="Ellon Sports Banner">
+                        <div class="otherImage" data-index="3">
+                            <img src="https://promantos.com.br/cdn/shop/files/camisa-camiseta-blusa-do-flamengo-nova-lancamento-da-temporada-2024_25-24_25-i-1-titular-principal-primeira-home-vermelha-e-preta-rubro-negra-listrada-masculina-versao-modelo-jogador_f4115a4b-e150-4d98-9996-4e133afcb6ff_600x.jpg?v=1714416123"
+                                 alt="Camisa Jogador Flamengo - Vista Completa">
                         </div>
                     </div>
                 </div>
@@ -478,6 +481,10 @@
         </div>
     </footer>
 @endsection
+
+<!-- Scripts -->
+<script src="{{ asset('assets/js/plugins.min.js') }}?v={{ env('STATIC_VERSION', time()) }}"></script>
+<script src="{{ asset('assets/js/detail.min.js') }}?v={{ env('STATIC_VERSION', time()) }}"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
