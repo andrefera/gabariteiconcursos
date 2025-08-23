@@ -16,6 +16,7 @@ readonly class ListProducts
         private ?string $type,
         private ?bool   $is_active,
         private ?string $team_name,
+        private ?string $team_url,
         private ?string $category,
         private ?string $gender,
         private int     $page = 1,
@@ -79,6 +80,7 @@ readonly class ListProducts
             'type' => $this->type,
             'is_active' => is_bool($this->is_active) ? ($this->is_active ? "Sim" : "Não") : null,
             'team_name' => $this->team_name,
+            'team_url' => $this->team_url,
             'categories' => $this->category,
             'gender' => $this->gender,
         ];
@@ -105,6 +107,7 @@ readonly class ListProducts
             $request->get('type'),
             !$request->get('is_active') ? null : $request->get('is_active') == 'true',
             $request->get('team_name'),
+            $request->get('team_url'),
             $request->get('category'),
             $request->get('gender'),
             $request->get('page'),

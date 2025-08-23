@@ -4,16 +4,17 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Store\CartController;
 use App\Http\Controllers\Store\CheckoutController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Store\HomeController;
 use App\Http\Controllers\Store\ProductController;
 use App\Http\Controllers\Store\ProductSearchController;
+use App\Http\Controllers\PrivacyController;
+use App\Http\Controllers\TermsController;
 use App\Http\Middleware\CheckUserProfile;
 use App\Http\Middleware\SessionTokenMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('web')->group(function () {
-    Route::get('/', function () {
-        return view('home');
-    });
+    Route::get('/', [HomeController::class, 'index'])->name('home');
 
     // Autenticação (páginas)
     Route::get('login', [AuthController::class, 'login'])->name('login');
@@ -88,4 +89,13 @@ Route::middleware('web')->group(function () {
 
     // Busca
     Route::get('/search/products', [ProductSearchController::class, 'search']);
+    
+    // Política de Privacidade
+    Route::get('/politica-privacidade', [PrivacyController::class, 'index'])->name('privacy.policy');
+    
+    // Termos de Uso
+    Route::get('/termos-uso', [TermsController::class, 'index'])->name('terms.use');
+    
+    // Times
+    Route::get('/teams', [App\Http\Controllers\HomeController::class, 'getTeams'])->name('teams.get');
 });

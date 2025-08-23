@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Modules\Admin\Products\Mappers\ProductGenderMapper;
 use App\Modules\Admin\Products\Mappers\ProductTypeMapper;
 use App\Support\Util\ElasticSearchUtil;
+use App\Support\Util\UrlUtil;
 use Carbon\Carbon;
 use Elastic\Elasticsearch\Exception\ClientResponseException;
 use Illuminate\Support\Facades\Log;
@@ -43,6 +44,8 @@ readonly class InsertProductElasticSearch
         $doc->push(['is_active' => $this->product->is_active ? "Sim" : "Não"]);
         $doc->push(['team_id' => $this->product->team?->id]);
         $doc->push(['team_name' => $this->product->team?->name]);
+        $doc->push(['team_url' => $this->product->team?->name ? UrlUtil::formatUrlKey($this->product->team->name) : '']);
+        $doc->push(['team_country' => $this->product->team?->country]);
         $doc->push(['gender' => (new ProductGenderMapper())($this->product->gender)]);
         $doc->push(['season' => $this->product->season]);
         $doc->push(['stock' => $this->product->getStock()]);

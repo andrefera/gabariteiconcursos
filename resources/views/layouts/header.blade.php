@@ -49,63 +49,28 @@
             </a>
         </div>
         
-        <!-- Desktop Options -->
         <div class="options desktop-only">
             <div class="dropdown-menu">
                 <a href="/" class="dropdown-trigger">
                     Brasileiros <img src="{{ asset('images/icons/arrow-down-icon.png') }}" width="10" height="10" alt="Arrow Icon">
                 </a>
-                <div class="dropdown-content">
-                    <a href="/time/flamengo">Flamengo</a>
-                    <a href="/time/corinthians">Corinthians</a>
-                    <a href="/time/palmeiras">Palmeiras</a>
-                    <a href="/time/sao-paulo">São Paulo</a>
-                    <a href="/time/santos">Santos</a>
-                    <a href="/time/botafogo">Botafogo</a>
-                    <a href="/time/fluminense">Fluminense</a>
-                    <a href="/time/vasco">Vasco</a>
-                    <a href="/time/cruzeiro">Cruzeiro</a>
-                    <a href="/time/atletico-mg">Atlético-MG</a>
-                    <a href="/time/gremio">Grêmio</a>
-                    <a href="/time/internacional">Internacional</a>
+                <div class="dropdown-content" id="desktop-brasileiros-content">
+                    
                 </div>
             </div>
             <div class="dropdown-menu">
                 <a href="/" class="dropdown-trigger">
                     Internacionais <img src="{{ asset('images/icons/arrow-down-icon.png') }}" width="10" height="10" alt="Arrow Icon">
                 </a>
-                <div class="dropdown-content">
-                    <a href="/time/real-madrid">Real Madrid</a>
-                    <a href="/time/barcelona">Barcelona</a>
-                    <a href="/time/manchester-united">Manchester United</a>
-                    <a href="/time/manchester-city">Manchester City</a>
-                    <a href="/time/liverpool">Liverpool</a>
-                    <a href="/time/chelsea">Chelsea</a>
-                    <a href="/time/arsenal">Arsenal</a>
-                    <a href="/time/psg">Paris Saint-Germain</a>
-                    <a href="/time/bayern-munich">Bayern München</a>
-                    <a href="/time/juventus">Juventus</a>
-                    <a href="/time/ac-milan">AC Milan</a>
-                    <a href="/time/inter-milan">Inter Milan</a>
+                <div class="dropdown-content" id="desktop-internacionais-content">
+                
                 </div>
             </div>
             <div class="dropdown-menu">
                 <a href="/" class="dropdown-trigger">
                     Seleções <img src="{{ asset('images/icons/arrow-down-icon.png') }}" width="10" height="10" alt="Arrow Icon">
                 </a>
-                <div class="dropdown-content">
-                    <a href="/selecao/brasil">Brasil</a>
-                    <a href="/selecao/argentina">Argentina</a>
-                    <a href="/selecao/uruguay">Uruguai</a>
-                    <a href="/selecao/colombia">Colômbia</a>
-                    <a href="/selecao/chile">Chile</a>
-                    <a href="/selecao/espanha">Espanha</a>
-                    <a href="/selecao/franca">França</a>
-                    <a href="/selecao/alemanha">Alemanha</a>
-                    <a href="/selecao/italia">Itália</a>
-                    <a href="/selecao/portugal">Portugal</a>
-                    <a href="/selecao/inglaterra">Inglaterra</a>
-                    <a href="/selecao/holanda">Holanda</a>
+                <div class="dropdown-content" id="desktop-selecoes-content">
                 </div>
             </div>
         </div>
@@ -182,18 +147,7 @@
                     </svg>
                 </button>
                 <div class="sidebar-section-content" id="brasileiros-content">
-                    <a href="/time/flamengo">🔴 Flamengo</a>
-                    <a href="/time/corinthians">⚫ Corinthians</a>
-                    <a href="/time/palmeiras">🟢 Palmeiras</a>
-                    <a href="/time/sao-paulo">🔴 São Paulo</a>
-                    <a href="/time/santos">⚪ Santos</a>
-                    <a href="/time/botafogo">⚫ Botafogo</a>
-                    <a href="/time/fluminense">🟢 Fluminense</a>
-                    <a href="/time/vasco">⚫ Vasco</a>
-                    <a href="/time/cruzeiro">🔵 Cruzeiro</a>
-                    <a href="/time/atletico-mg">⚫ Atlético-MG</a>
-                    <a href="/time/gremio">🔵 Grêmio</a>
-                    <a href="/time/internacional">🔴 Internacional</a>
+                    
                 </div>
             </div>
             
@@ -206,18 +160,7 @@
                     </svg>
                 </button>
                 <div class="sidebar-section-content" id="internacionais-content">
-                    <a href="/time/real-madrid">👑 Real Madrid</a>
-                    <a href="/time/barcelona">🔵 Barcelona</a>
-                    <a href="/time/manchester-united">🔴 Manchester United</a>
-                    <a href="/time/manchester-city">🔵 Manchester City</a>
-                    <a href="/time/liverpool">🔴 Liverpool</a>
-                    <a href="/time/chelsea">🔵 Chelsea</a>
-                    <a href="/time/arsenal">🔴 Arsenal</a>
-                    <a href="/time/psg">🔵 Paris Saint-Germain</a>
-                    <a href="/time/bayern-munich">🔴 Bayern München</a>
-                    <a href="/time/juventus">⚫ Juventus</a>
-                    <a href="/time/ac-milan">🔴 AC Milan</a>
-                    <a href="/time/inter-milan">🔵 Inter Milan</a>
+                    
                 </div>
             </div>
             
@@ -230,18 +173,7 @@
                     </svg>
                 </button>
                 <div class="sidebar-section-content" id="selecoes-content">
-                    <a href="/selecao/brasil">🇧🇷 Brasil</a>
-                    <a href="/selecao/argentina">🇦🇷 Argentina</a>
-                    <a href="/selecao/uruguay">🇺🇾 Uruguai</a>
-                    <a href="/selecao/colombia">🇨🇴 Colômbia</a>
-                    <a href="/selecao/chile">🇨🇱 Chile</a>
-                    <a href="/selecao/espanha">🇪🇸 Espanha</a>
-                    <a href="/selecao/franca">🇫🇷 França</a>
-                    <a href="/selecao/alemanha">🇩🇪 Alemanha</a>
-                    <a href="/selecao/italia">🇮🇹 Itália</a>
-                    <a href="/selecao/portugal">🇵🇹 Portugal</a>
-                    <a href="/selecao/inglaterra">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra</a>
-                    <a href="/selecao/holanda">🇳🇱 Holanda</a>
+                    
                 </div>
             </div>
         </div>
@@ -395,6 +327,15 @@
     .searchGroup {
         position: relative;
     }
+
+    /* Remover bolinha padrão quando tem logo do time */
+    .dropdown-content a img {
+        margin-right: 4px;
+    }
+    
+    .dropdown-content a.has-logo::before {
+        content: none !important;
+    }
 </style>
 
 <script>
@@ -402,6 +343,78 @@
         const input = document.getElementById('product-search-input');
         const dropdown = document.getElementById('search-results-dropdown');
         let timeout = null;
+
+        // Função para carregar times do backend
+        function loadTeams() {
+            fetch('/teams')
+                .then(res => res.json())
+                .then(teams => {
+                    updateTeamsInHeader(teams);
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar times:', error);
+                });
+        }
+
+        // Função para atualizar os times no header
+        function updateTeamsInHeader(teams) {
+            
+            // Separar times por categoria
+            const brasileiros = teams.filter(team => team.country === 'BR' && team.league !== 'Seleção');
+            const internacionais = teams.filter(team => team.country !== 'BR' && team.league !== 'Seleção');
+            const selecoes = teams.filter(team => team.league === 'Seleção');
+
+            // Atualizar dropdown desktop - Brasileiros
+            const brasileirosDropdown = document.getElementById('desktop-brasileiros-content');
+            if (brasileirosDropdown) {
+                brasileirosDropdown.innerHTML = brasileiros.map(team => 
+                    `<a href="/time/${team.url}" class="${team.logo ? 'has-logo' : ''}">${team.logo ? `<img src="${team.logo}" alt="${team.name}" width="16" height="16" style="margin-right: 4px;">` : '⚽'} ${team.name}</a>`
+                ).join('');
+            }
+
+            // Atualizar dropdown desktop - Internacionais
+            const internacionaisDropdown = document.getElementById('desktop-internacionais-content');
+            if (internacionaisDropdown) {
+                internacionaisDropdown.innerHTML = internacionais.map(team => 
+                    `<a href="/time/${team.url}" class="${team.logo ? 'has-logo' : ''}">${team.logo ? `<img src="${team.logo}" alt="${team.name}" width="16" height="16" style="margin-right: 4px;">` : '⚽'} ${team.name}</a>`
+                ).join('');
+            }
+
+            // Atualizar dropdown desktop - Seleções
+            const selecoesDropdown = document.getElementById('desktop-selecoes-content');
+            if (selecoesDropdown) {
+                selecoesDropdown.innerHTML = selecoes.map(team => 
+                    `<a href="/selecao/${team.url}" class="${team.logo ? 'has-logo' : ''}">${team.logo ? `<img src="${team.logo}" alt="${team.name}" width="16" height="16" style="margin-right: 4px;">` : '⚽'} ${team.name}</a>`
+                ).join('');
+            }
+
+            // Atualizar sidebar mobile - Brasileiros
+            const brasileirosContent = document.getElementById('brasileiros-content');
+            if (brasileirosContent) {
+                brasileirosContent.innerHTML = brasileiros.map(team => 
+                    `<a href="/time/${team.url}">${team.logo ? `<img src="${team.logo}" alt="${team.name}" width="16" height="16" style="margin-right: 4px;">` : '⚽'} ${team.name}</a>`
+                ).join('');
+            }
+
+            // Atualizar sidebar mobile - Internacionais
+            const internacionaisContent = document.getElementById('internacionais-content');
+            if (internacionaisContent) {
+                internacionaisContent.innerHTML = internacionais.map(team => 
+                    `<a href="/time/${team.url}">${team.logo ? `<img src="${team.logo}" alt="${team.name}" width="16" height="16" style="margin-right: 4px;">` : '⚽'} ${team.name}</a>`
+                ).join('');
+            }
+
+            // Atualizar sidebar mobile - Seleções
+            const selecoesContent = document.getElementById('selecoes-content');
+            if (selecoesContent) {
+                selecoesContent.innerHTML = selecoes.map(team => 
+                    `<a href="/time/${team.url}">${team.logo ? `<img src="${team.logo}" alt="${team.name}" width="16" height="16" style="margin-right: 4px;">` : '⚽'} ${team.name}</a>`
+                ).join('');
+            }
+        }
+
+        // Carregar times ao inicializar
+        loadTeams();
 
         input.addEventListener('input', function () {
             clearTimeout(timeout);

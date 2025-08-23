@@ -77,101 +77,38 @@
             <h2 class="title">Destaques</h2>
             <div class="grid swiper-container mySwiper">
                 <div class="swiper-wrapper">
-                    <!-- Card 1 -->
-                    <div class="card swiper-slide">
-                        <div class="cardContent">
-                            <span class="badge">5%</span>
-                            <img
-                                src="https://promantos.com.br/cdn/shop/files/comprar-camisa-camiseta-blusa-do-sao-paulo-nova-lancamento-new-balance-da-temporada-2024_25-24_25-iii-3-terceira-third-vermelha-com-preto-torcida-que-conduz-onibus-masculina-versao-mo_14b6de24-e00c-48bb-bb0c-7879521434a8_700x.jpg?v=1730630374"
-                                alt="Camisa Torcedor Corinthians Treino">
-                        </div>
-                        <div class="info">
-                            <h3>Camisa Torcedor Corinthians Treino 2025/26 - Masculina</h3>
-                            <div>
-                                <span class="price">R$ 179,90</span>
-                                <span class="old-price">R$ 190,00</span>
+                    @if(count($products) > 0)
+                        @foreach($products as $product)
+                            <div class="card swiper-slide">
+                                <a href="/shirt/{{ $product['url'] }}" class="card-link">
+                                    <div class="cardContent">
+                                        @if($product['discount_percentage'])
+                                            <span class="badge">{{ $product['discount_percentage'] }}</span>
+                                        @endif
+                                        <img
+                                            src="{{ $product['image'] ?? asset('images/icon.png') }}"
+                                            alt="{{ $product['name'] }}">
+                                    </div>
+                                    <div class="info">
+                                        <h3>{{ $product['name'] }}</h3>
+                                        <div>
+                                            <span class="price">{{ $product['special_price'] ?? $product['price'] }}</span>
+                                            @if($product['special_price'])
+                                                <span class="old-price">{{ $product['price'] }}</span>
+                                            @endif
+                                        </div>
+                                        <div>{{ $product['installment_price'] }}</div>
+                                        <div class="stars">★★★★★ (5)</div>
+                                        <span class="free-shipping">FRETE GRÁTIS</span>
+                                    </div>
+                                </a>
                             </div>
-                            <div>em até 12x de R$ 18,55</div>
-                            <div class="stars">★★★★★ (5)</div>
-                            <span class="free-shipping">FRETE GRÁTIS</span>
+                        @endforeach
+                    @else
+                        <div class="no-products">
+                            <p>Nenhum produto disponível no momento.</p>
                         </div>
-                    </div>
-                    <!-- Card 2 -->
-                    <div class="card swiper-slide">
-                        <div class="cardContent">
-                            <span class="badge">25%</span>
-                            <img
-                                src="https://promantos.com.br/cdn/shop/files/comprarcamisacamisetablusanovalancamentodocruzeirodatemporada2025_2625_26i1titularprincipalprimeirahomeazulbetfairmasculinaversaotorcedortailandesareplicapromantosdudugabigolkaiojorge_700x.png?v=1743769427"
-                                alt="Camisa Jogador Corinthians II">
-                        </div>
-                        <div class="info">
-                            <h3>Camisa Jogador Corinthians II 2024/25</h3>
-                            <div>
-                                <span class="price">R$ 239,90</span>
-                                <span class="old-price">R$ 320,00</span>
-                            </div>
-                            <div>em até 12x de R$ 24,74</div>
-                            <div class="stars">★★★★★ (5)</div>
-                            <span class="free-shipping">FRETE GRÁTIS</span>
-                        </div>
-                    </div>
-                    <!-- Card 3 -->
-                    <div class="card swiper-slide">
-                        <div class="cardContent">
-                            <span class="badge">5%</span>
-                            <img
-                                src="https://promantos.com.br/cdn/shop/files/camisa-camiseta-blusa-do-botafogo-fogao-reebook-nova-lancamento-da-temporada-ano-2024_25-24_25-i-1-titular-principal-primeira-home-listrada-alvinegra-preta-e-branco-masculina-versao-m_544fe31a-d863-470a-91ed-3d06b62b6b3b_700x.jpg?v=1719517896"
-                                alt="Camisa Torcedor Botafogo I">
-                        </div>
-                        <div class="info">
-                            <h3>Camisa Torcedor Botafogo I 2024/25 - Masculina</h3>
-                            <div>
-                                <span class="price">R$ 179,90</span>
-                                <span class="old-price">R$ 190,00</span>
-                            </div>
-                            <div>em até 12x de R$ 18,55</div>
-                            <div class="stars">★★★★★ (5)</div>
-                            <span class="free-shipping">FRETE GRÁTIS</span>
-                        </div>
-                    </div>
-                    <!-- Card 4 -->
-                    <div class="card swiper-slide">
-                        <div class="cardContent">
-                            <span class="badge">5%</span>
-                            <img
-                                src="https://promantos.com.br/cdn/shop/files/B0A54BED-544F-4E76-A75B-15CF1D62D691_700x.jpg?v=1744552590"
-                                alt="Camisa Torcedor Cruzeiro Treino">
-                        </div>
-                        <div class="info">
-                            <h3>Camisa Torcedor Cruzeiro Treino 2025/26 - Masculina</h3>
-                            <div>
-                                <span class="price">R$ 179,90</span>
-                                <span class="old-price">R$ 190,00</span>
-                            </div>
-                            <div>em até 12x de R$ 18,55</div>
-                            <div class="stars">★★★★★ (5)</div>
-                            <span class="free-shipping">FRETE GRÁTIS</span>
-                        </div>
-                    </div>
-                    <!-- Card 5 -->
-                    <div class="card swiper-slide">
-                        <div class="cardContent">
-                            <span class="badge">5%</span>
-                            <img
-                                src="https://promantos.com.br/cdn/shop/files/camisa-camiseta-blusa-do-botafogo-fogao-reebook-nova-lancamento-da-temporada-ano-2024_25-24_25-i-1-titular-principal-primeira-home-listrada-alvinegra-preta-e-branco-masculina-versao-m_544fe31a-d863-470a-91ed-3d06b62b6b3b_700x.jpg?v=1719517896"
-                                alt="Camisa Torcedor Botafogo I">
-                        </div>
-                        <div class="info">
-                            <h3>Camisa Torcedor Botafogo I 2024/25 - Masculina</h3>
-                            <div>
-                                <span class="price">R$ 179,90</span>
-                                <span class="old-price">R$ 190,00</span>
-                            </div>
-                            <div>em até 12x de R$ 18,55</div>
-                            <div class="stars">★★★★★ (5)</div>
-                            <span class="free-shipping">FRETE GRÁTIS</span>
-                        </div>
-                    </div>
+                    @endif
                 </div>
                 <div class="swiper-pagination swiper-pagination-depoimentos"></div>
             </div>
@@ -199,101 +136,38 @@
             <h2 class="title">Times Europeus</h2>
             <div class="grid swiper-container mySwiperEuropeus">
                 <div class="swiper-wrapper">
-                    <!-- Card 1 -->
-                    <div class="card swiper-slide">
-                        <div class="cardContent">
-                            <span class="badge">5%</span>
-                            <img
-                                src="https://promantos.com.br/cdn/shop/files/comprar-camisa-camiseta-blusa-do-sao-paulo-nova-lancamento-new-balance-da-temporada-2024_25-24_25-iii-3-terceira-third-vermelha-com-preto-torcida-que-conduz-onibus-masculina-versao-mo_14b6de24-e00c-48bb-bb0c-7879521434a8_700x.jpg?v=1730630374"
-                                alt="Camisa Torcedor Corinthians Treino">
-                        </div>
-                        <div class="info">
-                            <h3>Camisa Torcedor Corinthians Treino 2025/26 - Masculina</h3>
-                            <div>
-                                <span class="price">R$ 179,90</span>
-                                <span class="old-price">R$ 190,00</span>
+                    @if(count($europeanProducts) > 0)
+                        @foreach($europeanProducts as $product)
+                            <div class="card swiper-slide">
+                                <a href="/shirt/{{ $product['url'] }}" class="card-link">
+                                    <div class="cardContent">
+                                        @if($product['discount_percentage'])
+                                            <span class="badge">{{ $product['discount_percentage'] }}</span>
+                                        @endif
+                                        <img
+                                            src="{{ $product['image'] ?? asset('images/icon.png') }}"
+                                            alt="{{ $product['name'] }}">
+                                    </div>
+                                    <div class="info">
+                                        <h3>{{ $product['name'] }}</h3>
+                                        <div>
+                                            <span class="price">{{ $product['special_price'] ?? $product['price'] }}</span>
+                                            @if($product['special_price'])
+                                                <span class="old-price">{{ $product['price'] }}</span>
+                                            @endif
+                                        </div>
+                                        <div>{{ $product['installment_price'] }}</div>
+                                        <div class="stars">★★★★★ (5)</div>
+                                        <span class="free-shipping">FRETE GRÁTIS</span>
+                                    </div>
+                                </a>
                             </div>
-                            <div>em até 12x de R$ 18,55</div>
-                            <div class="stars">★★★★★ (5)</div>
-                            <span class="free-shipping">FRETE GRÁTIS</span>
+                        @endforeach
+                    @else
+                        <div class="no-products">
+                            <p>Nenhum produto de times europeus disponível no momento.</p>
                         </div>
-                    </div>
-                    <!-- Card 2 -->
-                    <div class="card swiper-slide">
-                        <div class="cardContent">
-                            <span class="badge">25%</span>
-                            <img
-                                src="https://promantos.com.br/cdn/shop/files/comprarcamisacamisetablusanovalancamentodocruzeirodatemporada2025_2625_26i1titularprincipalprimeirahomeazulbetfairmasculinaversaotorcedortailandesareplicapromantosdudugabigolkaiojorge_700x.png?v=1743769427"
-                                alt="Camisa Jogador Corinthians II">
-                        </div>
-                        <div class="info">
-                            <h3>Camisa Jogador Corinthians II 2024/25</h3>
-                            <div>
-                                <span class="price">R$ 239,90</span>
-                                <span class="old-price">R$ 320,00</span>
-                            </div>
-                            <div>em até 12x de R$ 24,74</div>
-                            <div class="stars">★★★★★ (5)</div>
-                            <span class="free-shipping">FRETE GRÁTIS</span>
-                        </div>
-                    </div>
-                    <!-- Card 3 -->
-                    <div class="card swiper-slide">
-                        <div class="cardContent">
-                            <span class="badge">5%</span>
-                            <img
-                                src="https://promantos.com.br/cdn/shop/files/camisa-camiseta-blusa-do-botafogo-fogao-reebook-nova-lancamento-da-temporada-ano-2024_25-24_25-i-1-titular-principal-primeira-home-listrada-alvinegra-preta-e-branco-masculina-versao-m_544fe31a-d863-470a-91ed-3d06b62b6b3b_700x.jpg?v=1719517896"
-                                alt="Camisa Torcedor Botafogo I">
-                        </div>
-                        <div class="info">
-                            <h3>Camisa Torcedor Botafogo I 2024/25 - Masculina</h3>
-                            <div>
-                                <span class="price">R$ 179,90</span>
-                                <span class="old-price">R$ 190,00</span>
-                            </div>
-                            <div>em até 12x de R$ 18,55</div>
-                            <div class="stars">★★★★★ (5)</div>
-                            <span class="free-shipping">FRETE GRÁTIS</span>
-                        </div>
-                    </div>
-                    <!-- Card 4 -->
-                    <div class="card swiper-slide">
-                        <div class="cardContent">
-                            <span class="badge">5%</span>
-                            <img
-                                src="https://promantos.com.br/cdn/shop/files/B0A54BED-544F-4E76-A75B-15CF1D62D691_700x.jpg?v=1744552590"
-                                alt="Camisa Torcedor Cruzeiro Treino">
-                        </div>
-                        <div class="info">
-                            <h3>Camisa Torcedor Cruzeiro Treino 2025/26 - Masculina</h3>
-                            <div>
-                                <span class="price">R$ 179,90</span>
-                                <span class="old-price">R$ 190,00</span>
-                            </div>
-                            <div>em até 12x de R$ 18,55</div>
-                            <div class="stars">★★★★★ (5)</div>
-                            <span class="free-shipping">FRETE GRÁTIS</span>
-                        </div>
-                    </div>
-                    <!-- Card 5 -->
-                    <div class="card swiper-slide">
-                        <div class="cardContent">
-                            <span class="badge">5%</span>
-                            <img
-                                src="https://promantos.com.br/cdn/shop/files/camisa-camiseta-blusa-do-botafogo-fogao-reebook-nova-lancamento-da-temporada-ano-2024_25-24_25-i-1-titular-principal-primeira-home-listrada-alvinegra-preta-e-branco-masculina-versao-m_544fe31a-d863-470a-91ed-3d06b62b6b3b_700x.jpg?v=1719517896"
-                                alt="Camisa Torcedor Botafogo I">
-                        </div>
-                        <div class="info">
-                            <h3>Camisa Torcedor Botafogo I 2024/25 - Masculina</h3>
-                            <div>
-                                <span class="price">R$ 179,90</span>
-                                <span class="old-price">R$ 190,00</span>
-                            </div>
-                            <div>em até 12x de R$ 18,55</div>
-                            <div class="stars">★★★★★ (5)</div>
-                            <span class="free-shipping">FRETE GRÁTIS</span>
-                        </div>
-                    </div>
+                    @endif
                 </div>
                 <div class="swiper-pagination swiper-pagination-europeus"></div>
             </div>
