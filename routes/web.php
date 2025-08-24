@@ -23,8 +23,9 @@ Route::middleware('web')->group(function () {
     Route::post('register', [AuthController::class, 'registerWeb'])->name('register.submit');
 
 
-    Route::get('shirts', [ProductController::class, 'index'])->name('products.index');
-    Route::get('/shirt/{url?}', [ProductController::class, 'detail'])->name('products.detail');
+    Route::get('camisas', [ProductController::class, 'index'])->name('products.index');
+    Route::get('/camisa/{url?}', [ProductController::class, 'detail'])->name('products.detail');
+    Route::get('/time/{teamUrl?}', [ProductController::class, 'teamProducts'])->name('products.team');
 
 
     // Carrinho com middleware

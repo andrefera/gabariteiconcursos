@@ -12,6 +12,7 @@ class ProductGenderMapper
             ProductGender::MASCULINE => 'Masculino',
             ProductGender::FEMININE => 'Feminino',
             ProductGender::UNISEX => 'Unisex',
+            ProductGender::KIDS => 'Infantil',
             default => '',
         };
     }

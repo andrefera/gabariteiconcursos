@@ -21,51 +21,65 @@
             <h2 class="title">Navegue por times</h2>
             <div class="swiper-container mySwiperTeams">
                 <div class="swiper-wrapper teamGroup">
-                    <div class="swiper-slide">
-                        <a href="/" class="team">
-                            <img src="{{ asset('images/teams/botafogo.png') }}" alt="Ellon Sports Banner">
-                        </a>
-                    </div>
-                    <div class="swiper-slide">
-                        <a href="/" class="team">
-                            <img src="{{ asset('images/teams/atletico.png') }}" alt="Ellon Sports Banner">
-                        </a>
-                    </div>
-                    <div class="swiper-slide">
-                        <a href="/" class="team">
-                            <img src="{{ asset('images/teams/cruzeiro.png') }}" alt="Ellon Sports Banner">
-                        </a>
-                    </div>
-                    <div class="swiper-slide">
-                        <a href="/" class="team">
-                            <img src="{{ asset('images/teams/corinthians.png') }}" alt="Ellon Sports Banner">
-                        </a>
-                    </div>
-                    <div class="swiper-slide">
-                        <a href="/" class="team">
-                            <img src="{{ asset('images/teams/flamengo.png') }}" alt="Ellon Sports Banner">
-                        </a>
-                    </div>
-                    <div class="swiper-slide">
-                        <a href="/" class="team">
-                            <img src="{{ asset('images/teams/palmeiras.png') }}" alt="Ellon Sports Banner">
-                        </a>
-                    </div>
-                    <div class="swiper-slide">
-                        <a href="/" class="team">
-                            <img src="{{ asset('images/teams/vasco.png') }}" alt="Ellon Sports Banner">
-                        </a>
-                    </div>
-                    <div class="swiper-slide">
-                        <a href="/" class="team">
-                            <img src="{{ asset('images/teams/saopaulo.png') }}" alt="Ellon Sports Banner">
-                        </a>
-                    </div>
-                    <div class="swiper-slide">
-                        <a href="/" class="team">
-                            <img src="{{ asset('images/teams/fluminense.png') }}" alt="Ellon Sports Banner">
-                        </a>
-                    </div>
+                    @if(count($brazilianTeams) > 0)
+                        @foreach($brazilianTeams as $team)
+                            <div class="swiper-slide">
+                                <a href="/time/{{ $team['url'] }}" class="team">
+                                    @if($team['logo'])
+                                        <img src="{{ $team['logo'] }}" alt="{{ $team['name'] }}">
+                                    @else
+                                        <img src="{{ asset('images/teams/default.png') }}" alt="{{ $team['name'] }}">
+                                    @endif
+                                </a>
+                            </div>
+                        @endforeach
+                    @else
+                        <div class="swiper-slide">
+                            <a href="/" class="team">
+                                <img src="{{ asset('images/teams/botafogo.png') }}" alt="Botafogo">
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="/" class="team">
+                                <img src="{{ asset('images/teams/atletico.png') }}" alt="Atlético">
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="/" class="team">
+                                <img src="{{ asset('images/teams/cruzeiro.png') }}" alt="Cruzeiro">
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="/" class="team">
+                                <img src="{{ asset('images/teams/corinthians.png') }}" alt="Corinthians">
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="/" class="team">
+                                <img src="{{ asset('images/teams/flamengo.png') }}" alt="Flamengo">
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="/" class="team">
+                                <img src="{{ asset('images/teams/palmeiras.png') }}" alt="Palmeiras">
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="/" class="team">
+                                <img src="{{ asset('images/teams/vasco.png') }}" alt="Vasco">
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="/" class="team">
+                                <img src="{{ asset('images/teams/saopaulo.png') }}" alt="São Paulo">
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="/" class="team">
+                                <img src="{{ asset('images/teams/fluminense.png') }}" alt="Fluminense">
+                            </a>
+                        </div>
+                    @endif
                 </div>
                 <div class="swiper-pagination swiper-pagination-teams"></div>
             </div>

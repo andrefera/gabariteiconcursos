@@ -149,6 +149,8 @@ readonly class CreateOrUpdateProduct
             }
             ProductSize::query()->where("product_id", $product->id)->whereNotIn("id", $sizeIds)->delete();
 
+            $product->touch();
+
             DB::commit();
 
             return ["success" => true, "msg" => ""];

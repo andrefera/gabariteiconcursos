@@ -85,6 +85,62 @@
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
 }
+
+/* Estilos para filtros ativos */
+.listSection .alignSection .groupList .filter .filter-group.checkbox label input[type=checkbox]:checked {
+  background-color: #ff6600;
+}
+
+.listSection .alignSection .groupList .filter .filter-group.checkbox label input[type=checkbox]:checked + .custom-checkbox {
+  background-color: #ff6600;
+  border-color: #ff6600;
+}
+
+.listSection .alignSection .groupList .filter .filter-group.checkbox label input[type=checkbox]:checked + .custom-checkbox::after {
+  display: block;
+}
+
+/* Estilo para dropdowns ativos */
+.listSection .alignSection .groupList .filter .sort-select.active {
+  background-color: #fff3e0;
+  border-color: #ff6600;
+}
+
+/* Estilo para o slider de preço ativo */
+.listSection .alignSection .groupList .filter .price-slider:active {
+  transform: scale(1.02);
+}
+
+/* Estilo para indicar filtros aplicados */
+.listSection .alignSection .groupList .filter .filter-group.has-active-filters {
+  border-left: 3px solid #ff6600;
+  padding-left: 10px;
+}
+
+.listSection .alignSection .groupList .filter .filter-group.has-active-filters h4 {
+  color: #ff6600;
+  font-weight: 600;
+}
+
+/* Estilo para o botão de limpar filtros */
+.listSection .alignSection .groupList .filter #clearFilters {
+  background: #ff6600;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.3s ease;
+}
+
+.listSection .alignSection .groupList .filter #clearFilters:hover {
+  background: #e55a00;
+}
+
+.listSection .alignSection .groupList .filter #clearFilters:active {
+  transform: scale(0.98);
+}
 .listSection .alignSection .groupList .filter .price-slider {
   -webkit-appearance: none;
   width: 100%;
@@ -244,12 +300,19 @@
 .listSection .alignSection .groupList .productList .grid .card:hover {
   transform: translateY(-5px);
 }
+
+.listSection .alignSection .groupList .productList .grid .card .card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
 .listSection .alignSection .groupList .productList .grid .card .cardContent {
   padding: 20px;
 }
 .listSection .alignSection .groupList .productList .grid .card .cardContent img {
   width: 100%;
-  height: auto;
+  height: 320px;
+  object-fit: contain;
   display: block;
   border-radius: 8px;
   margin: 0;
@@ -294,4 +357,88 @@
   color: #f5c518;
   font-size: 14px;
   margin-top: 5px;
+}
+
+.search-form {
+  display: flex;
+  max-width: 500px;
+  gap: 10px;
+}
+
+.search-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: #ff6600;
+}
+
+.search-button {
+  padding: 12px 24px;
+  background: #ff6600;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+  background: #e55a00;
+}
+
+/* Estilos para paginação */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 40px;
+  padding: 20px 0;
+}
+
+.page-link {
+  padding: 10px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.page-link:hover {
+  border-color: #ff6600;
+  color: #ff6600;
+}
+
+.page-link.active {
+  background: #ff6600;
+  border-color: #ff6600;
+  color: white;
+}
+
+/* Estilos para mensagem de nenhum produto */
+.no-products {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.no-products h3 {
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.no-products p {
+  color: #666;
+  font-size: 16px;
 }

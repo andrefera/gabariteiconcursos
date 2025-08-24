@@ -8,7 +8,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li><a href="#">Início</a></li>
-                <li><a href="/shirts">Camisetas</a></li>
+                <li><a href="/camisas">Camisetas</a></li>
                 <li class="active">{{$product->name}}</li>
             </ol>
         </nav>

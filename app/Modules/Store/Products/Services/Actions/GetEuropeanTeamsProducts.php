@@ -4,17 +4,27 @@ namespace App\Modules\Store\Products\Services\Actions;
 
 use App\Models\Product;
 use App\Modules\Store\Products\DTO\HomeProductDTO;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class GetEuropeanTeamsProducts
 {
+    private const CACHE_KEY = 'european_teams_products';
+    private const CACHE_TTL = 3600;
+
     public function __construct()
     {
         // Construtor vazio conforme solicitado
     }
 
     public function execute(): array
+    {
+        return Cache::remember(self::CACHE_KEY, self::CACHE_TTL, function () {
+            return $this->getProductsFromDatabase();
+        });
+    }
+
+    private function getProductsFromDatabase(): array
     {
         $productIds = DB::table('products')
             ->select('products.id')

@@ -3,6 +3,7 @@
 namespace App\Modules\Admin\Products\Services\Actions;
 
 use App\Models\Product;
+use App\Models\Enums\OrderStatus;
 use App\Modules\Admin\Products\Mappers\ProductGenderMapper;
 use App\Modules\Admin\Products\Mappers\ProductTypeMapper;
 use App\Support\Util\ElasticSearchUtil;
@@ -46,6 +47,7 @@ readonly class InsertProductElasticSearch
         $doc->push(['team_name' => $this->product->team?->name]);
         $doc->push(['team_url' => $this->product->team?->name ? UrlUtil::formatUrlKey($this->product->team->name) : '']);
         $doc->push(['team_country' => $this->product->team?->country]);
+        $doc->push(['is_national' => $this->isNationalTeam()]);
         $doc->push(['gender' => (new ProductGenderMapper())($this->product->gender)]);
         $doc->push(['season' => $this->product->season]);
         $doc->push(['stock' => $this->product->getStock()]);
@@ -54,6 +56,9 @@ readonly class InsertProductElasticSearch
             return ['size' => $item->name, 'stock' => $item->stock];
         })]);
         $doc->push(['categories' => $this->product->categories()->pluck("name")]);
+        $doc->push(['images' => $this->product->images()->pluck("url")]);
+        $doc->push(['total_orders' => $this->getTotalOrdersCurrentMonth()]);
+        $doc->push(['discount_percentage' => $this->calculateDiscountPercentage($this->product->price, $this->product->special_price)]);
         $doc->push(['created_at' => Carbon::parse($this->product->created_at)->setTimezone('America/Sao_Paulo')->format('d/m/Y H:i:s')]);
 
         try {
@@ -61,6 +66,47 @@ readonly class InsertProductElasticSearch
         } catch (ClientResponseException $e) {
             Log::error("Erro ao enviar produto para o EL: " . $e->getMessage());
         }
+    }
+
+    private function calculateDiscountPercentage(float $originalPrice, ?float $specialPrice): ?int
+    {
+        if (!$specialPrice || $specialPrice >= $originalPrice || $originalPrice <= 0) {
+            return null;
+        }
+
+        $discount = (($originalPrice - $specialPrice) / $originalPrice) * 100;
+        return (int) round($discount);
+    }
+
+    private function isNationalTeam(): string
+    {
+        if (!$this->product->team?->country) {
+            return "Não";
+        }
+
+        return trim($this->product->team->country) === 'BR' ? "Sim" : "Não";
+    }
+
+    private function getTotalOrdersCurrentMonth(): int
+    {
+        $currentMonth = Carbon::now()->startOfMonth();
+        $nextMonth = Carbon::now()->addMonth()->startOfMonth();
+
+        $validStatuses = [
+            OrderStatus::PAID->value,
+            OrderStatus::IN_SEPARATION->value,
+            OrderStatus::WAITING_FOR_CARRIER->value,
+            OrderStatus::IN_TRANSPORT->value,
+            OrderStatus::DELIVERED->value,
+        ];
+
+        return $this->product->orderItems()
+            ->whereHas('order', function ($query) use ($currentMonth, $nextMonth, $validStatuses) {
+                $query->where('created_at', '>=', $currentMonth)
+                      ->where('created_at', '<', $nextMonth)
+                      ->whereIn('status', $validStatuses);
+            })
+            ->sum('quantity');
     }
 
     public static function fromProduct(Product $product): self

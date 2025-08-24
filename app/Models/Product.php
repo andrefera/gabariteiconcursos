@@ -98,6 +98,11 @@ class Product extends Model
         return $this->belongsToMany(Category::class, 'product_categories');
     }
 
+    public function orderItems(): HasMany
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
     public function checkStock(string $sizeItem, int $quantity): bool
     {
         $size = $this->sizes()->where('name', $sizeItem)->first();

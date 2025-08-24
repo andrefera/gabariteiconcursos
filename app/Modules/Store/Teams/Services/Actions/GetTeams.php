@@ -4,17 +4,27 @@ namespace App\Modules\Store\Teams\Services\Actions;
 
 use App\Models\Team;
 use App\Modules\Store\Teams\DTO\TeamDTO;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class GetTeams
 {
+    private const CACHE_KEY = 'teams_list';
+    private const CACHE_TTL = 3600; 
+
     public function __construct()
     {
         // Construtor vazio conforme solicitado
     }
 
     public function execute(): array
+    {
+        return Cache::remember(self::CACHE_KEY, self::CACHE_TTL, function () {
+            return $this->getTeamsFromDatabase();
+        });
+    }
+
+    private function getTeamsFromDatabase(): array
     {
         $teamIds = DB::table('teams')
             ->select('teams.id')
