@@ -723,3 +723,26 @@
     display: none;
   }
 }
+
+/* Estilos para estado ativo e mensagens de "nenhum item encontrado" */
+.minhaConta .sidebar ul li a.active {
+  color: #fff;
+  background-color: #FF7C00;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  margin: -0.75rem -1rem;
+}
+
+.no-orders,
+.no-addresses {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+  font-style: italic;
+}
+
+.no-orders p,
+.no-addresses p {
+  margin: 0;
+  font-size: 1rem;
+}

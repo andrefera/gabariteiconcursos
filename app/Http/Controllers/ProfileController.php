@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CompleteProfileRequest;
 use App\Modules\Store\Users\Services\CompleteProfile;
+use App\Modules\Store\Users\Services\Actions\GetUserProfile;
 use App\Rules\ValidCep;
 use App\Rules\ValidCpf;
 use App\Rules\ValidPhone;
@@ -12,6 +13,17 @@ use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
+    public function index()
+    {
+        $result = (new GetUserProfile())->execute();
+
+        if (!$result['success']) {
+            return redirect()->back()->with('error', $result['message']);
+        }
+
+        return view('orders.index', $result['data']);
+    }
+
     public function complete()
     {
         $user = Auth::user();

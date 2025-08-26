@@ -51,7 +51,7 @@
                     <header class="userGreeting">
                         <div class="group">
                             <div class="profileImage">
-                                <img width="56" height="56" src="{{ asset('images/icons/order-list.svg') }}" alt="Pedidos">
+                                <img width="56" height="56" src="{{ asset('images/icons/profile-circle.svg') }}" alt="Perfil">
                             </div>
                             <div class="userInfo">
                                 <h1>Meus Pedidos</h1>
@@ -178,4 +178,4 @@
             </div>
         </div>
     </main>
-@endsection 
+@endsection

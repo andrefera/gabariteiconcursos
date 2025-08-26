@@ -39,17 +39,15 @@ Route::middleware('web')->group(function () {
 
     // Rotas autenticadas
     Route::middleware('auth')->group(function () {
-        Route::get('/my-account', function () {
-            return view('orders.index');
-        });
+        Route::get('/minha-conta', [ProfileController::class, 'index'])->name('profile.index');
 
-        Route::get('/my-data', function () {
+        Route::get('/meus-dados', function () {
             return view('orders.data');
-        });
+        })->name('orders.data');
 
-        Route::get('/my-orders', function () {
+        Route::get('/meus-pedidos', function () {
             return view('orders.orders');
-        });
+        })->name('orders.index');
 
         Route::post('logout', [AuthController::class, 'logoutWeb'])->name('logout');
 
@@ -90,13 +88,13 @@ Route::middleware('web')->group(function () {
 
     // Busca
     Route::get('/search/products', [ProductSearchController::class, 'search']);
-    
+
     // Política de Privacidade
     Route::get('/politica-privacidade', [PrivacyController::class, 'index'])->name('privacy.policy');
-    
+
     // Termos de Uso
     Route::get('/termos-uso', [TermsController::class, 'index'])->name('terms.use');
-    
+
     // Times
     Route::get('/teams', [App\Http\Controllers\HomeController::class, 'getTeams'])->name('teams.get');
 });
