@@ -5,10 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CompleteProfileRequest;
 use App\Modules\Store\Users\Services\CompleteProfile;
 use App\Modules\Store\Users\Services\Actions\GetUserProfile;
-use App\Rules\ValidCep;
-use App\Rules\ValidCpf;
-use App\Rules\ValidPhone;
-use Illuminate\Http\Request;
+use App\Modules\Store\Users\Services\Actions\GetOrderDetails;
+use App\Modules\Store\Users\Services\Actions\GetUserOrders;
+use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
@@ -60,5 +59,44 @@ class ProfileController extends Controller
             'message' => 'Perfil atualizado com sucesso!',
             'redirect' => route('checkout.index')
         ]);
+    }
+
+    public function getOrderDetails(Order $order)
+    {
+        $result = (new GetOrderDetails($order))->execute();
+
+        if (!$result['success']) {
+            return response()->json([
+                'success' => false,
+                'message' => $result['message']
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $result['data']
+        ]);
+    }
+
+    public function orders()
+    {
+        $result = (new GetUserOrders())->execute();
+
+        if (!$result['success']) {
+            return redirect()->back()->with('error', $result['message']);
+        }
+
+        return view('orders.orders', $result['data']);
+    }
+
+    public function addresses()
+    {
+        $result = (new GetUserProfile())->execute();
+
+        if (!$result['success']) {
+            return redirect()->back()->with('error', $result['message']);
+        }
+
+        return view('orders.addresses', $result['data']);
     }
 } 

@@ -203,3 +203,5 @@
 </footer>
 
 @yield('footer_content')
+
+@stack('scripts')

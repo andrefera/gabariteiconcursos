@@ -75,8 +75,7 @@ class GetUserProfile
                 'state' => $address->state,
                 'zipcode' => $address->zip_code,
                 'phone' => $this->user->phone,
-                'is_default' => $address->is_default,
-                'type' => $address->is_default ? 'Endereço de Entrega Padrão' : 'Endereço de Cobrança Padrão'
+                'is_default' => $address->is_default
             ];
         })->toArray();
     }

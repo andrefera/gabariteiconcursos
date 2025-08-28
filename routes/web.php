@@ -45,9 +45,11 @@ Route::middleware('web')->group(function () {
             return view('orders.data');
         })->name('orders.data');
 
-        Route::get('/meus-pedidos', function () {
-            return view('orders.orders');
-        })->name('orders.index');
+        Route::get('/meus-enderecos', [ProfileController::class, 'addresses'])->name('orders.addresses');
+
+        Route::get('/meus-pedidos', [ProfileController::class, 'orders'])->name('orders.index');
+
+        Route::get('/pedido/{order}', [ProfileController::class, 'getOrderDetails'])->name('orders.details');
 
         Route::post('logout', [AuthController::class, 'logoutWeb'])->name('logout');
 
@@ -79,6 +81,7 @@ Route::middleware('web')->group(function () {
     // Auth extra
     Route::prefix('auth')->group(function () {
         Route::post('change-password', [AuthController::class, 'changePassword'])->middleware('auth');
+        Route::post('delete-account', [AuthController::class, 'deleteAccount'])->middleware('auth');
         Route::get('me', [AuthController::class, 'me']);
         Route::get('google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
         Route::get('google/callback', [AuthController::class, 'handleGoogleCallback']);

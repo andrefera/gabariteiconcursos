@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Modules\Users\DTO\UserDTO;
 use App\Modules\Users\Services\Actions\ChangePassword;
+use App\Modules\Users\Services\Actions\DeleteAccount;
 use App\Modules\Users\Services\Actions\LoginUser;
 use App\Modules\Users\Services\Actions\RegisterUser;
 use Illuminate\Contracts\View\Factory;
@@ -17,7 +18,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
-use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 use Exception;
 
@@ -128,6 +128,11 @@ class AuthController extends Controller
     public function changePassword(Request $request): JsonResponse
     {
         return response()->json(ChangePassword::fromRequest($request)->execute());
+    }
+
+    public function deleteAccount(Request $request): JsonResponse
+    {
+        return response()->json(DeleteAccount::fromRequest($request)->execute());
     }
 
     public function me(): JsonResponse

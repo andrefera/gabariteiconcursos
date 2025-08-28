@@ -4,7 +4,7 @@ namespace App\Modules\Users\Services\Actions;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Auth;
 
 readonly class ChangePassword
 {
@@ -17,25 +17,21 @@ readonly class ChangePassword
 
     public function execute(): array
     {
-        $user = JWTAuth::parseToken()->authenticate();
+        $user = Auth::user();
 
-        if (!Hash::check($this->current_password, $this->password)) {
+        if (!Hash::check($this->current_password, $user->password)) {
             return [
                 'success' => false,
                 'message' => 'A senha atual está incorreta.',
             ];
         }
 
-
         $user->password = Hash::make($this->new_password);
         $user->save();
 
-        $newToken = JWTAuth::fromUser($user);
-
         return [
             'success' => true,
-            'message' => 'Senha alterada com sucesso!',
-            'token' => $newToken
+            'message' => 'Senha alterada com sucesso!'
         ];
     }
 

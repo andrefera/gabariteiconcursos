@@ -30,6 +30,7 @@ class AddressController extends Controller
             'neighborhood' => 'required|max:255',
             'city' => 'required|max:255',
             'state' => 'required|size:2',
+            'is_default' => 'boolean',
         ]);
 
         if ($validator->fails()) {
@@ -44,13 +45,24 @@ class AddressController extends Controller
             $data = $request->all();
             $user = Auth::user();
             $data['user_id'] = $user->id;
-            $data['is_default'] = true;
+            
+            // Se não há endereços, o primeiro deve ser padrão
+            $userAddressesCount = $user->addresses()->count();
+            if ($userAddressesCount === 0) {
+                $data['is_default'] = true;
+            } else {
+                $data['is_default'] = $request->boolean('is_default', false);
+            }
 
             $address = UserAddress::create($data);
-            $user->addresses()
-                ->where('id', '!=', $address->id)
-                ->where('is_default', true)
-                ->update(['is_default' => false]);
+            
+            // Se este endereço foi marcado como padrão, remove o padrão dos outros
+            if ($data['is_default']) {
+                $user->addresses()
+                    ->where('id', '!=', $address->id)
+                    ->where('is_default', true)
+                    ->update(['is_default' => false]);
+            }
 
             return response()->json([
                 'success' => true,
@@ -79,6 +91,7 @@ class AddressController extends Controller
             'neighborhood' => 'required|max:255',
             'city' => 'required|max:255',
             'state' => 'required|size:2',
+            'is_default' => 'boolean',
         ]);
 
         if ($validator->fails()) {
@@ -90,7 +103,18 @@ class AddressController extends Controller
         }
 
         try {
-            $address->update($request->all());
+            $data = $request->all();
+            $user = Auth::user();
+            
+            // Se este endereço foi marcado como padrão, remove o padrão dos outros
+            if ($request->boolean('is_default', false)) {
+                $user->addresses()
+                    ->where('id', '!=', $address->id)
+                    ->where('is_default', true)
+                    ->update(['is_default' => false]);
+            }
+            
+            $address->update($data);
 
             return response()->json([
                 'success' => true,
@@ -112,7 +136,18 @@ class AddressController extends Controller
         }
 
         try {
+            $user = Auth::user();
+            $wasDefault = $address->is_default;
+            
             $address->delete();
+            
+            // Se o endereço deletado era padrão, define outro como padrão
+            if ($wasDefault) {
+                $newDefaultAddress = $user->addresses()->first();
+                if ($newDefaultAddress) {
+                    $newDefaultAddress->update(['is_default' => true]);
+                }
+            }
 
             return response()->json([
                 'success' => true,
