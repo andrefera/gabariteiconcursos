@@ -41,9 +41,8 @@ Route::middleware('web')->group(function () {
     Route::middleware('auth')->group(function () {
         Route::get('/minha-conta', [ProfileController::class, 'index'])->name('profile.index');
 
-        Route::get('/meus-dados', function () {
-            return view('orders.data');
-        })->name('orders.data');
+        Route::get('/meus-dados', [ProfileController::class, 'data'])->name('orders.data');
+        Route::post('/meus-dados', [ProfileController::class, 'updateData'])->name('profile.update');
 
         Route::get('/meus-enderecos', [ProfileController::class, 'addresses'])->name('orders.addresses');
 

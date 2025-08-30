@@ -257,9 +257,6 @@
             }
 
             .addressCards {
-                display: flex;
-                gap: 1rem;
-
                 .addressCard {
                     border: 1px solid #ddd;
                     border-radius: 6px;
@@ -818,6 +815,107 @@
     align-self: center;
     margin: 0 0.2rem;
     margin-top: 1.1rem;
+}
+
+/* Mobile Layout - Minha Conta */
+@media (max-width: 768px) {
+    .minhaConta {
+        .alignSection {
+            padding: 10px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            padding: 0;
+        }
+
+        .sidebar {
+            width: 100%;
+            margin-bottom: 15px;
+            order: -1;
+            max-height: none;
+
+            ul {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                padding: 0;
+                margin: 0;
+                list-style: none;
+            }
+
+            li {
+                flex: 1;
+                min-width: 100px;
+                margin-bottom: 0;
+                padding: 0;
+
+                &:hover {
+                    background-color: transparent;
+                }
+
+                a {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    padding: 8px 4px;
+                    font-size: 0.75em;
+                    text-align: center;
+                    gap: 4px;
+                    border-radius: 6px;
+                    transition: all 0.3s;
+
+                    img {
+                        width: 18px;
+                        height: 18px;
+                    }
+                }
+            }
+        }
+
+        .mainContent {
+            width: 100%;
+            padding: 0;
+
+            .userGreeting {
+                padding: 15px;
+                margin-bottom: 15px;
+
+                .group {
+                    flex-direction: column;
+                    text-align: center;
+                    gap: 15px;
+                }
+
+                h1, h2 {
+                    font-size: 1.5em;
+                }
+
+                p {
+                    font-size: 0.9em;
+                }
+            }
+
+            .card {
+                margin-bottom: 15px;
+                padding: 15px;
+
+                .titleGroup {
+                    flex-direction: column;
+                    gap: 15px;
+                    align-items: stretch;
+                    margin-bottom: 15px;
+                }
+
+                .cardAlign {
+                    display: block;
+                    gap: 15px;
+                }
+            }
+        }
+    }
 }
 
 @media (max-width: 900px) {

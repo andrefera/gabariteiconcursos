@@ -215,10 +215,7 @@
   color: #FF7C00;
   border-radius: 15px;
 }
-.minhaConta .mainContent .card .addressCards {
-  display: flex;
-  gap: 1rem;
-}
+
 .minhaConta .mainContent .card .addressCards .addressCard {
   border: 1px solid #ddd;
   border-radius: 6px;

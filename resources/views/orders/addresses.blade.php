@@ -270,7 +270,7 @@
 
          .addressCards {
              display: grid;
-             grid-template-columns: repeat(4, 1fr);
+             grid-template-columns: repeat(3, 1fr);
              gap: 20px;
              max-height: 500px;
              overflow-y: auto;
@@ -281,13 +281,13 @@
          /* Responsivo - reduz colunas em telas menores */
          @media (max-width: 1400px) {
              .addressCards {
-                 grid-template-columns: repeat(3, 1fr);
+                 grid-template-columns: repeat(2, 1fr);
              }
          }
 
          @media (max-width: 1000px) {
              .addressCards {
-                 grid-template-columns: repeat(2, 1fr);
+                 grid-template-columns: repeat(1, 1fr);
              }
          }
 
@@ -496,6 +496,8 @@
             height: 100%;
             background-color: rgba(0,0,0,0.5);
             z-index: 1000;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .modal-content {
@@ -507,6 +509,9 @@
             max-width: 600px;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-height: calc(100vh - 100px);
+            display: flex;
+            flex-direction: column;
         }
 
         .modal-header {
@@ -539,6 +544,9 @@
 
         .modal-body {
             padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .form-group {
@@ -797,21 +805,100 @@
 
         
 
-         @media (max-width: 767px) {
-             .titleGroup {
-                 flex-direction: column;
-                 gap: 15px;
-                 align-items: stretch;
-             }
+        /* Mobile Layout - Minha Conta */
+        @media (max-width: 768px) {
+            .alignSection {
+                padding: 10px;
+            }
 
-             .addressCards {
-                 gap: 15px;
-                 padding-right: 4px;
-             }
+            .container {
+                display: flex;
+                flex-direction: column;
+                gap: 0;
+                padding: 0;
+            }
 
-             .addressCards::-webkit-scrollbar {
-                 width: 4px;
-             }
+            .sidebar {
+                width: 100%;
+                margin-bottom: 15px;
+                order: -1;
+            }
+
+            .sidebar ul {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                padding: 0;
+                margin: 0;
+                list-style: none;
+            }
+
+            .sidebar li {
+                flex: 1;
+                min-width: 100px;
+            }
+
+            .sidebar a {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 8px 4px;
+                font-size: 0.75em;
+                text-align: center;
+                gap: 4px;
+                border-radius: 6px;
+                transition: all 0.3s;
+            }
+
+            .sidebar a img {
+                width: 18px;
+                height: 18px;
+            }
+
+            .mainContent {
+                width: 100%;
+                padding: 0;
+            }
+
+            .userGreeting {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+
+            .userGreeting .group {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .userGreeting h2 {
+                font-size: 1.5em;
+            }
+
+            .userGreeting p {
+                font-size: 0.9em;
+            }
+
+            .card {
+                margin-bottom: 15px;
+            }
+
+            .titleGroup {
+                flex-direction: column;
+                gap: 15px;
+                align-items: stretch;
+            }
+
+            .addressCards {
+                grid-template-columns: 1fr !important;
+                gap: 15px;
+                padding-right: 4px;
+                max-height: 400px;
+            }
+
+            .addressCards::-webkit-scrollbar {
+                width: 4px;
+            }
 
             .addressHeader {
                 flex-direction: column;
@@ -828,10 +915,28 @@
                 padding: 40px 20px;
             }
 
+            .modal {
+                align-items: flex-start;
+                padding: 10px;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
             .modal-content {
                 margin: 20px auto;
                 width: 95%;
                 max-width: none;
+                max-height: calc(100vh - 40px);
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                position: relative;
+            }
+
+            .modal-body {
+                padding: 15px;
+                max-height: calc(100vh - 140px);
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
 
             .form-row {
@@ -918,6 +1023,90 @@
                     scrollIndicator.classList.remove('show');
                 }, 3000);
             }
+
+            // Controle de scroll do modal no mobile
+            function isMobile() {
+                return window.innerWidth <= 768;
+            }
+
+            // Função para abrir modal (override da original se necessário)
+            window.openAddressModalWithScrollFix = function(addressId = null) {
+                const modal = document.getElementById('addressModal');
+                if (modal) {
+                    modal.style.display = 'block';
+                    
+                    // No mobile, evita scroll do body
+                    if (isMobile()) {
+                        document.body.style.overflow = 'hidden';
+                        document.body.style.position = 'fixed';
+                        document.body.style.width = '100%';
+                        document.body.style.top = `-${window.scrollY}px`;
+                    }
+                }
+                
+                // Chama a função original se existir
+                if (typeof openAddressModal === 'function') {
+                    openAddressModal(addressId);
+                }
+            };
+
+            // Função para fechar modal (override da original se necessário)
+            window.closeAddressModalWithScrollFix = function() {
+                const modal = document.getElementById('addressModal');
+                if (modal) {
+                    modal.style.display = 'none';
+                    
+                    // No mobile, restaura scroll do body
+                    if (isMobile()) {
+                        const scrollY = document.body.style.top;
+                        document.body.style.position = '';
+                        document.body.style.top = '';
+                        document.body.style.overflow = '';
+                        document.body.style.width = '';
+                        
+                        if (scrollY) {
+                            window.scrollTo(0, parseInt(scrollY || '0') * -1);
+                        }
+                    }
+                }
+                
+                // Chama a função original se existir
+                if (typeof closeAddressModal === 'function') {
+                    closeAddressModal();
+                }
+            };
+
+            // Intercepta cliques nos botões para usar as novas funções
+            document.addEventListener('click', function(e) {
+                if (e.target.matches('.add-address-btn') && isMobile()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    openAddressModalWithScrollFix();
+                }
+                
+                if (e.target.matches('.edit-address-btn') && isMobile()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const addressId = e.target.getAttribute('data-address-id');
+                    openAddressModalWithScrollFix(addressId);
+                }
+
+                if (e.target.matches('.close-modal, .btn-cancel') && isMobile()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeAddressModalWithScrollFix();
+                }
+            });
+
+            // Intercepta ESC key no mobile
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && isMobile()) {
+                    const modal = document.getElementById('addressModal');
+                    if (modal && modal.style.display === 'block') {
+                        closeAddressModalWithScrollFix();
+                    }
+                }
+            });
         });
     </script>
 
