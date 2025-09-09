@@ -3,6 +3,27 @@
 <link rel="stylesheet" href="{!! asset('assets/css/detail.css') !!}">
 <link rel="stylesheet" href="{!! asset('assets/css/plugins.css') !!}">
 
+<style>
+    /* Zoom lens styles - scoped to product detail page */
+    .imageMain { position: relative; }
+    .zoomLens {
+        position: absolute;
+        display: none;
+        width: 180px;
+        height: 180px;
+        border: 2px solid #ffffff;
+        border-radius: 50%;
+        box-shadow: 0 6px 24px rgba(0,0,0,0.18), 0 0 0 2px rgba(0,0,0,0.06);
+        background-repeat: no-repeat;
+        pointer-events: none;
+        z-index: 5;
+        transition: opacity .15s ease, transform .15s ease;
+        opacity: 0;
+        transform: scale(.92);
+        overflow: hidden;
+    }
+</style>
+
 @section('content')
     <div class="alignSection">
         <nav aria-label="breadcrumb">
@@ -18,33 +39,32 @@
             <div class="productArea">
                 <div class="imageArea">
                     <!-- Container da imagem principal -->
-                    <div class="imageMain">
-                        <img width="600" height="600"
-                             src="{{ $product->images[0]->url ?? 'https://promantos.com.br/cdn/shop/files/E0FFA9E0-E91B-40E8-95F9-4C95F7A592D7_600x.jpg?v=1731013907' }}"
-                             alt="Camisa Jogador Flamengo - Vista Frontal"
-                             class="main-product-image"
-                             id="mainImage">
-                    </div>
+                    @if(isset($product->images[0]))
+                        <div class="imageMain">
+                            <img width="600" height="600"
+                                 src="{{ $product->images[0]->url }}"
+                                 alt="{{ $product->name }}"
+                                 class="main-product-image"
+                                 id="mainImage">
+                            <div class="zoomLens" id="zoomLens"></div>
+                        </div>
+                    @endif
 
                     <!-- Miniaturas das imagens -->
-                    <div class="otherImages">
-                        <div class="otherImage active" data-index="0">
-                            <img src="{{ $product->images[0]->url ?? 'https://promantos.com.br/cdn/shop/files/E0FFA9E0-E91B-40E8-95F9-4C95F7A592D7_600x.jpg?v=1731013907' }}"
-                                 alt="Camisa Jogador Flamengo - Vista Frontal">
+                    @if(!empty($product->images) && count($product->images) > 1)
+                        <div class="otherImages">
+                            @foreach($product->images as $index => $image)
+                                <div class="otherImage {{ $index === 0 ? 'active' : '' }}" data-index="{{$index}}">
+                                    <img src="{{ $image->url }}" alt="{{ $product->name }} - {{ $index + 1 }}">
+                                </div>
+                            @endforeach
                         </div>
-                        <div class="otherImage" data-index="1">
-                            <img src="{{ $product->images[1]->url ?? 'https://promantos.com.br/cdn/shop/files/1F114692-6679-4C04-96AA-FFD3F50850E7_600x.png?v=1714416123' }}"
-                                 alt="Camisa Jogador Flamengo - Detalhes">
+                    @endif
+                    {{-- <div class="mobileStars">
+                        <div class="stars">★★★★★
+                            <p>(121)</p>
                         </div>
-                        <div class="otherImage" data-index="2">
-                            <img src="{{ $product->images[2]->url ?? 'https://promantos.com.br/cdn/shop/files/1B615CE0-111C-429A-AC68-23E66C7D5FDE_600x.png?v=1714416123' }}"
-                                 alt="Camisa Jogador Flamengo - Costas">
-                        </div>
-                        <div class="otherImage" data-index="3">
-                            <img src="{{ $product->images[3]->url ?? 'https://promantos.com.br/cdn/shop/files/camisa-camiseta-blusa-do-flamengo-nova-lancamento-da-temporada-2024_25-24_25-i-1-titular-principal-primeira-home-vermelha-e-preta-rubro-negra-listrada-masculina-versao-modelo-jogador_f4115a4b-e150-4d98-9996-4e133afcb6ff_600x.jpg?v=1714416123' }}"
-                                 alt="Camisa Jogador Flamengo - Vista Completa">
-                        </div>
-                    </div>
+                    </div> --}}
                 </div>
 
                 <div class="textArea">
@@ -458,25 +478,6 @@
             </div>
         </div>
     </section>
-    <footer>
-        <div class="footer-container">
-            <div class="footer-logo">Footer</div>
-
-            <div class="footer-links">
-                <a href="#">Home</a>
-                <a href="#">Produtos</a>
-                <a href="#">Contato</a>
-                <a href="#">Sobre Nós</a>
-            </div>
-
-            <div class="footer-social">
-                <a href="#">⚽</a>
-                <a href="#">📷</a>
-                <a href="#">🐦</a>
-                <a href="#">📘</a>
-            </div>
-        </div>
-    </footer>
 @endsection
 
 <!-- Scripts -->
@@ -490,6 +491,33 @@
         elements.forEach(element => {
             element.classList.add('show');
         });
+
+        // Troca de imagem principal ao clicar nas miniaturas
+        const mainImageEl = document.getElementById('mainImage');
+        const zoomLensEl = document.getElementById('zoomLens');
+        const thumbnailContainers = document.querySelectorAll('.otherImage');
+        if (mainImageEl && thumbnailContainers.length) {
+            thumbnailContainers.forEach(container => {
+                container.addEventListener('click', function () {
+                    // remove estado ativo anterior
+                    thumbnailContainers.forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+
+                    const img = this.querySelector('img');
+                    if (img) {
+                        mainImageEl.src = img.getAttribute('src');
+                        const altText = img.getAttribute('alt');
+                        if (altText) {
+                            mainImageEl.alt = altText;
+                        }
+                        // atualizar imagem de fundo do zoom quando a principal muda
+                        if (zoomLensEl) {
+                            zoomLensEl.style.backgroundImage = `url('${mainImageEl.src}')`;
+                        }
+                    }
+                });
+            });
+        }
 
         // Seleção de tamanho
         let selectedSize = null;
@@ -551,5 +579,78 @@
                 alert('Erro ao adicionar ao carrinho.');
             }
         });
+
+        // Efeito de zoom na imagem principal
+        if (mainImageEl && zoomLensEl) {
+            const imageMainContainer = mainImageEl.parentElement;
+            const lens = zoomLensEl;
+            const zoomScale = 2.2; // fator de zoom
+            let scaleX = 1, scaleY = 1;
+
+            const updateLensBackground = () => {
+                lens.style.backgroundImage = `url('${mainImageEl.src}')`;
+                const naturalWidth = mainImageEl.naturalWidth || mainImageEl.width;
+                const naturalHeight = mainImageEl.naturalHeight || mainImageEl.height;
+                const displayWidth = mainImageEl.clientWidth;
+                const displayHeight = mainImageEl.clientHeight;
+                // tamanho do background (zoom aplicado)
+                const bgW = naturalWidth * zoomScale;
+                const bgH = naturalHeight * zoomScale;
+                lens.style.backgroundSize = `${bgW}px ${bgH}px`;
+                // escala para converter coordenadas da tela para a imagem com zoom
+                scaleX = (naturalWidth / displayWidth) * zoomScale;
+                scaleY = (naturalHeight / displayHeight) * zoomScale;
+            };
+            updateLensBackground();
+
+            const getCursorPos = (e) => {
+                const rect = imageMainContainer.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                return { x, y, rect };
+            };
+
+            const moveLens = (e) => {
+                const { x, y, rect } = getCursorPos(e);
+                const lensW = lens.offsetWidth;
+                const lensH = lens.offsetHeight;
+                // centro da lente deve seguir o ponteiro
+                let centerX = x;
+                let centerY = y;
+                // limitar para que a lente não ultrapasse as bordas
+                const halfW = lensW / 2;
+                const halfH = lensH / 2;
+                if (centerX < halfW) centerX = halfW;
+                if (centerX > rect.width - halfW) centerX = rect.width - halfW;
+                if (centerY < halfH) centerY = halfH;
+                if (centerY > rect.height - halfH) centerY = rect.height - halfH;
+
+                lens.style.left = `${centerX - halfW}px`;
+                lens.style.top = `${centerY - halfH}px`;
+
+                // posiciona o background para que o ponto sob o cursor fique no centro da lente
+                const bgX = centerX * scaleX - halfW;
+                const bgY = centerY * scaleY - halfH;
+                lens.style.backgroundPosition = `-${bgX}px -${bgY}px`;
+            };
+
+            imageMainContainer.addEventListener('mouseenter', () => {
+                lens.style.display = 'block';
+                // força recálculo para ativar a transição
+                // eslint-disable-next-line no-unused-expressions
+                lens.offsetHeight;
+                lens.style.opacity = '1';
+                lens.style.transform = 'scale(1)';
+                updateLensBackground();
+            });
+            imageMainContainer.addEventListener('mousemove', moveLens);
+            imageMainContainer.addEventListener('mouseleave', () => {
+                lens.style.opacity = '0';
+                lens.style.transform = 'scale(.92)';
+                setTimeout(() => { lens.style.display = 'none'; }, 140);
+            });
+            window.addEventListener('resize', updateLensBackground);
+            mainImageEl.addEventListener('load', updateLensBackground);
+        }
     });
 </script>

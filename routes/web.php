@@ -29,7 +29,7 @@ Route::middleware('web')->group(function () {
 
 
     // Carrinho com middleware
-    Route::prefix('cart')->middleware(SessionTokenMiddleware::class)->group(function () {
+     Route::prefix('cart')->middleware(SessionTokenMiddleware::class)->group(function () {
         Route::get('/', [CartController::class, 'index'])->name('cart.index');
         Route::post('/add', [CartController::class, 'addItem'])->name('cart.add');
         Route::put('/item/{item}', [CartController::class, 'updateItem'])->name('cart.update');

@@ -776,9 +776,6 @@
 }
 
 @media (max-width: 480px) {
-  .footer-container {
-    padding: 0 1rem;
-  }
   .newsletter-section {
     padding: 2rem 0;
   }
@@ -787,9 +784,6 @@
   }
   .newsletter-text p {
     font-size: 1rem;
-  }
-  .footer-main {
-    padding: 3rem 0 1.5rem 0;
   }
   .footer-content {
     gap: 2rem;
