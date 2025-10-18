@@ -152,14 +152,6 @@
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
-
-            <div class="form-group">
-                <label>
-                    <input type="checkbox" name="use_as_shipping" value="1">
-                    Usar como endereço de entrega
-                </label>
-            </div>
-
             <button type="submit" class="btn-continue">Salvar e Continuar</button>
         </form>
     </div>
