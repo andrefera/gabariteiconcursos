@@ -116,12 +116,6 @@ body {
   cursor: pointer;
   transition: transform 0.3s ease;
 }
-
-.destaques .card .card-link {
-  text-decoration: none;
-  color: inherit;
-  display: block;
-}
 .destaques .card:hover {
   transform: translateY(-5px);
 }
@@ -130,8 +124,7 @@ body {
 }
 .destaques .card .cardContent img {
   width: 100%;
-  height: 320px;
-  object-fit: contain;
+  height: auto;
   display: block;
   border-radius: 8px;
   margin: 0;

@@ -56,6 +56,7 @@ mix.combine([
 mix.js('resources/js/home.js', 'public/assets/js/home.min.js');
 mix.js('resources/js/header.js', 'public/assets/js/header.min.js');
 mix.js('resources/js/detail.js', 'public/assets/js/detail.min.js');
+mix.js('resources/js/list.js', 'public/assets/js/list.min.js');
 
 
 const partytown = require('@builder.io/partytown/utils');

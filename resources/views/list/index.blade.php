@@ -19,11 +19,29 @@
                     Camisetas
                 @endif
             </h1>
+            
+            <!-- Mobile Sort Bar -->
+            <div class="mobile-sort-bar">
+                <div class="sort-container">
+                    <div class="results-count">
+                        @if(isset($products) && count($products) > 0)
+                            {{ $total }} produto{{ $total > 1 ? 's' : '' }} encontrado{{ $total > 1 ? 's' : '' }}
+                        @endif
+                    </div>
+                    <button class="mobile-filter-toggle" id="mobileFilterToggle">
+                        <span class="filter-icon">🔍</span>
+                        Filtros
+                        <span class="filter-count" id="mobileFilterCount">0</span>
+                    </button>
+                </div>
+                
+            </div>
+            
             <div class="groupList">
                 <div class="filter">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <div class="filter-header">
                         <h3>Filtrar por</h3>
-                        <button id="clearFilters">Limpar Filtros</button>
+                        <button id="clearFilters" class="clear-filters-btn">Limpar Filtros</button>
                     </div>
                     <!-- Filtro por Preço -->
                     <div class="filter-group">
@@ -73,11 +91,11 @@
                             @if(isset($filters['team']) && $filters['team'])
                                 @php
                                     $selectedTeam = collect($teams)->firstWhere('url', $filters['team']);
-                                    $teamName = $selectedTeam ? $selectedTeam['name'] : 'Time';
+                                    $teamName = $selectedTeam ? $selectedTeam['name'] : 'Todos';
                                 @endphp
                                 {{ $teamName }}
                             @else
-                                Time
+                                Todos
                             @endif
                             <svg class="arrow" width="16" height="16" viewBox="0 0 24 24">
                                 <path fill="#ff6600" d="M7 10l5 5 5-5z"/>
@@ -85,6 +103,7 @@
                         </div>
                         <div class="dropdown">
                             <div class="dropdown-content" id="dropdownTime">
+                                <a href="#" data-team="">Todos</a>
                                 @if(isset($teams) && count($teams) > 0)
                                     @foreach($teams as $team)
                                         <a href="#" data-team="{{ $team['url'] }}">{{ $team['name'] }}</a>
@@ -147,13 +166,14 @@
                     <div class="filter-group">
                         <h4>Temporada</h4>
                         <div class="sort-select" id="sortSelectTemporada" onclick="toggleDropdown('dropdownTemporada')">
-                            {{ $filters['season'] ?? 'Selecione' }}
+                            {{ $filters['season'] ?? 'Todos' }}
                             <svg class="arrow" width="16" height="16" viewBox="0 0 24 24">
                                 <path fill="#ff6600" d="M7 10l5 5 5-5z"/>
                             </svg>
                         </div>
                         <div class="dropdown">
                             <div class="dropdown-content" id="dropdownTemporada">
+                                <a href="#" data-season="">Todos</a>
                                 @php
                                     $currentYear = date('Y');
                                     for ($year = $currentYear; $year >= 2010; $year--) {
@@ -192,15 +212,18 @@
                     <div class="filter-group">
                         <h4>Tipo de produto</h4>
                         <div class="sort-select" id="sortSelectTipo" onclick="toggleDropdown('dropdownTipo')">
-                            @switch($filters['product_type'] ?? 'uniforme')
+                            @switch($filters['product_type'] ?? '')
                                 @case('casual')
                                     Casual
                                     @break
                                 @case('acessorios')
                                     Acessórios
                                     @break
-                                @default
+                                @case('uniforme')
                                     Uniforme
+                                    @break
+                                @default
+                                    Todos
                             @endswitch
                             <svg class="arrow" width="16" height="16" viewBox="0 0 24 24">
                                 <path fill="#ff6600" d="M7 10l5 5 5-5z"/>
@@ -208,6 +231,7 @@
                         </div>
                         <div class="dropdown">
                             <div class="dropdown-content" id="dropdownTipo">
+                                <a href="#" data-product-type="">Todos</a>
                                 <a href="#" data-product-type="uniforme">Uniforme</a>
                                 <a href="#" data-product-type="casual">Casual</a>
                                 <a href="#" data-product-type="acessorios">Acessórios</a>
@@ -238,13 +262,46 @@
 
                 <div class="productList">
                     @if(isset($products) && count($products) > 0)
-                        <div style="margin-bottom: 20px; color: #666; font-size: 14px;">
+                        <!-- Desktop product count (hidden on mobile) -->
+                        <div class="desktop-product-count" style="margin-bottom: 20px; color: #666; font-size: 14px;">
                             {{ $total }} produto{{ $total > 1 ? 's' : '' }} encontrado{{ $total > 1 ? 's' : '' }}
                             @if(isset($filters) && array_filter($filters))
                                 com os filtros aplicados
                             @endif
                         </div>
+                        
+                        <!-- Desktop Grid -->
                         <div class="grid">
+                            @foreach($products as $product)
+                                <div class="card">
+                                    <a href="{{ $product['url'] }}" class="card-link">
+                                        <div class="cardContent">
+                                            @if($product['discount_percentage'])
+                                                <span class="badge">{{ $product['discount_percentage'] }}</span>
+                                            @endif
+                                            <img
+                                                src="{{ $product['image'] ?? asset('images/placeholder-product.jpg') }}"
+                                                alt="{{ $product['name'] }}">
+                                        </div>
+                                        <div class="info">
+                                            <h3>{{ $product['name'] }}</h3>
+                                            <div>
+                                                <span class="price">{{ $product['price'] }}</span>
+                                                @if($product['special_price'])
+                                                    <span class="old-price">{{ $product['special_price'] }}</span>
+                                                @endif
+                                            </div>
+                                            <div>{{ $product['installment_price'] }}</div>
+                                            <div class="stars">★★★★★ (5)</div>
+                                            <span class="free-shipping">FRETE GRÁTIS</span>
+                                        </div>
+                                    </a>
+                                </div>
+                            @endforeach
+                        </div>
+                        
+                        <!-- Mobile Grid -->
+                        <div class="mobile-product-grid">
                             @foreach($products as $product)
                                 <div class="card">
                                     <a href="{{ $product['url'] }}" class="card-link">
@@ -299,216 +356,240 @@
             </div>
         </div>
     </section>
-    <script>
-        // Função para aplicar filtros
-        function applyFilters() {
-            const currentUrl = new URL(window.location);
-            const params = new URLSearchParams(currentUrl.search);
-            
-            // Limpar parâmetros de página ao aplicar filtros
-            params.delete('page');
-            
-            // Filtro de preço
-            const priceSlider = document.getElementById('priceSlider');
-            if (priceSlider) {
-                params.set('price_max', priceSlider.value);
-            }
-            
-            // Filtro de ordenação
-            const sortSelect = document.getElementById('sortSelectOrdenar');
-            if (sortSelect && sortSelect.dataset.sort) {
-                params.set('sort', sortSelect.dataset.sort);
-            }
-            
-            // Filtro de time
-            const teamSelect = document.getElementById('sortSelectTime');
-            if (teamSelect && teamSelect.dataset.team !== undefined) {
-                if (teamSelect.dataset.team) {
-                    params.set('team', teamSelect.dataset.team);
-                } else {
-                    params.delete('team');
-                }
-            }
-            
-            // Filtro de temporada
-            const seasonSelect = document.getElementById('sortSelectTemporada');
-            if (seasonSelect && seasonSelect.dataset.season) {
-                params.set('season', seasonSelect.dataset.season);
-            }
-            
-            // Filtro de tipo de produto
-            const productTypeSelect = document.getElementById('sortSelectTipo');
-            if (productTypeSelect && productTypeSelect.dataset.productType) {
-                params.set('product_type', productTypeSelect.dataset.productType);
-            }
-            
-            const checkboxFilters = {
-                'gender': document.querySelectorAll('input[type="checkbox"][value="masculine"], input[type="checkbox"][value="feminine"], input[type="checkbox"][value="unisex"], input[type="checkbox"][value="kids"]'),
-                'size': document.querySelectorAll('input[type="checkbox"][value="P"], input[type="checkbox"][value="M"], input[type="checkbox"][value="G"], input[type="checkbox"][value="GG"]'),
-                'category': document.querySelectorAll('input[type="checkbox"][value="Retro"], input[type="checkbox"][value="torcedor"], input[type="checkbox"][value="jogador"], input[type="checkbox"][value="treino"]'),
-                'national_international': document.querySelectorAll('input[type="checkbox"][value="Sim"], input[type="checkbox"][value="Não"]')
-            };
+    
+    <!-- Mobile Filter Components -->
+    <div class="mobile-filter-overlay" id="mobileFilterOverlay"></div>
+    
+    <!-- Mobile Filter Sidebar -->
+    <div class="mobile-filter-sidebar" id="mobileFilterSidebar">
+        <div class="mobile-filter-header">
+            <h3>Filtrar por</h3>
+            <button class="close-filter" id="closeMobileFilter">×</button>
+        </div>
         
-            
-            Object.entries(checkboxFilters).forEach(([param, checkboxes]) => {
-                const checkedValues = Array.from(checkboxes)
-                    .filter(cb => cb.checked)
-                    .map(cb => cb.value);
-                
-                if (checkedValues.length > 0) {
-                    params.set(param, checkedValues.join(','));
-                } else {
-                    params.delete(param);
-                }
-            });
-            
-            
-            // Redirecionar com os novos filtros
-            window.location.href = currentUrl.pathname + '?' + params.toString();
-        }
+        <div class="mobile-filter-content">
+            <!-- Filtro por Preço -->
+            <div class="filter-group">
+                <h4>Preço</h4>
+                <input type="range" min="50" max="500" value="{{ $filters['price_max'] ?? 250 }}" class="price-slider" id="mobilePriceSlider">
+                <div class="price-range" id="mobilePriceRange">R$ 50 - R$ {{ $filters['price_max'] ?? 250 }}</div>
+            </div>
 
-        function toggleDropdown(id) {
-            const dropdown = document.getElementById(id);
-            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-        }
+            <!-- Ordenar por -->
+            <div class="filter-group">
+                <h4>Ordenar por</h4>
+                <div class="sort-select" id="mobileSortSelectOrdenar" onclick="toggleDropdown('mobileDropdownMenu')">
+                    @switch($filters['sort'] ?? 'most_sold')
+                        @case('newest')
+                            Novidades
+                            @break
+                        @case('promotions')
+                            Promoções
+                            @break
+                        @case('price_asc')
+                            Preço: menor para maior
+                            @break
+                        @case('price_desc')
+                            Preço: maior para menor
+                            @break
+                        @default
+                            Mais vendidos
+                    @endswitch
+                    <svg class="arrow" width="16" height="16" viewBox="0 0 24 24">
+                        <path fill="#ff6600" d="M7 10l5 5 5-5z"/>
+                    </svg>
+                </div>
+                <div class="dropdown">
+                    <div class="dropdown-content" id="mobileDropdownMenu">
+                        <a href="#" data-sort="most_sold">Mais vendidos</a>
+                        <a href="#" data-sort="newest">Novidades</a>
+                        <a href="#" data-sort="promotions">Promoções</a>
+                        <a href="#" data-sort="price_asc">Preço: menor para maior</a>
+                        <a href="#" data-sort="price_desc">Preço: maior para menor</a>
+                    </div>
+                </div>
+            </div>
 
-        document.addEventListener("click", function (event) {
-            const allDropdowns = ["dropdownMenu", "dropdownTemporada", "dropdownTime", "dropdownTipo"];
-            const allButtons = ["sortSelectOrdenar", "sortSelectTemporada", "sortSelectTime", "sortSelectTipo"];
+            <div class="filter-group">
+                <h4>Time</h4>
+                <div class="sort-select" id="mobileSortSelectTime" onclick="toggleDropdown('mobileDropdownTime')">
+                    @if(isset($filters['team']) && $filters['team'])
+                        @php
+                            $selectedTeam = collect($teams)->firstWhere('url', $filters['team']);
+                            $teamName = $selectedTeam ? $selectedTeam['name'] : 'Todos';
+                        @endphp
+                        {{ $teamName }}
+                    @else
+                        Todos
+                    @endif
+                    <svg class="arrow" width="16" height="16" viewBox="0 0 24 24">
+                        <path fill="#ff6600" d="M7 10l5 5 5-5z"/>
+                    </svg>
+                </div>
+                <div class="dropdown">
+                    <div class="dropdown-content" id="mobileDropdownTime">
+                        <a href="#" data-team="">Todos</a>
+                        @if(isset($teams) && count($teams) > 0)
+                            @foreach($teams as $team)
+                                <a href="#" data-team="{{ $team['url'] }}">{{ $team['name'] }}</a>
+                            @endforeach
+                        @endif
+                    </div>
+                </div>
+            </div>
 
-            allDropdowns.forEach((id, index) => {
-                const dropdown = document.getElementById(id);
-                const button = document.getElementById(allButtons[index]);
+            <div class="filter-group checkbox">
+                <h4>Gênero</h4>
+                <label>
+                    <input type="checkbox" value="masculine" {{ in_array('masculine', explode(',', $filters['gender'] ?? '')) ? 'checked' : '' }} />
+                    <span class="custom-checkbox"></span>
+                    Masculino
+                </label>
+                <label>
+                    <input type="checkbox" value="feminine" {{ in_array('feminine', explode(',', $filters['gender'] ?? '')) ? 'checked' : '' }} />
+                    <span class="custom-checkbox"></span>
+                    Feminino
+                </label>
+                <label>
+                    <input type="checkbox" value="unisex" {{ in_array('unisex', explode(',', $filters['gender'] ?? '')) ? 'checked' : '' }} />
+                    <span class="custom-checkbox"></span>
+                    Unisex
+                </label>
+                <label>
+                    <input type="checkbox" value="kids" {{ in_array('kids', explode(',', $filters['gender'] ?? '')) ? 'checked' : '' }} />
+                    <span class="custom-checkbox"></span>
+                    Infantil
+                </label>
+            </div>
 
-                if (!button.contains(event.target) && !dropdown.contains(event.target)) {
-                    dropdown.style.display = "none";
-                }
-            });
-        });
+            <!-- Filtro por Tamanho -->
+            <div class="filter-group checkbox">
+                <h4>Tamanho</h4>
+                <label>
+                    <input type="checkbox" value="P" {{ in_array('P', explode(',', $filters['size'] ?? '')) ? 'checked' : '' }} />
+                    <span class="custom-checkbox"></span>
+                    P
+                </label>
+                <label>
+                    <input type="checkbox" value="M" {{ in_array('M', explode(',', $filters['size'] ?? '')) ? 'checked' : '' }} />
+                    <span class="custom-checkbox"></span>
+                    M
+                </label>
+                <label>
+                    <input type="checkbox" value="G" {{ in_array('G', explode(',', $filters['size'] ?? '')) ? 'checked' : '' }} />
+                    <span class="custom-checkbox"></span>
+                    G
+                </label>
+                <label>
+                    <input type="checkbox" value="GG" {{ in_array('GG', explode(',', $filters['size'] ?? '')) ? 'checked' : '' }} />
+                    <span class="custom-checkbox"></span>
+                    GG
+                </label>
+            </div>
 
-        // Adiciona listeners para todas as dropdowns
-        function setupDropdown(dropdownId, buttonId, dataAttribute) {
-            const links = document.querySelectorAll(`#${dropdownId} a`);
-            links.forEach(link => {
-                link.addEventListener("click", function (e) {
-                    e.preventDefault();
-                    const selectedText = this.textContent;
-                    const selectedValue = this.getAttribute(dataAttribute);
-                    const button = document.getElementById(buttonId);
-                    
-                    button.childNodes[0].nodeValue = selectedText + " ";
-                    button.dataset[dataAttribute.replace('data-', '')] = selectedValue;
-                    
-                    document.getElementById(dropdownId).style.display = "none";
-                    applyFilters();
-                });
-            });
-        }
+            <!-- Temporada -->
+            <div class="filter-group">
+                <h4>Temporada</h4>
+                <div class="sort-select" id="mobileSortSelectTemporada" onclick="toggleDropdown('mobileDropdownTemporada')">
+                    {{ $filters['season'] ?? 'Todos' }}
+                    <svg class="arrow" width="16" height="16" viewBox="0 0 24 24">
+                        <path fill="#ff6600" d="M7 10l5 5 5-5z"/>
+                    </svg>
+                </div>
+                <div class="dropdown">
+                    <div class="dropdown-content" id="mobileDropdownTemporada">
+                        <a href="#" data-season="">Todos</a>
+                        @php
+                            $currentYear = date('Y');
+                            for ($year = $currentYear; $year >= 2010; $year--) {
+                                $value = substr($year, 2);
+                                $nextYear = substr($year + 1, 2);
+                                $season = $value . '/' . $nextYear;
+                                echo '<a href="#" data-season="' . $season . '">' . $season . '</a>';
+                            }
+                        @endphp
+                    </div>
+                </div>
+            </div>
 
-        setupDropdown("dropdownMenu", "sortSelectOrdenar", "data-sort");
-        setupDropdown("dropdownTemporada", "sortSelectTemporada", "data-season");
-        setupDropdown("dropdownTime", "sortSelectTime", "data-team");
-        setupDropdown("dropdownTipo", "sortSelectTipo", "data-product-type");
+            <div class="filter-group checkbox">
+                <h4>Categoria</h4>
+                <label>
+                    <input type="checkbox" value="Retro" {{ in_array('Retro', explode(',', $filters['category'] ?? '')) ? 'checked' : '' }} />
+                    <span class="custom-checkbox"></span>
+                    Retro
+                </label>
+            </div>
+            <div class="filter-group checkbox">
+                <h4>Nacional / Internacional</h4>
+                <label>
+                    <input type="checkbox" value="Sim" {{ in_array('Sim', explode(',', $filters['national_international'] ?? '')) ? 'checked' : '' }} />
+                    <span class="custom-checkbox"></span>
+                    Nacional
+                </label>
+                <label>
+                    <input type="checkbox" value="Não" {{ in_array('Não', explode(',', $filters['national_international'] ?? '')) ? 'checked' : '' }} />
+                    <span class="custom-checkbox"></span>
+                    Internacional
+                </label>
+            </div>
 
-        // Adicionar listeners para checkboxes
-        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-            checkbox.addEventListener('change', applyFilters);
-        });
+            <div class="filter-group">
+                <h4>Tipo de produto</h4>
+                <div class="sort-select" id="mobileSortSelectTipo" onclick="toggleDropdown('mobileDropdownTipo')">
+                    @switch($filters['product_type'] ?? '')
+                        @case('casual')
+                            Casual
+                            @break
+                        @case('acessorios')
+                            Acessórios
+                            @break
+                        @case('uniforme')
+                            Uniforme
+                            @break
+                        @default
+                            Todos
+                    @endswitch
+                    <svg class="arrow" width="16" height="16" viewBox="0 0 24 24">
+                        <path fill="#ff6600" d="M7 10l5 5 5-5z"/>
+                    </svg>
+                </div>
+                <div class="dropdown">
+                    <div class="dropdown-content" id="mobileDropdownTipo">
+                        <a href="#" data-product-type="">Todos</a>
+                        <a href="#" data-product-type="uniforme">Uniforme</a>
+                        <a href="#" data-product-type="casual">Casual</a>
+                        <a href="#" data-product-type="acessorios">Acessórios</a>
+                    </div>
+                </div>
+            </div>
 
-        // Função para atualizar indicadores visuais de filtros ativos
-        function updateActiveFilterIndicators() {
-            // Atualizar indicadores de checkboxes
-            document.querySelectorAll('.filter-group.checkbox').forEach(group => {
-                const checkboxes = group.querySelectorAll('input[type="checkbox"]');
-                const hasActiveFilters = Array.from(checkboxes).some(cb => cb.checked);
-                
-                if (hasActiveFilters) {
-                    group.classList.add('has-active-filters');
-                } else {
-                    group.classList.remove('has-active-filters');
-                }
-            });
-
-            // Atualizar indicadores de dropdowns
-            const dropdowns = [
-                { id: 'sortSelectOrdenar', param: 'sort' },
-                { id: 'sortSelectTime', param: 'team' },
-                { id: 'sortSelectTemporada', param: 'season' },
-                { id: 'sortSelectTipo', param: 'product_type' }
-            ];
-
-            dropdowns.forEach(dropdown => {
-                const element = document.getElementById(dropdown.id);
-                const currentValue = new URLSearchParams(window.location.search).get(dropdown.param);
-                
-                if (currentValue && currentValue !== 'most_sold' && currentValue !== '2023/24' && currentValue !== 'uniforme') {
-                    element.classList.add('active');
-                } else {
-                    element.classList.remove('active');
-                }
-            });
-
-            // Atualizar indicador do slider de preço
-            const priceSlider = document.getElementById('priceSlider');
-            const currentPriceMax = new URLSearchParams(window.location.search).get('price_max');
-            if (priceSlider && currentPriceMax && currentPriceMax !== '250') {
-                priceSlider.parentElement.classList.add('has-active-filters');
-            } else {
-                priceSlider.parentElement.classList.remove('has-active-filters');
-            }
-        }
-
-        // Chamar a função ao carregar a página
-        document.addEventListener('DOMContentLoaded', function() {
-            updateActiveFilterIndicators();
-            
-            // Inicializar o valor do time no dropdown se houver um filtro ativo
-            const currentTeam = new URLSearchParams(window.location.search).get('team');
-            if (currentTeam) {
-                const teamSelect = document.getElementById('sortSelectTime');
-                if (teamSelect) {
-                    teamSelect.dataset.team = currentTeam;
-                }
-            }
-            
-            // Adicionar listener para o botão de limpar filtros
-            const clearFiltersBtn = document.getElementById('clearFilters');
-            if (clearFiltersBtn) {
-                clearFiltersBtn.addEventListener('click', function() {
-                    // Redirecionar para a URL base sem parâmetros
-                    const currentUrl = new URL(window.location);
-                    window.location.href = currentUrl.pathname;
-                });
-            }
-        });
-
-        // Adicionar listener para o slider de preço
-        document.addEventListener("DOMContentLoaded", function () {
-            const slider = document.querySelector(".price-slider");
-            const priceRange = document.getElementById("priceRange");
-
-            function updateSliderTrack() {
-                const min = parseInt(slider.min);
-                const max = parseInt(slider.max);
-                const value = parseInt(slider.value);
-
-                const percentage = ((value - min) / (max - min)) * 100;
-
-                slider.style.background = `linear-gradient(to right, #ff6600 ${percentage}%, #ddd ${percentage}%)`;
-                priceRange.textContent = `R$ 50 - R$ ${value}`;
-            }
-
-            slider.addEventListener("input", updateSliderTrack);
-            
-            // Aplicar filtro após o usuário parar de arrastar o slider
-            let timeout;
-            slider.addEventListener("change", function() {
-                clearTimeout(timeout);
-                timeout = setTimeout(applyFilters, 500);
-            });
-
-            // Atualizar ao carregar a página
-            updateSliderTrack();
-        });
-    </script>
+            <div class="filter-group checkbox">
+                <h4>Tipo de Camisa</h4>
+                <label>
+                    <input type="checkbox" value="torcedor" {{ in_array('torcedor', explode(',', $filters['category'] ?? '')) ? 'checked' : '' }} />
+                    <span class="custom-checkbox"></span>
+                    Torcedor
+                </label>
+                <label>
+                    <input type="checkbox" value="jogador" {{ in_array('jogador', explode(',', $filters['category'] ?? '')) ? 'checked' : '' }} />
+                    <span class="custom-checkbox"></span>
+                    Jogador
+                </label>
+                <label>
+                    <input type="checkbox" value="treino" {{ in_array('treino', explode(',', $filters['category'] ?? '')) ? 'checked' : '' }} />
+                    <span class="custom-checkbox"></span>
+                    Treino
+                </label>
+            </div>
+        </div>
+        
+        <div class="mobile-filter-actions">
+            <button class="btn btn-clear" id="mobileClearFilters">Limpar</button>
+            <button class="btn btn-apply" id="mobileApplyFilters">Aplicar</button>
+        </div>
+    </div>
+    
+    
+    <script src="{!! asset('assets/js/list.min.js') !!}"></script>
 @endsection
