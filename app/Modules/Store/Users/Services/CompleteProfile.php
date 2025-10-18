@@ -38,6 +38,7 @@ readonly class CompleteProfile
 
 
             $userAddress = UserAddress::query()
+                ->where('user_id', $user->id)
                 ->where('zip_code', $this->address['zipcode'])
                 ->where('street', $this->address['street'])
                 ->where('neighborhood', $this->address['neighborhood'])
