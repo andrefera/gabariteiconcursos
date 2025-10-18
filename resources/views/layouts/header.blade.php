@@ -1,7 +1,7 @@
 @php use Illuminate\Support\Facades\Session; @endphp
 <header id="header">
     <div class="alignHeader">
-        <div class="mobile-header-actions">   
+        <div class="mobile-header-actions">
             <!-- Mobile Menu Button -->
             <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Abrir Menu">
                 <span class="hamburger-line"></span>
@@ -39,7 +39,7 @@
                     </a>
                 @endauth
             </div>
-                <a class="imgIcon cart-link" href="/carrinho">
+                <a class="imgIcon cart-link" href="/cart">
                 <img src="{{ asset('images/icons/cart-icon.png') }}" width="20" height="20" alt="Cart Icon" class="searchIcon">
                     <span class="desktop-only">
                         Carrinho
@@ -48,14 +48,14 @@
                     </span>
             </a>
         </div>
-        
+
         <div class="options desktop-only">
             <div class="dropdown-menu">
                 <a href="/" class="dropdown-trigger">
                     Brasileiros <img src="{{ asset('images/icons/arrow-down-icon.png') }}" width="10" height="10" alt="Arrow Icon">
                 </a>
                 <div class="dropdown-content" id="desktop-brasileiros-content">
-                    
+
                 </div>
             </div>
             <div class="dropdown-menu">
@@ -63,7 +63,7 @@
                     Internacionais <img src="{{ asset('images/icons/arrow-down-icon.png') }}" width="10" height="10" alt="Arrow Icon">
                 </a>
                 <div class="dropdown-content" id="desktop-internacionais-content">
-                
+
                 </div>
             </div>
             <div class="dropdown-menu">
@@ -74,7 +74,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Mobile & Desktop Search -->
         <div class="searchGroup">
             <div class="searchInput">
@@ -85,7 +85,7 @@
             </div>
             <div id="search-results-dropdown" class="search-results-dropdown" style="display:none;"></div>
         </div>
-        
+
         <!-- Desktop Actions -->
         <div class="header-actions desktop-only">
             <div class="userMenuContainer">
@@ -111,7 +111,7 @@
                     </a>
                 @endauth
             </div>
-                <a class="imgIcon cart-link" href="/carrinho">
+                <a class="imgIcon cart-link" href="/cart">
                 <img src="{{ asset('images/icons/cart-icon.png') }}" width="20" height="20" alt="Cart Icon" class="searchIcon">
                     <span class="desktop-only">
                         Carrinho
@@ -136,7 +136,7 @@
                 </svg>
             </button>
         </div>
-        
+
         <div class="sidebar-menu">
             <!-- Brasileiros -->
             <div class="sidebar-section">
@@ -147,10 +147,10 @@
                     </svg>
                 </button>
                 <div class="sidebar-section-content" id="brasileiros-content">
-                    
+
                 </div>
             </div>
-            
+
             <!-- Internacionais -->
             <div class="sidebar-section">
                 <button class="sidebar-section-trigger" data-section="internacionais">
@@ -160,10 +160,10 @@
                     </svg>
                 </button>
                 <div class="sidebar-section-content" id="internacionais-content">
-                    
+
                 </div>
             </div>
-            
+
             <!-- Seleções -->
             <div class="sidebar-section">
                 <button class="sidebar-section-trigger" data-section="selecoes">
@@ -173,11 +173,11 @@
                     </svg>
                 </button>
                 <div class="sidebar-section-content" id="selecoes-content">
-                    
+
                 </div>
             </div>
         </div>
-        
+
         <div class="sidebar-footer">
             <div class="sidebar-user-section">
                 @auth
@@ -332,7 +332,7 @@
     .dropdown-content a img {
         margin-right: 4px;
     }
-    
+
     .dropdown-content a.has-logo::before {
         content: none !important;
     }
@@ -358,7 +358,7 @@
 
         // Função para atualizar os times no header
         function updateTeamsInHeader(teams) {
-            
+
             // Separar times por categoria
             const brasileiros = teams.filter(team => team.country === 'BR' && team.league !== 'Seleção');
             const internacionais = teams.filter(team => team.country !== 'BR' && team.league !== 'Seleção');
@@ -367,7 +367,7 @@
             // Atualizar dropdown desktop - Brasileiros
             const brasileirosDropdown = document.getElementById('desktop-brasileiros-content');
             if (brasileirosDropdown) {
-                brasileirosDropdown.innerHTML = brasileiros.map(team => 
+                brasileirosDropdown.innerHTML = brasileiros.map(team =>
                     `<a href="/time/${team.url}" class="${team.logo ? 'has-logo' : ''}">${team.logo ? `<img src="${team.logo}" alt="${team.name}" width="16" height="16" style="margin-right: 4px;">` : '⚽'} ${team.name}</a>`
                 ).join('');
             }
@@ -375,7 +375,7 @@
             // Atualizar dropdown desktop - Internacionais
             const internacionaisDropdown = document.getElementById('desktop-internacionais-content');
             if (internacionaisDropdown) {
-                internacionaisDropdown.innerHTML = internacionais.map(team => 
+                internacionaisDropdown.innerHTML = internacionais.map(team =>
                     `<a href="/time/${team.url}" class="${team.logo ? 'has-logo' : ''}">${team.logo ? `<img src="${team.logo}" alt="${team.name}" width="16" height="16" style="margin-right: 4px;">` : '⚽'} ${team.name}</a>`
                 ).join('');
             }
@@ -383,7 +383,7 @@
             // Atualizar dropdown desktop - Seleções
             const selecoesDropdown = document.getElementById('desktop-selecoes-content');
             if (selecoesDropdown) {
-                selecoesDropdown.innerHTML = selecoes.map(team => 
+                selecoesDropdown.innerHTML = selecoes.map(team =>
                     `<a href="/time/${team.url}" class="${team.logo ? 'has-logo' : ''}">${team.logo ? `<img src="${team.logo}" alt="${team.name}" width="16" height="16" style="margin-right: 4px;">` : '⚽'} ${team.name}</a>`
                 ).join('');
             }
@@ -391,7 +391,7 @@
             // Atualizar sidebar mobile - Brasileiros
             const brasileirosContent = document.getElementById('brasileiros-content');
             if (brasileirosContent) {
-                brasileirosContent.innerHTML = brasileiros.map(team => 
+                brasileirosContent.innerHTML = brasileiros.map(team =>
                     `<a href="/time/${team.url}">${team.logo ? `<img src="${team.logo}" alt="${team.name}" width="16" height="16" style="margin-right: 4px;">` : '⚽'} ${team.name}</a>`
                 ).join('');
             }
@@ -399,7 +399,7 @@
             // Atualizar sidebar mobile - Internacionais
             const internacionaisContent = document.getElementById('internacionais-content');
             if (internacionaisContent) {
-                internacionaisContent.innerHTML = internacionais.map(team => 
+                internacionaisContent.innerHTML = internacionais.map(team =>
                     `<a href="/time/${team.url}">${team.logo ? `<img src="${team.logo}" alt="${team.name}" width="16" height="16" style="margin-right: 4px;">` : '⚽'} ${team.name}</a>`
                 ).join('');
             }
@@ -407,7 +407,7 @@
             // Atualizar sidebar mobile - Seleções
             const selecoesContent = document.getElementById('selecoes-content');
             if (selecoesContent) {
-                selecoesContent.innerHTML = selecoes.map(team => 
+                selecoesContent.innerHTML = selecoes.map(team =>
                     `<a href="/time/${team.url}">${team.logo ? `<img src="${team.logo}" alt="${team.name}" width="16" height="16" style="margin-right: 4px;">` : '⚽'} ${team.name}</a>`
                 ).join('');
             }
