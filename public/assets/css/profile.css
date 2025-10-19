@@ -1,0 +1,263 @@
+@charset "UTF-8";
+.profile-complete-container {
+  max-width: 700px;
+  margin: 1rem auto;
+  padding: 1.5rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+.profile-complete-container h1 {
+  color: #333;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  background: linear-gradient(135deg, #FF7C00 0%, #ff8c1a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.profile-complete-container > p {
+  color: #666;
+  font-size: 0.95rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.profile-form .form-section {
+  margin-bottom: 1rem;
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+.profile-form .form-section h3 {
+  color: #333;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 2px solid #FF7C00;
+}
+.profile-form .form-group {
+  margin-bottom: 0.7rem;
+}
+.profile-form .form-group label {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-weight: 600;
+  color: #333;
+  font-size: 0.9rem;
+}
+.profile-form .form-group .form-control {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  background: #fff;
+}
+.profile-form .form-group .form-control:focus {
+  outline: none;
+  border-color: #FF7C00;
+  box-shadow: 0 0 0 3px rgba(255, 124, 0, 0.1);
+  transform: translateY(-1px);
+}
+.profile-form .form-group .form-control:hover:not(:focus) {
+  border-color: #d1d5db;
+}
+.profile-form .form-group .form-control.is-invalid {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+.profile-form .form-group .form-control::-moz-placeholder {
+  color: #9ca3af;
+  font-style: italic;
+}
+.profile-form .form-group .form-control::placeholder {
+  color: #9ca3af;
+  font-style: italic;
+}
+.profile-form .form-group select.form-control {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.75rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem;
+}
+.profile-form .form-group:has(label[for=billing_address]) {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #f3f4f6;
+}
+.profile-form .form-group:has(label[for=billing_address]) label {
+  font-size: 1.1rem;
+  color: #FF7C00;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+.profile-form .form-group:has(input[name*=billing_address]) {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+@media (min-width: 768px) {
+  .profile-form .form-group:has(input[name*=billing_address]) {
+    grid-template-columns: 2fr 1fr;
+  }
+  .profile-form .form-group:has(input[name*=billing_address]) input[name="billing_address[street]"] {
+    grid-column: 1/-1;
+  }
+  .profile-form .form-group:has(input[name*=billing_address]) input[name="billing_address[number]"] {
+    grid-column: 1;
+  }
+  .profile-form .form-group:has(input[name*=billing_address]) input[name="billing_address[complement]"] {
+    grid-column: 2;
+  }
+  .profile-form .form-group:has(input[name*=billing_address]) input[name="billing_address[neighborhood]"] {
+    grid-column: 1;
+  }
+  .profile-form .form-group:has(input[name*=billing_address]) input[name="billing_address[city]"] {
+    grid-column: 2;
+  }
+  .profile-form .form-group:has(input[name*=billing_address]) select[name="billing_address[state]"] {
+    grid-column: 1;
+  }
+  .profile-form .form-group:has(input[name*=billing_address]) input[name="billing_address[zipcode]"] {
+    grid-column: 2;
+  }
+}
+
+.btn-continue {
+  width: 100%;
+  padding: 0.8rem 1.5rem;
+  background: linear-gradient(135deg, #FF7C00 0%, #ff8c1a 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 124, 0, 0.3);
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.btn-continue span {
+  font-weight: 600;
+}
+.btn-continue svg {
+  transition: transform 0.3s ease;
+}
+.btn-continue:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 124, 0, 0.4);
+  background: linear-gradient(135deg, #e67300 0%, #ff7c00 100%);
+}
+.btn-continue:hover svg {
+  transform: translateX(4px);
+}
+.btn-continue:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 15px rgba(255, 124, 0, 0.3);
+}
+
+.alert {
+  padding: 0.8rem 1rem;
+  margin-bottom: 1rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+}
+.alert.alert-danger {
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  color: #dc2626;
+  border-left: 4px solid #ef4444;
+}
+.alert ul {
+  margin: 0.5rem 0 0 0;
+  padding-left: 1.25rem;
+}
+.alert ul li {
+  margin-bottom: 0.25rem;
+}
+
+.invalid-feedback {
+  color: #ef4444;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.invalid-feedback::before {
+  content: "⚠";
+  font-size: 0.875rem;
+}
+
+.form-control:disabled {
+  background-color: #f8fafc;
+  color: #6b7280;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+  .profile-complete-container {
+    margin: 0.5rem;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+  .profile-complete-container h1 {
+    font-size: 1.5rem;
+  }
+  .profile-complete-container > p {
+    font-size: 0.9rem;
+  }
+  .profile-form .form-group {
+    margin-bottom: 0.8rem;
+  }
+  .profile-form .form-section {
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+  }
+  .btn-continue {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.95rem;
+  }
+}
+.profile-complete-container {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.form-control:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+select.form-control {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  background-color: #fff;
+}
+select.form-control:focus {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23FF7C00' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+}

@@ -37,10 +37,16 @@ mix.sass('resources/scss/cart.scss', 'public/assets/css').options({
 mix.sass('resources/scss/login.scss', 'public/assets/css').options({
     processCssUrls: false
 });
+mix.sass('resources/scss/auth.scss', 'public/assets/css').options({
+    processCssUrls: false
+});
 mix.sass('resources/scss/order_list.scss', 'public/assets/css').options({
     processCssUrls: false
 });
 mix.sass('resources/scss/footer.scss', 'public/assets/css').options({
+    processCssUrls: false
+});
+mix.sass('resources/scss/profile.scss', 'public/assets/css').options({
     processCssUrls: false
 });
 

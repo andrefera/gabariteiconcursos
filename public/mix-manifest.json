@@ -3,12 +3,15 @@
     "/assets/js/header.min.js": "/assets/js/header.min.js",
     "/assets/js/detail.min.js": "/assets/js/detail.min.js",
     "/assets/js/list.min.js": "/assets/js/list.min.js",
+    "/assets/css/list.css": "/assets/css/list.css",
     "/assets/css/detail.css": "/assets/css/detail.css",
     "/assets/css/home.css": "/assets/css/home.css",
     "/assets/css/header.css": "/assets/css/header.css",
     "/assets/css/main.css": "/assets/css/main.css",
+    "/assets/css/profile.css": "/assets/css/profile.css",
     "/assets/css/footer.css": "/assets/css/footer.css",
     "/assets/css/order_list.css": "/assets/css/order_list.css",
+    "/assets/css/auth.css": "/assets/css/auth.css",
     "/assets/css/login.css": "/assets/css/login.css",
     "/assets/css/cart.css": "/assets/css/cart.css",
     "/assets/css/plugins.css": "/assets/css/plugins.css",
@@ -23,6 +26,5 @@
     "/~partytown/partytown-atomics.js": "/~partytown/partytown-atomics.js",
     "/~partytown/partytown-media.js": "/~partytown/partytown-media.js",
     "/~partytown/partytown-sw.js": "/~partytown/partytown-sw.js",
-    "/~partytown/partytown.js": "/~partytown/partytown.js",
-    "/assets/css/list.css": "/assets/css/list.css"
+    "/~partytown/partytown.js": "/~partytown/partytown.js"
 }

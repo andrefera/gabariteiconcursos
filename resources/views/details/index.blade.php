@@ -399,7 +399,7 @@
                     <li><a href="/busca/creatina-1kg">
                             creatina 1kg
                         </a></li>
-                    <li><a href="/shirts/masculino">
+                    <li><a href="/camisa/masculino">
                             camiseta masculina
                         </a></li>
                     <li><a href="/mochilas/masculino">

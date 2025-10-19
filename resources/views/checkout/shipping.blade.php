@@ -7,8 +7,9 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
 @section('content')
-<div class="container">
-    <div class="checkout-container">
+<section class="checkoutSection">
+    <div class="alignSection">
+        <div class="checkout-container">
         <!-- Coluna da esquerda: Endereços e Frete -->
         <div class="checkout-main">
             <!-- Seção de Endereços -->
@@ -210,7 +211,8 @@
             </button>
         </div>
     </div>
-</div>
+    </div>
+</section>
 
 <!-- Loading State Component -->
 <div id="loading-overlay" class="loading-overlay" style="display: none;">
@@ -227,6 +229,13 @@
 </div>
 
 <style>
+.checkoutSection {
+    margin: 0 auto;
+    max-width: 1400px;
+    min-height: calc(100vh - 162px);
+    width: 100%;
+}
+
 .checkout-container {
     display: flex;
     gap: 30px;
@@ -512,7 +521,7 @@
     width: 100%;
     height: 100%;
     background-color: rgba(0,0,0,0.5);
-    z-index: 1000;
+    z-index: 99999;
 }
 
 .modal-content {
@@ -704,6 +713,265 @@
     from { transform: translateX(100%); }
     to { transform: translateX(0); }
 }
+
+/* ===========================================
+   RESPONSIVE DESIGN - MOBILE FIRST
+   =========================================== */
+
+/* Tablet and below */
+@media (max-width: 1024px) {
+    .checkout-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .order-summary {
+        width: 100%;
+        order: -1; /* Move summary to top on mobile */
+    }
+    
+    .checkout-main {
+        order: 1;
+    }
+}
+
+/* Mobile landscape and below */
+@media (max-width: 768px) {
+    .checkoutSection {
+        min-height: calc(100vh - 120px);
+    }
+    
+    .checkout-container {
+        padding: 10px 0;
+        gap: 15px;
+    }
+    
+    .addresses-section,
+    .shipping-methods-section,
+    .order-summary {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .address-card {
+        flex-direction: column;
+        gap: 10px;
+        padding: 12px;
+    }
+    
+    .address-actions {
+        justify-content: flex-end;
+        margin-top: 10px;
+    }
+    
+    .btn-edit,
+    .btn-delete {
+        padding: 10px;
+        min-width: 44px;
+        min-height: 44px;
+    }
+    
+    .add-address-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 15px 20px;
+        font-size: 16px;
+    }
+    
+    .shipping-method {
+        padding: 12px;
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .shipping-method-info {
+        order: 1;
+    }
+    
+    .shipping-method-price {
+        order: 2;
+        font-size: 18px;
+        font-weight: bold;
+    }
+    
+    .order-summary h2 {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+    
+    .btn-complete-order {
+        padding: 18px;
+        font-size: 16px;
+        min-height: 56px;
+    }
+    
+    /* Modal improvements for mobile */
+    .modal-content {
+        width: 95%;
+        margin: 20px auto;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    
+    .modal-body {
+        padding: 15px;
+    }
+    
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .col-4,
+    .col-8 {
+        flex: 1;
+        width: 100%;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .btn-save,
+    .btn-cancel {
+        width: 100%;
+        padding: 15px;
+        font-size: 16px;
+    }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+    .checkoutSection {
+        min-height: calc(100vh - 100px);
+    }
+    
+    .addresses-section h2,
+    .shipping-methods-section h2,
+    .order-summary h2 {
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+    
+    .address-card {
+        padding: 10px;
+    }
+    
+    .address-line {
+        font-size: 14px;
+        line-height: 1.3;
+    }
+    
+    .shipping-method {
+        padding: 10px;
+    }
+    
+    .shipping-method-info {
+        font-size: 14px;
+    }
+    
+    .shipping-method-price {
+        font-size: 16px;
+    }
+    
+    .order-totals {
+        font-size: 14px;
+    }
+    
+    .grand-total {
+        font-size: 16px;
+    }
+    
+    .btn-complete-order {
+        padding: 16px;
+        font-size: 15px;
+        min-height: 52px;
+    }
+    
+    .modal-content {
+        width: 98%;
+        margin: 10px auto;
+    }
+    
+    .modal-header {
+        padding: 12px 15px;
+    }
+    
+    .modal-header h3 {
+        font-size: 18px;
+    }
+    
+    .form-control {
+        padding: 12px;
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+    
+    .form-group {
+        margin-bottom: 12px;
+    }
+}
+
+/* Touch improvements */
+@media (hover: none) and (pointer: coarse) {
+    .address-card:hover {
+        border-color: #ddd;
+    }
+    
+    .address-card:active {
+        border-color: #FF7F00;
+        background-color: #fff8f0;
+    }
+    
+    .shipping-method:hover {
+        border-color: #ddd;
+    }
+    
+    .shipping-method:active {
+        border-color: #FF7F00;
+        background-color: #fff8f0;
+    }
+    
+    .btn-edit:hover,
+    .btn-delete:hover {
+        background-color: transparent;
+    }
+    
+    .btn-edit:active {
+        background-color: rgba(0, 86, 179, 0.1);
+    }
+    
+    .btn-delete:active {
+        background-color: rgba(220, 53, 69, 0.1);
+    }
+}
+
+/* Landscape orientation adjustments */
+@media (max-width: 768px) and (orientation: landscape) {
+    .checkout-container {
+        flex-direction: row;
+        gap: 15px;
+    }
+    
+    .checkout-main {
+        flex: 2;
+    }
+    
+    .order-summary {
+        flex: 1;
+        order: 1;
+    }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .address-card,
+    .shipping-method,
+    .order-summary {
+        border-width: 0.5px;
+    }
+}
 </style>
 
 <script src="https://unpkg.com/imask"></script>
@@ -785,6 +1053,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
 
+            // Seleciona automaticamente o primeiro método de envio
+            const firstShippingMethod = document.querySelector('input[name="shipping_method"]');
+            if (firstShippingMethod) {
+                firstShippingMethod.checked = true;
+                const shippingMethod = firstShippingMethod.closest('.shipping-method');
+                const shippingPrice = parseFloat(shippingMethod.dataset.price);
+                
+                updateTotals(shippingPrice);
+                selectedShippingMethod = firstShippingMethod.value;
+                btnCompleteOrder.disabled = false;
+            }
+
         } catch (error) {
             showError(error.message);
             shippingMethodsList.innerHTML = '<div class="loading-shipping">Erro ao calcular frete. Tente novamente.</div>';
@@ -830,11 +1110,30 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         modal.style.display = 'block';
+        
+        // Mobile-specific improvements
+        if (isMobile()) {
+            // Prevent body scroll when modal is open
+            document.body.style.overflow = 'hidden';
+            
+            // Focus first input after modal opens
+            setTimeout(() => {
+                const firstInput = modal.querySelector('input');
+                if (firstInput) {
+                    firstInput.focus();
+                }
+            }, 100);
+        }
     }
 
     // Função para fechar modal de endereço
     window.closeAddressModal = function() {
         document.getElementById('addressModal').style.display = 'none';
+        
+        // Restore body scroll on mobile
+        if (isMobile()) {
+            document.body.style.overflow = '';
+        }
     }
 
     // Função para carregar dados do endereço
@@ -1094,6 +1393,65 @@ document.addEventListener('DOMContentLoaded', function() {
             position: "right",
             backgroundColor: isError ? "#dc3545" : "#28a745",
         }).showToast();
+    }
+
+    // Mobile-specific improvements
+    function isMobile() {
+        return window.innerWidth <= 768;
+    }
+
+    // Improve touch interactions
+    function addTouchSupport() {
+        if (isMobile()) {
+            // Add touch feedback for address cards
+            document.querySelectorAll('.address-card').forEach(card => {
+                card.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.98)';
+                    this.style.transition = 'transform 0.1s ease';
+                });
+                
+                card.addEventListener('touchend', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+
+            // Add touch feedback for shipping methods
+            document.querySelectorAll('.shipping-method').forEach(method => {
+                method.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.98)';
+                    this.style.transition = 'transform 0.1s ease';
+                });
+                
+                method.addEventListener('touchend', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+
+            // Improve button touch targets
+            document.querySelectorAll('.btn-edit, .btn-delete').forEach(btn => {
+                btn.style.minWidth = '44px';
+                btn.style.minHeight = '44px';
+            });
+        }
+    }
+
+    // Initialize mobile improvements
+    addTouchSupport();
+
+    // Re-initialize on window resize
+    window.addEventListener('resize', function() {
+        setTimeout(addTouchSupport, 100);
+    });
+
+    // Prevent zoom on input focus (iOS)
+    if (isMobile()) {
+        document.querySelectorAll('input, select, textarea').forEach(input => {
+            input.addEventListener('focus', function() {
+                if (this.style.fontSize !== '16px') {
+                    this.style.fontSize = '16px';
+                }
+            });
+        });
     }
 });
 </script>

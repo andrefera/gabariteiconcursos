@@ -36,6 +36,35 @@
         // Logo
         .logo-link img {
             max-height: 70px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            transition: all 0.3s ease;
+
+            // Responsividade para diferentes tamanhos de tela
+            @media (max-width: 1200px) {
+                max-height: 65px;
+            }
+
+            @media (max-width: 992px) {
+                max-height: 60px;
+            }
+
+            @media (max-width: 768px) {
+                max-height: 50px;
+            }
+
+            @media (max-width: 576px) {
+                max-height: 45px;
+            }
+
+            @media (max-width: 480px) {
+                max-height: 40px;
+            }
+
+            @media (max-width: 360px) {
+                max-height: 35px;
+            }
         }
 
         // Ações do header
@@ -177,6 +206,17 @@
                     font-size: 16px;
                     opacity: 0.6;
                     transition: all 0.2s ease;
+                }
+
+                // Quando o link possui um logo (img), removemos o marcador padrão
+                &.has-logo {
+                    &:before {
+                        content: none !important;
+                    }
+
+                    img {
+                        margin-right: 4px;
+                    }
                 }
 
                 &:hover {
@@ -376,29 +416,169 @@
 }
 
 .userMenuDropdown {
-    text-align: end;
     display: none;
     position: absolute;
-    top: 100%;
+    top: calc(100% + 8px);
     right: 0;
-    background-color: white;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
-    padding: 8px 0;
-    min-width: 180px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 0;
+    min-width: 280px;
     z-index: 1000;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-    a {
+    &.show {
         display: block;
-        padding: 8px 16px;
-        margin-right: 0 !important;
-        color: #333;
-        text-decoration: none;
-        transition: background-color 0.2s;
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
 
-        &:hover {
-            background-color: #f5f5f5;
-        }
+.userMenuHeader {
+    padding: 20px;
+    background: linear-gradient(135deg, #FF7C00, #FF9500);
+    color: white;
+    border-radius: 16px 16px 0 0;
+}
+
+.userInfo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.userAvatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+
+    img {
+        width: 32px;
+        height: 32px;
+        filter: brightness(0) invert(1);
+    }
+}
+
+.userDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    align-items: flex-start;
+}
+
+.userName {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.2;
+}
+
+.userEmail {
+    font-size: 13px;
+    opacity: 0.9;
+    line-height: 1.2;
+}
+
+.userMenuDivider {
+    height: 1px;
+    background: #f0f0f0;
+    margin: 0;
+}
+
+.userMenuItems {
+    padding: 8px 0;
+}
+
+.userMenuItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    font-size: 14px;
+
+    &:hover {
+        background: #f8f9fa;
+        color: #FF7C00;
+        transform: translateX(4px);
+    }
+}
+
+.menuIcon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.userMenuItem:hover .menuIcon {
+    transform: scale(1.1);
+}
+
+.userMenuFooter {
+    padding: 8px 0;
+    border-top: 1px solid #f0f0f0;
+}
+
+.logoutForm {
+    margin: 0;
+}
+
+.logoutButton {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    background: none;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    text-align: left;
+
+    &:hover {
+        background: #fff5f5;
+        color: #c82333;
+        transform: translateX(4px);
+    }
+
+    &:hover .menuIcon {
+        transform: scale(1.1);
+    }
+}
+
+.userMenuTrigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: rgba(255, 124, 0, 0.1);
+    }
+
+    span {
+        color: #333;
+        font-weight: 500;
     }
 }
 
@@ -422,7 +602,7 @@
 // ===============================================
 
 .desktop-only {
-    @media (max-width: 768px) {
+    @media (max-width: 992px) {
         display: none !important;
     }
 }
@@ -430,7 +610,7 @@
 .mobile-only {
     display: none !important;
 
-    @media (max-width: 768px) {
+    @media (max-width: 992px) {
         display: block !important;
     }
 }
@@ -449,45 +629,83 @@
 @media (max-width: 1199px) and (min-width: 992px) {
     #header .alignHeader {
         max-width: 100%;
-        padding: 1rem 2rem;
-
-        .searchGroup .searchInput {
-            width: 400px;
-        }
-    }
-}
-
-@media (max-width: 991px) and (min-width: 769px) {
-    #header .alignHeader {
         padding: 1rem 1.5rem;
+        gap: 1rem;
 
         .searchGroup .searchInput {
-            width: 300px;
+            width: 350px;
         }
 
         .options {
             gap: 0.75rem;
 
             .dropdown-trigger {
-                padding: 10px 12px;
+                padding: 10px 14px;
+                font-size: 0.9rem;
+            }
+        }
+
+        .header-actions {
+            gap: 0.75rem;
+
+            .imgIcon {
+                padding: 8px 10px;
                 font-size: 0.9rem;
             }
         }
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 991px) and (min-width: 769px) {
     #header .alignHeader {
-        padding: 0.75rem 1rem;
+        padding: 0.75rem 1.25rem;
+        gap: 0.75rem;
+        flex-wrap: nowrap;
+
+        .searchGroup .searchInput {
+            width: 280px;
+            height: 38px;
+        }
+
+        .options {
+            gap: 0.5rem;
+
+            .dropdown-trigger {
+                padding: 8px 12px;
+                font-size: 0.85rem;
+            }
+        }
+
+        .header-actions {
+            gap: 0.5rem;
+
+            .imgIcon {
+                padding: 6px 8px;
+                font-size: 0.85rem;
+
+                span {
+                    font-size: 0.8rem;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 992px) {
+    #header .alignHeader {
+        padding: 0.5rem 0.75rem;
         flex-wrap: wrap;
-        gap: 0;
+        gap: 0.5rem;
         position: relative;
-        min-height: 70px;
+        min-height: 60px;
         width: 100%;
+        overflow: hidden;
 
         .mobile-menu-btn {
             order: 1;
             flex: none;
+            min-width: 44px;
+            min-height: 44px;
         }
 
         .logo-link {
@@ -496,34 +714,67 @@
             display: flex;
             justify-content: center;
             margin: 0;
+            min-width: 0;
 
             img {
-                max-height: 50px;
+                max-height: 45px;
                 height: auto;
+                max-width: 100%;
             }
         }
 
         .header-actions.mobileOptions {
             order: 3;
             display: flex;
-            gap: 0.5rem;
+            gap: 0.25rem;
             align-items: center;
             flex: none;
+            min-width: 0;
 
-            .userMenuContainer,
+            .userMenuContainer {
+                min-width: 0;
+
+                > .userMenu > .userMenuTrigger {
+                    padding: 6px;
+                    min-width: 36px;
+                    min-height: 36px;
+
+                    span {
+                        display: none;
+                    }
+
+                    img {
+                        width: 20px;
+                        height: 20px;
+                    }
+                }
+
+                &.imgIcon {
+                    padding: 6px;
+                    border-radius: 6px;
+                    transition: all 0.2s ease;
+
+                    &:hover {
+                        background: rgba(255, 127, 0, 0.1);
+                    }
+                }
+            }
+
             .cart-link {
+                min-width: 0;
+
                 span {
                     display: none;
                 }
 
                 img {
-                    width: 22px;
-                    height: 22px;
+                    width: 20px;
+                    height: 20px;
                 }
 
                 &.imgIcon {
-                    padding: 8px;
-                    border-radius: 8px;
+                    padding: 6px;
+                    border-radius: 6px;
                     transition: all 0.2s ease;
 
                     &:hover {
@@ -537,13 +788,14 @@
             order: 4;
             width: 100%;
             position: relative;
-            margin-top: 0.75rem;
+            margin-top: 0.5rem;
 
             .searchInput {
                 width: 100%;
-                height: 42px;
+                height: 40px;
                 font-size: 16px;
-                border-radius: 21px;
+                border-radius: 20px;
+                padding: 0 16px 0 18px;
             }
         }
     }
@@ -595,14 +847,24 @@
 
 @media (max-width: 480px) {
     #header .alignHeader {
-        padding: 0.5rem 0.75rem;
-        gap: 0.4rem;
+        padding: 0.4rem 0.5rem;
+        gap: 0.25rem;
+        min-height: 55px;
+
+        .mobile-menu-btn {
+            min-width: 40px;
+            min-height: 40px;
+            padding: 8px;
+        }
 
         .logo-link {
-            margin-left: 0.4rem;
+            margin: 0;
+            flex: 1;
+            min-width: 0;
             
             img {
-                max-height: 45px;
+                max-height: 40px;
+                max-width: 100%;
             }
         }
 
@@ -610,25 +872,88 @@
             margin-top: 0.25rem;
 
             .searchInput {
-                height: 40px;
+                height: 38px;
                 font-size: 16px;
-                padding: 0 16px 0 18px;
+                padding: 0 14px 0 16px;
             }
         }
 
-        .header-actions {
-            gap: 0.25rem;
+        .header-actions.mobileOptions {
+            gap: 0.2rem;
+
+            .userMenuContainer,
+            .cart-link {
+                min-width: 0;
+
+                img {
+                    width: 18px;
+                    height: 18px;
+                }
+
+                &.imgIcon {
+                    padding: 5px;
+                    min-width: 32px;
+                    min-height: 32px;
+                }
+            }
+
+            .userMenuContainer > .userMenu > .userMenuTrigger {
+                padding: 5px;
+                min-width: 32px;
+                min-height: 32px;
+            }
+        }
+    }
+}
+
+// Ajustes para telas muito pequenas (360px e menos)
+@media (max-width: 360px) {
+    #header .alignHeader {
+        padding: 0.3rem 0.4rem;
+        gap: 0.2rem;
+        min-height: 50px;
+
+        .mobile-menu-btn {
+            min-width: 36px;
+            min-height: 36px;
+            padding: 6px;
+        }
+
+        .logo-link {
+            img {
+                max-height: 35px;
+            }
+        }
+
+        .searchGroup {
+            .searchInput {
+                height: 36px;
+                padding: 0 12px 0 14px;
+                font-size: 15px;
+            }
+        }
+
+        .header-actions.mobileOptions {
+            gap: 0.15rem;
 
             .userMenuContainer,
             .cart-link {
                 img {
-                    width: 20px;
-                    height: 20px;
+                    width: 16px;
+                    height: 16px;
                 }
 
                 &.imgIcon {
-                    padding: 6px;
+                    padding: 4px;
+                    min-width: 28px;
+                    min-height: 28px;
                 }
+            }
+
+            .userMenuContainer > .userMenu > .userMenuTrigger {
+                padding: 4px;
+                min-width: 28px;
+                min-height: 28px;
             }
         }
     }
@@ -650,7 +975,7 @@
     position: relative;
     z-index: 1002;
 
-    @media (max-width: 768px) {
+    @media (max-width: 992px) {
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -1133,7 +1458,7 @@
 // ===============================================
 
 // Body lock when sidebar is open
-@media (max-width: 768px) {
+@media (max-width: 992px) {
     body.sidebar-open {
         overflow: hidden;
         position: fixed;
@@ -1302,8 +1627,97 @@
 .mobileOptions {
     display: none!important;
 
-    @media(max-width: 769px) {
+    @media(max-width: 992px) {
         display: flex!important;
+    }
+}
+
+// Responsividade para mobile do userMenu
+@media (max-width: 768px) {
+    .userMenuDropdown {
+        position: fixed;
+        top: auto;
+        right: 20px;
+        left: 20px;
+        min-width: auto;
+        width: calc(100% - 40px);
+        max-width: 400px;
+        margin: 0 auto;
+        transform: translateY(20px) scale(0.9);
+
+        &.show {
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .userMenuHeader {
+        padding: 16px;
+    }
+
+    .userInfo {
+        gap: 10px;
+    }
+
+    .userAvatar {
+        width: 40px;
+        height: 40px;
+
+        img {
+            width: 24px;
+            height: 24px;
+        }
+    }
+
+    .userName {
+        font-size: 15px;
+    }
+
+    .userEmail {
+        font-size: 12px;
+    }
+
+    .userMenuItem {
+        padding: 14px 16px;
+        font-size: 15px;
+    }
+
+    .logoutButton {
+        padding: 14px 16px;
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .userMenuDropdown {
+        right: 10px;
+        left: 10px;
+        width: calc(100% - 20px);
+    }
+
+    .userMenuHeader {
+        padding: 14px;
+    }
+
+    .userInfo {
+        gap: 8px;
+    }
+
+    .userAvatar {
+        width: 36px;
+        height: 36px;
+
+        img {
+            width: 20px;
+            height: 20px;
+        }
+    }
+
+    .userName {
+        font-size: 14px;
+    }
+
+    .userEmail {
+        font-size: 11px;
     }
 }
 

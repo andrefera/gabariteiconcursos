@@ -37,7 +37,7 @@
                     <!-- 🏢 COMPANY INFO -->
                     <div class="footer-column footer-company">
                         <div class="footer-logo">
-                            <img src="{{ asset('logo.png') }}" alt="Ellon Sports" class="footer-logo-img">
+                            <img src="{{ asset('logobranca.png') }}" alt="Ellon Sports" class="footer-logo-img">
 {{--                            <h3>Ellon Sports</h3>--}}
                         </div>
                         <p class="footer-description">

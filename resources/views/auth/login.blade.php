@@ -4,8 +4,8 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Login - Gestão de Equipe</title>
-    <link rel="stylesheet" href="{!! asset('assets/css/login.css') !!}">
+    <title>Entrar / Criar Conta - Ellon Sports</title>
+    <link rel="stylesheet" href="{!! asset('assets/css/auth.css') !!}">
 </head>
 <body>
 <button id="botaoVoltar" class="botaoVoltarTopo">
@@ -17,55 +17,102 @@
         <div class="logoEmpresa">
             <img src="{{ asset('images/mini_logo.png') }}" width="60" height="56" alt="Ellon Sports Logo">
         </div>
-        <h1 class="tituloFormulario" id="formTitulo">Comece Agora</h1>
-        <p class="descricaoFormulario" id="formDescricao">Crie sua conta e comece a renovar seu guarda-roupa com nossos produtos.</p>
+        
+        <!-- Tela de seleção inicial -->
+        <div id="telaSelecao" class="tela-selecao">
+            <h1 class="tituloFormulario">Bem-vindo!</h1>
+            <p class="descricaoFormulario">Escolha uma opção para continuar</p>
+            
+            <div class="botoesSelecao">
+                <button class="botaoSelecao" id="botaoNovo">
+                    <div class="icone-botao">👤</div>
+                    <div class="texto-botao">
+                        <h3>Sou novo</h3>
+                        <p>Criar uma nova conta</p>
+                    </div>
+                </button>
+                
+                <button class="botaoSelecao" id="botaoExistente">
+                    <div class="icone-botao">🔑</div>
+                    <div class="texto-botao">
+                        <h3>Já tenho conta</h3>
+                        <p>Fazer login</p>
+                    </div>
+                </button>
+            </div>
+        </div>
 
-        @if($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+        <!-- Formulário de Registro -->
+        <div id="formularioRegistro" class="formulario-container oculto">
+            <h1 class="tituloFormulario">Criar Conta</h1>
+            <p class="descricaoFormulario">Crie sua conta e comece a renovar seu guarda-roupa com nossos produtos.</p>
 
-        <form class="formularioCadastro" id="formulario" method="POST">
-            @csrf
-            <div class="campo visivelSuave" id="grupoNome">
-                <label class="labelInput" for="nome">Nome</label>
-                <input type="text" id="nome" name="name" placeholder="Seu nome" value="{{ old('name') }}" class="register-field"/>
-            </div>
-            <div class="campo visivelSuave">
-                <label class="labelInput" for="email">E-mail</label>
-                <input type="email" id="email" name="email" placeholder="seuemail@empresa.com" value="{{ old('email') }}"/>
-            </div>
-            <div class="campo visivelSuave">
-                <label class="labelInput" for="senha">
-                    Senha
-                    <a href="#" class="linkRecuperarSenha" id="esqueceuSenha">Esqueceu a senha?</a>
-                </label>
-                <input type="password" id="senha" name="password" placeholder="mín. 6 caracteres"/>
-            </div>
-            <div class="campo visivelSuave" id="grupoConfirmaSenha">
-                <label class="labelInput" for="confirmaSenha">Confirmar Senha</label>
-                <input type="password" id="confirmaSenha" name="password_confirmation" placeholder="Digite sua senha novamente" class="register-field"/>
-            </div>
-            <div class="aceiteTermos" id="grupoTermos">
-                <input type="checkbox" id="termos" class="register-field"/>
-                <label for="termos">Concordo com os <a href="#">Termos & Privacidade</a></label>
-            </div>
+            @if($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-            <button type="submit" class="botaoLogin" id="botaoPrincipal">Cadastrar</button>
-        </form>
+            <form class="formularioCadastro" id="formularioRegistroForm" method="POST">
+                @csrf
+                <div class="campo">
+                    <label class="labelInput" for="nome">Nome</label>
+                    <input type="text" id="nome" name="name" placeholder="Seu nome" value="{{ old('name') }}" required/>
+                </div>
+                <div class="campo">
+                    <label class="labelInput" for="emailRegistro">E-mail</label>
+                    <input type="email" id="emailRegistro" name="email" placeholder="seuemail@empresa.com" value="{{ old('email') }}" required/>
+                </div>
+                <div class="campo">
+                    <label class="labelInput" for="senhaRegistro">Senha</label>
+                    <input type="password" id="senhaRegistro" name="password" placeholder="mín. 6 caracteres" required/>
+                </div>
+                <div class="campo">
+                    <label class="labelInput" for="confirmaSenhaRegistro">Confirmar Senha</label>
+                    <input type="password" id="confirmaSenhaRegistro" name="password_confirmation" placeholder="Digite sua senha novamente" required/>
+                </div>
+                <div class="aceiteTermos">
+                    <input type="checkbox" id="termos" required/>
+                    <label for="termos">Concordo com os <a href="#">Termos & Privacidade</a></label>
+                </div>
 
-        <p class="textoRodape" id="rodapeTexto">
-            Já tem uma conta? <span id="alternarFormulario">Entrar</span>
-        </p>
-    </div>
+                <button type="submit" class="botaoLogin">Criar Conta</button>
+            </form>
 
-    <div class="areaIlustracao">
-        <div class="area">
+            <p class="textoRodape">
+                Já tem uma conta? <span id="voltarLogin">Fazer login</span>
+            </p>
+        </div>
+
+        <!-- Formulário de Login -->
+        <div id="formularioLogin" class="formulario-container oculto">
+            <h1 class="tituloFormulario">Fazer Login</h1>
+            <p class="descricaoFormulario">Acesse sua conta para acompanhar pedidos e aproveitar nossas ofertas exclusivas.</p>
+
+            <form class="formularioCadastro" id="formularioLoginForm" method="POST">
+                @csrf
+                <div class="campo">
+                    <label class="labelInput" for="emailLogin">E-mail</label>
+                    <input type="email" id="emailLogin" name="email" placeholder="seuemail@empresa.com" value="{{ old('email') }}" required/>
+                </div>
+                <div class="campo">
+                    <label class="labelInput" for="senhaLogin">
+                        Senha
+                        <a href="#" class="linkRecuperarSenha">Esqueceu a senha?</a>
+                    </label>
+                    <input type="password" id="senhaLogin" name="password" placeholder="Digite sua senha" required/>
+                </div>
+
+                <button type="submit" class="botaoLogin">Entrar</button>
+            </form>
+
+            <p class="textoRodape">
+                Novo por aqui? <span id="voltarRegistro">Criar conta</span>
+            </p>
         </div>
     </div>
 </div>
@@ -79,101 +126,84 @@
         }
     };
 
-    const alternarLink = document.getElementById('alternarFormulario');
-    const formTitulo = document.getElementById('formTitulo');
-    const formDescricao = document.getElementById('formDescricao');
-    const formulario = document.getElementById('formulario');
-    const rodapeTexto = document.getElementById('rodapeTexto');
     const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    
+    // Elementos da interface
+    const telaSelecao = document.getElementById('telaSelecao');
+    const formularioRegistro = document.getElementById('formularioRegistro');
+    const formularioLogin = document.getElementById('formularioLogin');
+    
+    // Botões de seleção
+    const botaoNovo = document.getElementById('botaoNovo');
+    const botaoExistente = document.getElementById('botaoExistente');
+    
+    // Botões de navegação entre formulários
+    const voltarLogin = document.getElementById('voltarLogin');
+    const voltarRegistro = document.getElementById('voltarRegistro');
+    
+    // Formulários
+    const formRegistro = document.getElementById('formularioRegistroForm');
+    const formLogin = document.getElementById('formularioLoginForm');
 
-    const grupoNome = document.getElementById('grupoNome');
-    const grupoConfirmaSenha = document.getElementById('grupoConfirmaSenha');
-    const grupoTermos = document.getElementById('grupoTermos');
-    const botaoPrincipal = document.getElementById('botaoPrincipal');
-    const esqueceuSenha = document.getElementById('esqueceuSenha');
-
-    let modoCadastro = true;
-
-    // Hide register-only fields initially
-    document.querySelectorAll('.register-field').forEach(field => {
-        field.required = modoCadastro;
-    });
-
-    function alternarModo(e) {
-        e.preventDefault();
-        modoCadastro = !modoCadastro;
-
-        [formTitulo, formDescricao, formulario].forEach(el => el.classList.add('fadeOut'));
-
-        setTimeout(() => {
-            if (modoCadastro) {
-                formTitulo.textContent = 'Comece Agora';
-                formDescricao.textContent = 'Crie sua conta e comece a renovar seu guarda-roupa com nossos produtos.';
-                rodapeTexto.innerHTML = 'Já tem uma conta? <span id="alternarFormulario">Entrar</span>';
-                grupoNome.style.display = 'block';
-                grupoConfirmaSenha.style.display = 'block';
-                grupoTermos.style.display = 'block';
-                esqueceuSenha.style.display = 'none';
-                botaoPrincipal.textContent = 'Cadastrar';
-            } else {
-                formTitulo.textContent = 'Bem-vindo de volta';
-                formDescricao.textContent = 'Acesse sua conta para acompanhar pedidos e aproveitar nossas ofertas exclusivas.';
-                rodapeTexto.innerHTML = 'Novo por aqui? <span id="alternarFormulario">Criar conta</span>';
-                grupoNome.style.display = 'none';
-                grupoConfirmaSenha.style.display = 'none';
-                grupoTermos.style.display = 'none';
-                esqueceuSenha.style.display = 'inline';
-                botaoPrincipal.textContent = 'Entrar';
-            }
-
-            // Toggle required attribute for register-only fields
-            document.querySelectorAll('.register-field').forEach(field => {
-                field.required = modoCadastro;
-            });
-
-            [formTitulo, formDescricao, formulario].forEach(el => {
-                el.classList.remove('fadeOut');
-                el.classList.add('fadeIn');
-            });
-
-            document.getElementById('alternarFormulario').addEventListener('click', alternarModo);
-        }, 300);
+    // Função para mostrar tela de seleção
+    function mostrarTelaSelecao() {
+        telaSelecao.classList.remove('oculto');
+        formularioRegistro.classList.add('oculto');
+        formularioLogin.classList.add('oculto');
     }
 
-    alternarLink.addEventListener('click', alternarModo);
+    // Função para mostrar formulário de registro
+    function mostrarFormularioRegistro() {
+        telaSelecao.classList.add('oculto');
+        formularioRegistro.classList.remove('oculto');
+        formularioLogin.classList.add('oculto');
+    }
 
-    // Handle form submission
-    formulario.addEventListener('submit', async function(e) {
+    // Função para mostrar formulário de login
+    function mostrarFormularioLogin() {
+        telaSelecao.classList.add('oculto');
+        formularioRegistro.classList.add('oculto');
+        formularioLogin.classList.remove('oculto');
+    }
+
+    // Event listeners para botões de seleção
+    botaoNovo.addEventListener('click', mostrarFormularioRegistro);
+    botaoExistente.addEventListener('click', mostrarFormularioLogin);
+
+    // Event listeners para navegação entre formulários
+    voltarLogin.addEventListener('click', mostrarFormularioLogin);
+    voltarRegistro.addEventListener('click', mostrarFormularioRegistro);
+
+    // Validação do formulário de registro
+    formRegistro.addEventListener('submit', async function(e) {
         e.preventDefault();
 
         const formData = {
-            email: document.getElementById('email').value,
-            password: document.getElementById('senha').value,
+            name: document.getElementById('nome').value,
+            email: document.getElementById('emailRegistro').value,
+            password: document.getElementById('senhaRegistro').value,
+            password_confirmation: document.getElementById('confirmaSenhaRegistro').value,
             _token: token
         };
 
-        if (modoCadastro) {
-            formData.name = document.getElementById('nome').value;
-            formData.password_confirmation = document.getElementById('confirmaSenha').value;
+        // Validações
+        if (!document.getElementById('termos').checked) {
+            alert('Por favor, aceite os termos e condições para continuar.');
+            return;
+        }
 
-            if (!document.getElementById('termos').checked) {
-                alert('Por favor, aceite os termos e condições para continuar.');
-                return;
-            }
+        if (!formData.password || formData.password.length < 6) {
+            alert('A senha precisa ter no mínimo 6 caracteres.');
+            return;
+        }
 
-            if (!formData.password || formData.password.length < 6) {
-                alert('A senha precisa ter no mínimo 6 caracteres.');
-                return;
-            }
-
-            if (formData.password !== formData.password_confirmation) {
-                alert('As senhas não coincidem. Por favor, verifique.');
-                return;
-            }
+        if (formData.password !== formData.password_confirmation) {
+            alert('As senhas não coincidem. Por favor, verifique.');
+            return;
         }
 
         try {
-            const response = await fetch(modoCadastro ? '{{ route("register.submit") }}' : '{{ route("login.submit") }}', {
+            const response = await fetch('{{ route("register.submit") }}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -192,7 +222,45 @@
             if (data.success) {
                 window.location.href = '/';
             } else {
-                alert(data.message || (modoCadastro ? 'Erro ao criar conta.' : 'Erro ao fazer login. Verifique suas credenciais.'));
+                alert(data.message || 'Erro ao criar conta.');
+            }
+        } catch (error) {
+            console.error('Erro:', error);
+            alert('Erro ao processar sua solicitação. Tente novamente mais tarde.');
+        }
+    });
+
+    // Validação do formulário de login
+    formLogin.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const formData = {
+            email: document.getElementById('emailLogin').value,
+            password: document.getElementById('senhaLogin').value,
+            _token: token
+        };
+
+        try {
+            const response = await fetch('{{ route("login.submit") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': token
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (response.redirected) {
+                window.location.href = response.url;
+                return;
+            }
+
+            const data = await response.json();
+
+            if (data.success) {
+                window.location.href = '/';
+            } else {
+                alert(data.message || 'Erro ao fazer login. Verifique suas credenciais.');
             }
         } catch (error) {
             console.error('Erro:', error);

@@ -28,6 +28,41 @@
 }
 #header .alignHeader .logo-link img {
   max-height: 70px;
+  width: auto;
+  height: auto;
+  -o-object-fit: contain;
+     object-fit: contain;
+  transition: all 0.3s ease;
+}
+@media (max-width: 1200px) {
+  #header .alignHeader .logo-link img {
+    max-height: 65px;
+  }
+}
+@media (max-width: 992px) {
+  #header .alignHeader .logo-link img {
+    max-height: 60px;
+  }
+}
+@media (max-width: 768px) {
+  #header .alignHeader .logo-link img {
+    max-height: 50px;
+  }
+}
+@media (max-width: 576px) {
+  #header .alignHeader .logo-link img {
+    max-height: 45px;
+  }
+}
+@media (max-width: 480px) {
+  #header .alignHeader .logo-link img {
+    max-height: 40px;
+  }
+}
+@media (max-width: 360px) {
+  #header .alignHeader .logo-link img {
+    max-height: 35px;
+  }
 }
 #header .alignHeader .header-actions {
   display: flex;
@@ -146,6 +181,12 @@
   font-size: 16px;
   opacity: 0.6;
   transition: all 0.2s ease;
+}
+.options .dropdown-menu .dropdown-content a.has-logo:before {
+  content: none !important;
+}
+.options .dropdown-menu .dropdown-content a.has-logo img {
+  margin-right: 4px;
 }
 .options .dropdown-menu .dropdown-content a:hover {
   background: linear-gradient(135deg, rgba(255, 127, 0, 0.08) 0%, rgba(255, 127, 0, 0.12) 100%);
@@ -301,28 +342,164 @@
 }
 
 .userMenuDropdown {
-  text-align: end;
   display: none;
   position: absolute;
-  top: 100%;
+  top: calc(100% + 8px);
   right: 0;
-  background-color: white;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
-  padding: 8px 0;
-  min-width: 180px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 0;
+  min-width: 280px;
   z-index: 1000;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-10px) scale(0.95);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.userMenuDropdown a {
+.userMenuDropdown.show {
   display: block;
-  padding: 8px 16px;
-  margin-right: 0 !important;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.userMenuHeader {
+  padding: 20px;
+  background: linear-gradient(135deg, #FF7C00, #FF9500);
+  color: white;
+  border-radius: 16px 16px 0 0;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.userAvatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
+}
+.userAvatar img {
+  width: 32px;
+  height: 32px;
+  filter: brightness(0) invert(1);
+}
+
+.userDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: flex-start;
+}
+
+.userName {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.userEmail {
+  font-size: 13px;
+  opacity: 0.9;
+  line-height: 1.2;
+}
+
+.userMenuDivider {
+  height: 1px;
+  background: #f0f0f0;
+  margin: 0;
+}
+
+.userMenuItems {
+  padding: 8px 0;
+}
+
+.userMenuItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
   color: #333;
   text-decoration: none;
-  transition: background-color 0.2s;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  font-size: 14px;
 }
-.userMenuDropdown a:hover {
-  background-color: #f5f5f5;
+.userMenuItem:hover {
+  background: #f8f9fa;
+  color: #FF7C00;
+  transform: translateX(4px);
+}
+
+.menuIcon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.userMenuItem:hover .menuIcon {
+  transform: scale(1.1);
+}
+
+.userMenuFooter {
+  padding: 8px 0;
+  border-top: 1px solid #f0f0f0;
+}
+
+.logoutForm {
+  margin: 0;
+}
+
+.logoutButton {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: none;
+  border: none;
+  color: #dc3545;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+.logoutButton:hover {
+  background: #fff5f5;
+  color: #c82333;
+  transform: translateX(4px);
+}
+.logoutButton:hover .menuIcon {
+  transform: scale(1.1);
+}
+
+.userMenuTrigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+.userMenuTrigger:hover {
+  background: rgba(255, 124, 0, 0.1);
+}
+.userMenuTrigger span {
+  color: #333;
+  font-weight: 500;
 }
 
 .logout-button {
@@ -339,7 +516,7 @@
   background-color: #f5f5f5;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .desktop-only {
     display: none !important;
   }
@@ -348,7 +525,7 @@
 .mobile-only {
   display: none !important;
 }
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .mobile-only {
     display: block !important;
   }
@@ -363,39 +540,70 @@
 @media (max-width: 1199px) and (min-width: 992px) {
   #header .alignHeader {
     max-width: 100%;
-    padding: 1rem 2rem;
-  }
-  #header .alignHeader .searchGroup .searchInput {
-    width: 400px;
-  }
-}
-@media (max-width: 991px) and (min-width: 769px) {
-  #header .alignHeader {
     padding: 1rem 1.5rem;
+    gap: 1rem;
   }
   #header .alignHeader .searchGroup .searchInput {
-    width: 300px;
+    width: 350px;
   }
   #header .alignHeader .options {
     gap: 0.75rem;
   }
   #header .alignHeader .options .dropdown-trigger {
-    padding: 10px 12px;
+    padding: 10px 14px;
+    font-size: 0.9rem;
+  }
+  #header .alignHeader .header-actions {
+    gap: 0.75rem;
+  }
+  #header .alignHeader .header-actions .imgIcon {
+    padding: 8px 10px;
     font-size: 0.9rem;
   }
 }
-@media (max-width: 768px) {
+@media (max-width: 991px) and (min-width: 769px) {
   #header .alignHeader {
-    padding: 0.75rem 1rem;
+    padding: 0.75rem 1.25rem;
+    gap: 0.75rem;
+    flex-wrap: nowrap;
+  }
+  #header .alignHeader .searchGroup .searchInput {
+    width: 280px;
+    height: 38px;
+  }
+  #header .alignHeader .options {
+    gap: 0.5rem;
+  }
+  #header .alignHeader .options .dropdown-trigger {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+  #header .alignHeader .header-actions {
+    gap: 0.5rem;
+  }
+  #header .alignHeader .header-actions .imgIcon {
+    padding: 6px 8px;
+    font-size: 0.85rem;
+  }
+  #header .alignHeader .header-actions .imgIcon span {
+    font-size: 0.8rem;
+  }
+}
+@media (max-width: 992px) {
+  #header .alignHeader {
+    padding: 0.5rem 0.75rem;
     flex-wrap: wrap;
-    gap: 0;
+    gap: 0.5rem;
     position: relative;
-    min-height: 70px;
+    min-height: 60px;
     width: 100%;
+    overflow: hidden;
   }
   #header .alignHeader .mobile-menu-btn {
     order: 1;
     flex: none;
+    min-width: 44px;
+    min-height: 44px;
   }
   #header .alignHeader .logo-link {
     order: 2;
@@ -403,34 +611,59 @@
     display: flex;
     justify-content: center;
     margin: 0;
+    min-width: 0;
   }
   #header .alignHeader .logo-link img {
-    max-height: 50px;
+    max-height: 45px;
     height: auto;
+    max-width: 100%;
   }
   #header .alignHeader .header-actions.mobileOptions {
     order: 3;
     display: flex;
-    gap: 0.5rem;
+    gap: 0.25rem;
     align-items: center;
     flex: none;
+    min-width: 0;
   }
-  #header .alignHeader .header-actions.mobileOptions .userMenuContainer span,
+  #header .alignHeader .header-actions.mobileOptions .userMenuContainer {
+    min-width: 0;
+  }
+  #header .alignHeader .header-actions.mobileOptions .userMenuContainer > .userMenu > .userMenuTrigger {
+    padding: 6px;
+    min-width: 36px;
+    min-height: 36px;
+  }
+  #header .alignHeader .header-actions.mobileOptions .userMenuContainer > .userMenu > .userMenuTrigger span {
+    display: none;
+  }
+  #header .alignHeader .header-actions.mobileOptions .userMenuContainer > .userMenu > .userMenuTrigger img {
+    width: 20px;
+    height: 20px;
+  }
+  #header .alignHeader .header-actions.mobileOptions .userMenuContainer.imgIcon {
+    padding: 6px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+  #header .alignHeader .header-actions.mobileOptions .userMenuContainer.imgIcon:hover {
+    background: rgba(255, 127, 0, 0.1);
+  }
+  #header .alignHeader .header-actions.mobileOptions .cart-link {
+    min-width: 0;
+  }
   #header .alignHeader .header-actions.mobileOptions .cart-link span {
     display: none;
   }
-  #header .alignHeader .header-actions.mobileOptions .userMenuContainer img,
   #header .alignHeader .header-actions.mobileOptions .cart-link img {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
   }
-  #header .alignHeader .header-actions.mobileOptions .userMenuContainer.imgIcon,
   #header .alignHeader .header-actions.mobileOptions .cart-link.imgIcon {
-    padding: 8px;
-    border-radius: 8px;
+    padding: 6px;
+    border-radius: 6px;
     transition: all 0.2s ease;
   }
-  #header .alignHeader .header-actions.mobileOptions .userMenuContainer.imgIcon:hover,
   #header .alignHeader .header-actions.mobileOptions .cart-link.imgIcon:hover {
     background: rgba(255, 127, 0, 0.1);
   }
@@ -438,13 +671,14 @@
     order: 4;
     width: 100%;
     position: relative;
-    margin-top: 0.75rem;
+    margin-top: 0.5rem;
   }
   #header .alignHeader .searchGroup .searchInput {
     width: 100%;
-    height: 42px;
+    height: 40px;
     font-size: 16px;
-    border-radius: 21px;
+    border-radius: 20px;
+    padding: 0 16px 0 18px;
   }
   .mobile-header-actions {
     display: flex;
@@ -483,34 +717,93 @@
 }
 @media (max-width: 480px) {
   #header .alignHeader {
-    padding: 0.5rem 0.75rem;
-    gap: 0.4rem;
+    padding: 0.4rem 0.5rem;
+    gap: 0.25rem;
+    min-height: 55px;
+  }
+  #header .alignHeader .mobile-menu-btn {
+    min-width: 40px;
+    min-height: 40px;
+    padding: 8px;
   }
   #header .alignHeader .logo-link {
-    margin-left: 0.4rem;
+    margin: 0;
+    flex: 1;
+    min-width: 0;
   }
   #header .alignHeader .logo-link img {
-    max-height: 45px;
+    max-height: 40px;
+    max-width: 100%;
   }
   #header .alignHeader .searchGroup {
     margin-top: 0.25rem;
   }
   #header .alignHeader .searchGroup .searchInput {
-    height: 40px;
+    height: 38px;
     font-size: 16px;
-    padding: 0 16px 0 18px;
+    padding: 0 14px 0 16px;
   }
-  #header .alignHeader .header-actions {
-    gap: 0.25rem;
+  #header .alignHeader .header-actions.mobileOptions {
+    gap: 0.2rem;
   }
-  #header .alignHeader .header-actions .userMenuContainer img,
-  #header .alignHeader .header-actions .cart-link img {
-    width: 20px;
-    height: 20px;
+  #header .alignHeader .header-actions.mobileOptions .userMenuContainer,
+  #header .alignHeader .header-actions.mobileOptions .cart-link {
+    min-width: 0;
   }
-  #header .alignHeader .header-actions .userMenuContainer.imgIcon,
-  #header .alignHeader .header-actions .cart-link.imgIcon {
+  #header .alignHeader .header-actions.mobileOptions .userMenuContainer img,
+  #header .alignHeader .header-actions.mobileOptions .cart-link img {
+    width: 18px;
+    height: 18px;
+  }
+  #header .alignHeader .header-actions.mobileOptions .userMenuContainer.imgIcon,
+  #header .alignHeader .header-actions.mobileOptions .cart-link.imgIcon {
+    padding: 5px;
+    min-width: 32px;
+    min-height: 32px;
+  }
+  #header .alignHeader .header-actions.mobileOptions .userMenuContainer > .userMenu > .userMenuTrigger {
+    padding: 5px;
+    min-width: 32px;
+    min-height: 32px;
+  }
+}
+@media (max-width: 360px) {
+  #header .alignHeader {
+    padding: 0.3rem 0.4rem;
+    gap: 0.2rem;
+    min-height: 50px;
+  }
+  #header .alignHeader .mobile-menu-btn {
+    min-width: 36px;
+    min-height: 36px;
     padding: 6px;
+  }
+  #header .alignHeader .logo-link img {
+    max-height: 35px;
+  }
+  #header .alignHeader .searchGroup .searchInput {
+    height: 36px;
+    padding: 0 12px 0 14px;
+    font-size: 15px;
+  }
+  #header .alignHeader .header-actions.mobileOptions {
+    gap: 0.15rem;
+  }
+  #header .alignHeader .header-actions.mobileOptions .userMenuContainer img,
+  #header .alignHeader .header-actions.mobileOptions .cart-link img {
+    width: 16px;
+    height: 16px;
+  }
+  #header .alignHeader .header-actions.mobileOptions .userMenuContainer.imgIcon,
+  #header .alignHeader .header-actions.mobileOptions .cart-link.imgIcon {
+    padding: 4px;
+    min-width: 28px;
+    min-height: 28px;
+  }
+  #header .alignHeader .header-actions.mobileOptions .userMenuContainer > .userMenu > .userMenuTrigger {
+    padding: 4px;
+    min-width: 28px;
+    min-height: 28px;
   }
 }
 .mobile-menu-btn {
@@ -525,7 +818,7 @@
   position: relative;
   z-index: 1002;
 }
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .mobile-menu-btn {
     display: flex;
     flex-direction: column;
@@ -936,7 +1229,7 @@
   transform: translateY(0);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   body.sidebar-open {
     overflow: hidden;
     position: fixed;
@@ -1065,12 +1358,83 @@
 .mobileOptions {
   display: none !important;
 }
-@media (max-width: 769px) {
+@media (max-width: 992px) {
   .mobileOptions {
     display: flex !important;
   }
 }
 
+@media (max-width: 768px) {
+  .userMenuDropdown {
+    position: fixed;
+    top: auto;
+    right: 20px;
+    left: 20px;
+    min-width: auto;
+    width: calc(100% - 40px);
+    max-width: 400px;
+    margin: 0 auto;
+    transform: translateY(20px) scale(0.9);
+  }
+  .userMenuDropdown.show {
+    transform: translateY(0) scale(1);
+  }
+  .userMenuHeader {
+    padding: 16px;
+  }
+  .userInfo {
+    gap: 10px;
+  }
+  .userAvatar {
+    width: 40px;
+    height: 40px;
+  }
+  .userAvatar img {
+    width: 24px;
+    height: 24px;
+  }
+  .userName {
+    font-size: 15px;
+  }
+  .userEmail {
+    font-size: 12px;
+  }
+  .userMenuItem {
+    padding: 14px 16px;
+    font-size: 15px;
+  }
+  .logoutButton {
+    padding: 14px 16px;
+    font-size: 15px;
+  }
+}
+@media (max-width: 480px) {
+  .userMenuDropdown {
+    right: 10px;
+    left: 10px;
+    width: calc(100% - 20px);
+  }
+  .userMenuHeader {
+    padding: 14px;
+  }
+  .userInfo {
+    gap: 8px;
+  }
+  .userAvatar {
+    width: 36px;
+    height: 36px;
+  }
+  .userAvatar img {
+    width: 20px;
+    height: 20px;
+  }
+  .userName {
+    font-size: 14px;
+  }
+  .userEmail {
+    font-size: 11px;
+  }
+}
 * {
   -webkit-tap-highlight-color: transparent;
 }

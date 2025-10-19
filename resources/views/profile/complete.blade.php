@@ -3,6 +3,7 @@
 
 <!-- Add Toastify CSS -->
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<link rel="stylesheet" href="{!! asset('assets/css/profile.css') !!}">
 
 @section('content')
 <div class="container">
@@ -22,34 +23,44 @@
 
         <form id="profileForm" class="profile-form">
             @csrf
-            <div class="form-group">
-                <label for="document">CPF</label>
-                <input type="text"
-                       id="document"
-                       name="document"
-                       class="form-control @error('document') is-invalid @enderror"
-                       value="{{ old('document', $user->document) }}"
-                       required>
-                @error('document')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+            
+            <!-- Personal Information Section -->
+            <div class="form-section">
+                <h3>Informações Pessoais</h3>
+                
+                <div class="form-group">
+                    <label for="document">CPF</label>
+                    <input type="text"
+                           id="document"
+                           name="document"
+                           class="form-control @error('document') is-invalid @enderror"
+                           value="{{ old('document', $user->document) }}"
+                           placeholder="000.000.000-00"
+                           required>
+                    @error('document')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Telefone</label>
+                    <input type="text"
+                           id="phone"
+                           name="phone"
+                           class="form-control @error('phone') is-invalid @enderror"
+                           value="{{ old('phone', $user->phone) }}"
+                           placeholder="(00) 00000-0000"
+                           required>
+                    @error('phone')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="phone">Telefone</label>
-                <input type="text"
-                       id="phone"
-                       name="phone"
-                       class="form-control @error('phone') is-invalid @enderror"
-                       value="{{ old('phone', $user->phone) }}"
-                       required>
-                @error('phone')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <div class="form-group">
-                <label for="billing_address">Endereço de Cobrança</label>
+            <!-- Address Information Section -->
+            <div class="form-section">
+                <div class="form-group">
+                    <label for="billing_address">Endereço de Cobrança</label>
                 <input type="text"
                        id="street"
                        name="billing_address[street]"
@@ -151,85 +162,19 @@
                 @error('billing_address.zipcode')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
+                </div>
             </div>
-            <button type="submit" class="btn-continue">Salvar e Continuar</button>
+            
+            <button type="submit" class="btn-continue">
+                <span>Salvar e Continuar</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
         </form>
     </div>
 </div>
 
-<style>
-.profile-complete-container {
-    max-width: 600px;
-    margin: 40px auto;
-    padding: 20px;
-}
-
-.profile-form {
-    margin-top: 20px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-.form-control {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-.form-control.is-invalid {
-    border-color: #dc3545;
-}
-
-.invalid-feedback {
-    color: #dc3545;
-    font-size: 0.875rem;
-    margin-top: -8px;
-    margin-bottom: 10px;
-}
-
-.alert {
-    padding: 12px;
-    margin-bottom: 20px;
-    border: 1px solid transparent;
-    border-radius: 4px;
-}
-
-.alert-danger {
-    color: #721c24;
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-}
-
-.alert ul {
-    margin: 0;
-    padding-left: 20px;
-}
-
-.btn-continue {
-    width: 100%;
-    padding: 10px;
-    background: #FF7F00;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.btn-continue:hover {
-    background: #e67300;
-}
-</style>
 
 <script src="https://unpkg.com/imask"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>

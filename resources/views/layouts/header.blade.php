@@ -24,12 +24,44 @@
                                 <span class="desktop-only">{{ Auth::user()->name }}</span>
                         </div>
                         <div class="userMenuDropdown">
-                            <a href="/minha-conta">Minha Conta</a>
-                            <a href="/meus-pedidos">Meus Pedidos</a>
-                            <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
-                                @csrf
-                                <button type="submit" class="logout-button">Sair</button>
-                            </form>
+                            <div class="userMenuHeader">
+                                <div class="userInfo">
+                                    <div class="userAvatar">
+                                        <img src="{{ asset('images/icons/user-icon.png') }}" alt="Avatar" width="32" height="32">
+                                    </div>
+                                    <div class="userDetails">
+                                        <span class="userName">{{ Auth::user()->name }}</span>
+                                        <span class="userEmail">{{ Auth::user()->email }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="userMenuDivider"></div>
+                            <div class="userMenuItems">
+                                <a href="/minha-conta" class="userMenuItem">
+                                    <svg class="menuIcon" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                    </svg>
+                                    <span>Minha Conta</span>
+                                </a>
+                                <a href="/meus-pedidos" class="userMenuItem">
+                                    <svg class="menuIcon" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M7 4V2C7 1.45 7.45 1 8 1H16C16.55 1 17 1.45 17 2V4H20V6H19V19C19 20.1 18.1 21 17 21H7C5.9 21 5 20.1 5 19V6H4V4H7ZM9 3V4H15V3H9ZM7 6V19H17V6H7Z"/>
+                                    </svg>
+                                    <span>Meus Pedidos</span>
+                                </a>
+                            </div>
+                            <div class="userMenuDivider"></div>
+                            <div class="userMenuFooter">
+                                <form action="{{ route('logout') }}" method="POST" class="logoutForm">
+                                    @csrf
+                                    <button type="submit" class="logoutButton">
+                                        <svg class="menuIcon" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.59L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                                        </svg>
+                                        <span>Sair</span>
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 @else
@@ -96,12 +128,44 @@
                                 <span class="desktop-only">{{ Auth::user()->name }}</span>
                         </div>
                         <div class="userMenuDropdown">
-                            <a href="/minha-conta">Minha Conta</a>
-                            <a href="/meus-pedidos">Meus Pedidos</a>
-                            <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
-                                @csrf
-                                <button type="submit" class="logout-button">Sair</button>
-                            </form>
+                            <div class="userMenuHeader">
+                                <div class="userInfo">
+                                    <div class="userAvatar">
+                                        <img src="{{ asset('images/icons/user-icon.png') }}" alt="Avatar" width="32" height="32">
+                                    </div>
+                                    <div class="userDetails">
+                                        <span class="userName">{{ Auth::user()->name }}</span>
+                                        <span class="userEmail">{{ Auth::user()->email }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="userMenuDivider"></div>
+                            <div class="userMenuItems">
+                                <a href="/minha-conta" class="userMenuItem">
+                                    <svg class="menuIcon" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                    </svg>
+                                    <span>Minha Conta</span>
+                                </a>
+                                <a href="/meus-pedidos" class="userMenuItem">
+                                    <svg class="menuIcon" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M7 4V2C7 1.45 7.45 1 8 1H16C16.55 1 17 1.45 17 2V4H20V6H19V19C19 20.1 18.1 21 17 21H7C5.9 21 5 20.1 5 19V6H4V4H7ZM9 3V4H15V3H9ZM7 6V19H17V6H7Z"/>
+                                    </svg>
+                                    <span>Meus Pedidos</span>
+                                </a>
+                            </div>
+                            <div class="userMenuDivider"></div>
+                            <div class="userMenuFooter">
+                                <form action="{{ route('logout') }}" method="POST" class="logoutForm">
+                                    @csrf
+                                    <button type="submit" class="logoutButton">
+                                        <svg class="menuIcon" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.59L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                                        </svg>
+                                        <span>Sair</span>
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 @else
@@ -224,119 +288,7 @@
     </div>
 </div>
 
-<style>
-    .userMenu {
-        position: relative;
-        display: inline-block;
-    }
-
-    .userMenuDropdown {
-        text-align: end;
-        display: none;
-        position: absolute;
-        top: 100%;
-        right: 0;
-        background-color: white;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        border-radius: 4px;
-        padding: 8px 0;
-        min-width: 180px;
-        z-index: 1000;
-    }
-
-    .userMenuDropdown a {
-        display: block;
-        padding: 8px 16px;
-        margin-right: 0 !important;
-        color: #333;
-        text-decoration: none;
-        transition: background-color 0.2s;
-    }
-
-    .userMenuDropdown a:hover {
-        background-color: #f5f5f5;
-    }
-
-    .userMenu:hover .userMenuDropdown {
-        display: block;
-    }
-
-    .userMenuTrigger {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        cursor: pointer;
-    }
-
-    .userMenuTrigger span {
-        color: #333;
-    }
-
-    .logout-button {
-        width: 100%;
-        text-align: left;
-        background: none;
-        border: none;
-        padding: 8px 16px;
-        color: #333;
-        cursor: pointer;
-        font: inherit;
-    }
-
-    .logout-button:hover {
-        background-color: #f5f5f5;
-    }
-
-    .search-results-dropdown {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        background: #fff;
-        border: 1px solid #eee;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        z-index: 1001;
-        max-height: 400px;
-        overflow-y: auto;
-        padding: 10px;
-    }
-
-    .search-result-item {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 8px 0;
-        border-bottom: 1px solid #f0f0f0;
-        cursor: pointer;
-    }
-
-    .search-result-item:last-child {
-        border-bottom: none;
-    }
-
-    .search-result-item img {
-        border-radius: 4px;
-        background: #f5f5f5;
-    }
-
-    .no-results {
-        padding: 10px;
-        color: #888;
-    }
-
-    .searchGroup {
-        position: relative;
-    }
-
-    /* Remover bolinha padrão quando tem logo do time */
-    .dropdown-content a img {
-        margin-right: 4px;
-    }
-
-    .dropdown-content a.has-logo::before {
-        content: none !important;
-    }
-</style>
+<style></style>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -450,6 +402,89 @@
         document.addEventListener('click', function (e) {
             if (!dropdown.contains(e.target) && e.target !== input) {
                 dropdown.style.display = 'none';
+            }
+        });
+
+        // Enhanced User Menu Functionality
+        const userMenus = document.querySelectorAll('.userMenu');
+        
+        userMenus.forEach(userMenu => {
+            const trigger = userMenu.querySelector('.userMenuTrigger');
+            const dropdown = userMenu.querySelector('.userMenuDropdown');
+            
+            if (trigger && dropdown) {
+                let isOpen = false;
+                let hoverTimeout = null;
+                let closeTimeout = null;
+                
+                // Open menu function
+                function openMenu() {
+                    if (closeTimeout) {
+                        clearTimeout(closeTimeout);
+                        closeTimeout = null;
+                    }
+                    
+                    dropdown.classList.add('show');
+                    isOpen = true;
+                }
+                
+                // Close menu function
+                function closeMenu() {
+                    dropdown.classList.remove('show');
+                    isOpen = false;
+                }
+                
+                // Toggle menu function
+                function toggleMenu() {
+                    if (isOpen) {
+                        closeMenu();
+                    } else {
+                        openMenu();
+                    }
+                }
+                
+                // Click handler
+                trigger.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleMenu();
+                });
+                
+                // Hover handlers for desktop
+                if (window.innerWidth > 768) {
+                    userMenu.addEventListener('mouseenter', function() {
+                        if (hoverTimeout) {
+                            clearTimeout(hoverTimeout);
+                        }
+                        hoverTimeout = setTimeout(openMenu, 150);
+                    });
+                    
+                    userMenu.addEventListener('mouseleave', function() {
+                        if (hoverTimeout) {
+                            clearTimeout(hoverTimeout);
+                        }
+                        closeTimeout = setTimeout(closeMenu, 300);
+                    });
+                }
+                
+                // Close on escape key
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && isOpen) {
+                        closeMenu();
+                    }
+                });
+            }
+        });
+        
+        // Close user menus when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.userMenu')) {
+                userMenus.forEach(userMenu => {
+                    const dropdown = userMenu.querySelector('.userMenuDropdown');
+                    if (dropdown) {
+                        dropdown.classList.remove('show');
+                    }
+                });
             }
         });
     });

@@ -6,9 +6,20 @@
         <div class="alignSection">
             @if(!$cart || empty($cart->products))
                 <div class="empty-cart">
+                    <div class="empty-cart__illustration" aria-hidden="true">
+                        <!-- Simple cart outline icon -->
+                        <svg width="96" height="96" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 3h1.6c.46 0 .87.31.98.75L6.7 8.5H19a1 1 0 0 1 .98 1.2l-1.1 5.5a2 2 0 0 1-1.96 1.6H9.3a2 2 0 0 1-1.95-1.43L5.2 6H3" stroke="#FF7C00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="9" cy="20" r="1.5" stroke="#333" stroke-width="1.5"/>
+                            <circle cx="17" cy="20" r="1.5" stroke="#333" stroke-width="1.5"/>
+                        </svg>
+                    </div>
                     <h1>Seu carrinho está vazio</h1>
-                    <p>Você ainda não adicionou nenhum produto ao seu carrinho.</p>
-                    <a href="/camisas" class="btn-continue">Continuar Comprando</a>
+                    <p class="empty-cart__subtitle">Você ainda não adicionou nenhum produto ao seu carrinho.</p>
+                    <div class="empty-cart__ctas">
+                        <a href="/camisas" class="btn-continue">Ver produtos</a>
+                        <a href="/" class="link-secondary">Ir para a página inicial</a>
+                    </div>
                 </div>
             @else
                 <h1>Carrinho de Compras ({{ $cart->totalProducts }})</h1>
@@ -38,7 +49,7 @@
                                                     {{$item->quantity - 1 === 0 ? "disabled" : ""}} onclick="updateQuantity({{ $item->id }}, {{ $item->quantity - 1 }})">
                                                 -
                                             </button>
-                                            <input type="text" value="{{ $item->quantity }}" id="quantity"
+                                            <input type="text" value="{{ $item->quantity }}" id="quantity" class="quantity-input"
                                                    onchange="updateQuantity({{ $item->id }}, this.value)">
                                             <button class="quantity-btn plus"
                                                     onclick="updateQuantity({{ $item->id }}, {{ $item->quantity + 1 }})">
