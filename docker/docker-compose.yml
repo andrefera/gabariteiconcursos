@@ -33,16 +33,17 @@ services:
         networks:
             - compose-bridge
 
-    mysql:
-        image: mysql:8
-        container_name: mysql
-        restart: unless-stopped
-        environment:
-            MYSQL_ROOT_PASSWORD: root
-        ports:
-            - "3306:3306"
-        networks:
-            - compose-bridge
+#    mysql:
+#        image: mysql:8
+#        container_name: mysql
+#        restart: unless-stopped
+#        ports:
+#            - "3306:3306"
+#        volumes:
+#            - mysqldata:/var/lib/mysql/
+#            - ./mysql/my.cnf:/etc/mysql/my.cnf
+#        networks:
+#            - compose-bridge
 
     nginx:
         image: nginx:alpine
@@ -53,7 +54,6 @@ services:
             - "8000:8000" #ellonsports
         volumes:
             - /var/www:/var/www
-            - ./nginx:/etc/nginx
         networks:
             - compose-bridge
 
