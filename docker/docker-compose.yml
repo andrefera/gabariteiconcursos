@@ -27,6 +27,8 @@ services:
         container_name: ellonsportsreact
         restart: unless-stopped
         command: bash -c "npm install && npm run build && npx serve -s build"
+        ports:
+            - "3000:3000"
         working_dir: /var/www/ellonsportsreact
         volumes:
             - /var/www:/var/www
