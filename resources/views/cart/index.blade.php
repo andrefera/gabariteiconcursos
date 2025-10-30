@@ -169,7 +169,6 @@
     </style>
 
     <script src="https://unpkg.com/imask"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script>
         const quantityMask = IMask(document.getElementById('quantity'), {
             mask: '00'
@@ -196,44 +195,37 @@
                         if (data.success) {
                             window.location.reload();
                         }else if(data.msg){
-                            Toastify({
-                                text: data.msg,
-                                duration: 3000,
-                                gravity: "top",
-                                position: "right",
-                                stopOnFocus: true,
-                                style: {
-                                    background: "#dc3545",
-                                    borderRadius: "4px",
-                                    fontSize: "14px",
-                                    padding: "12px 24px"
-                                }
-                            }).showToast();
-
+                            showToast('Erro', data.msg, 'error');
                             setTimeout(() => {
                                 window.location.reload();
-                            }, 1000)
+                            }, 2000)
                         }
                     })
                     .catch(error => console.error('Error:', error));
             }
 
             function removeItem(itemId) {
-                if (!confirm('Tem certeza que deseja remover este item do carrinho?')) return;
-
                 fetch(`/cart/item/${itemId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    }
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.cart) {
-                            window.location.reload();
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                         }
                     })
-                    .catch(error => console.error('Error:', error));
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                showToast('Sucesso', 'Item removido do carrinho!', 'success');
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 500);
+                            } else {
+                                showToast('Erro', 'Erro ao remover item do carrinho', 'error');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            showToast('Erro', 'Erro ao remover item do carrinho', 'error');
+                        });
             }
         </script>
     @endif

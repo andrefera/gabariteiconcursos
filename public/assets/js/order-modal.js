@@ -250,47 +250,7 @@ function handleChangePassword(event) {
     });
 }
 
-// Sistema de Toast
-function showToast(title, message, type) {
-    const container = document.getElementById('toastContainer');
-    
-    const toast = document.createElement('div');
-    toast.className = 'toast ' + type;
-    
-    const icon = type === 'success' ? '✓' : '✕';
-    
-    toast.innerHTML = `
-        <div class="toast-icon">${icon}</div>
-        <div class="toast-content">
-            <div class="toast-title">${title}</div>
-            <div class="toast-message">${message}</div>
-        </div>
-        <button class="toast-close" onclick="closeToast(this)">×</button>
-    `;
-    
-    container.appendChild(toast);
-    
-    // Animar entrada
-    setTimeout(function() {
-        toast.classList.add('show');
-    }, 100);
-    
-    // Auto-remover após 5 segundos
-    setTimeout(function() {
-        closeToast(toast.querySelector('.toast-close'));
-    }, 5000);
-}
-
-function closeToast(button) {
-    const toast = button.closest('.toast');
-    toast.classList.remove('show');
-    
-    setTimeout(function() {
-        if (toast.parentNode) {
-            toast.parentNode.removeChild(toast);
-        }
-    }, 300);
-}
+// Removido sistema local de toast; usar window.showToast
 
 function resetSubmitButton(button, originalText) {
     button.innerHTML = originalText;

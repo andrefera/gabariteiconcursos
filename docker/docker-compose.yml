@@ -1,0 +1,62 @@
+version: "3.9"
+services:
+#    php82:
+#        build:
+#            context: .
+#            dockerfile: DockerfilePhp82
+#            args:
+#                uid: ${UID}
+#                ssh_prv_key: ${SSH_PRV_KEY}
+#                ssh_pub_key: ${SSH_PUB_KEY}
+#        image: php:8.2-fpm
+#        container_name: php82
+#        restart: unless-stopped
+#        tty: true
+#        environment:
+#            SERVICE_NAME: php82
+#            SERVICE_TAGS: dev82
+#        working_dir: /var/www
+#        volumes:
+#            - /var/www:/var/www
+#            - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+#        networks:
+#            - compose-bridge
+
+    ellonsportsreact:
+        image: node:20.19.4
+        container_name: ellonsportsreact
+        restart: unless-stopped
+        command: bash -c "npm install && npm run build && npx serve -s build"
+        working_dir: /var/www/ellonsportsreact
+        volumes:
+            - /var/www:/var/www
+        networks:
+            - compose-bridge
+
+    mysql:
+        image: mysql:8
+        container_name: mysql
+        restart: unless-stopped
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+        ports:
+            - "3306:3306"
+        networks:
+            - compose-bridge
+
+    nginx:
+        image: nginx:alpine
+        container_name: nginx
+        restart: unless-stopped
+        tty: true
+        ports:
+            - "8000:8000" #ellonsports
+        volumes:
+            - /var/www:/var/www
+            - ./nginx:/etc/nginx
+        networks:
+            - compose-bridge
+
+networks:
+    compose-bridge:
+        driver: bridge

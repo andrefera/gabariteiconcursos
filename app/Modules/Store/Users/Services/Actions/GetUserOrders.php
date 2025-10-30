@@ -55,6 +55,12 @@ class GetUserOrders
             ->get();
 
         return $orders->map(function ($order) {
+            $trackingNumber = null;
+            if ($order->getTrackingData() && $order->status === OrderStatus::IN_TRANSPORT->value) {
+                $trackingNumber = $order->getTrackingData()['number'] ?? null;
+            }
+
+
             return [
                 'id' => $order->id,
                 'order_number' => $order->increment_id ?? $order->id,
@@ -64,7 +70,8 @@ class GetUserOrders
                 'created_at' => Carbon::parse($order->created_at)->setTimezone('America/Sao_Paulo')->format('d/m/Y H:i:s'),
                 'delivered_at' => $order->delivered_at ? Carbon::parse($order->delivered_at)->setTimezone('America/Sao_Paulo')->format('d/m/Y H:i:s') : null,
                 'items_count' => $order->items->count(),
-                'progress_steps' => $this->getProgressSteps($order)
+                'progress_steps' => $this->getProgressSteps($order),
+                'tracking_number' => $trackingNumber,
             ];
         })->toArray();
     }
@@ -72,7 +79,10 @@ class GetUserOrders
     private function getProgressSteps(Order $order): array
     {
         $steps = [];
-        
+        if (in_array($order->status, [OrderStatus::CANCELLED->value, OrderStatus::REFUNDED->value])) {
+            return [];
+        }
+
         // Sempre mostra "Pedido Realizado" com data
         $steps[] = [
             'label' => 'Pedido Realizado',

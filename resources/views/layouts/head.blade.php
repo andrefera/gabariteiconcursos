@@ -32,6 +32,7 @@
     <link rel="stylesheet" href="{!! asset('assets/css/header.css') !!}">
     <link rel="stylesheet" href="{!! asset('assets/css/footer.css') !!}">
     <link rel="stylesheet" href="{!! asset('assets/css/main.css') !!}">
+    <link rel="stylesheet" href="{!! asset('assets/css/toast.css') !!}">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="HandheldFriendly" content="true">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
@@ -75,4 +76,5 @@
     }
     </script>
     <script src="{{ asset('assets/js/header.min.js') }}?v={{ env('STATIC_VERSION', time()) }}" defer></script>
+    <script src="{{ asset('assets/js/toast.js') }}?v={{ env('STATIC_VERSION', time()) }}" defer></script>
 </head>

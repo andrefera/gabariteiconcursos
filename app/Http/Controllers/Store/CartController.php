@@ -73,6 +73,7 @@ class CartController extends Controller
 
         if (!$cart || !$this->cartItemService->validateCartItem($cart, $item)) {
             return response()->json([
+                'success' => false,
                 'message' => 'Item não encontrado no carrinho'
             ], 404);
         }
@@ -80,6 +81,7 @@ class CartController extends Controller
         $this->cartItemService->removeItem($item);
 
         return response()->json([
+            'success' => true,
             'message' => 'Item removido do carrinho',
             'cart' => $cart->load('items.product')
         ]);

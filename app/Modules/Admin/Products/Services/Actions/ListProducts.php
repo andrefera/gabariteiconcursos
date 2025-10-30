@@ -34,9 +34,7 @@ readonly class ListProducts
             ]
         ];
 
-
         $start = ($this->page - 1) * $this->limit;
-
         $response = ElasticSearchUtil::search(env('ELASTIC_SEARCH_INDEX_PRODUCTS', 'products_index'), $query, [], $start, $this->limit, ['id' => 'DESC']);
         $total = $response['hits']['total']['value'];
 

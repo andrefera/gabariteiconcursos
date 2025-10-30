@@ -1,8 +1,6 @@
 @extends('layouts.app')
 @section('title', 'Ellon Sports | Complete seu cadastro')
 
-<!-- Add Toastify CSS -->
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 <link rel="stylesheet" href="{!! asset('assets/css/profile.css') !!}">
 
 @section('content')
@@ -177,24 +175,8 @@
 
 
 <script src="https://unpkg.com/imask"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script>
-    // Function to show toast message
-    function showToast(message, isError = false) {
-        Toastify({
-            text: message,
-            duration: 3000,
-            gravity: "top",
-            position: "right",
-            stopOnFocus: true,
-            style: {
-                background: isError ? "#dc3545" : "#28a745",
-                borderRadius: "4px",
-                fontSize: "14px",
-                padding: "12px 24px"
-            }
-        }).showToast();
-    }
+    // Removido: usar window.showToast global
 
     // Function to handle form errors
     function handleFormErrors(errors) {
@@ -212,15 +194,15 @@
                     field.classList.add('is-invalid');
                 }
                 if (Array.isArray(errors[key])) {
-                    errors[key].forEach(error => showToast(error, true));
+                    errors[key].forEach(error => showToast('Erro', error, 'error'));
                 } else {
-                    showToast(errors[key], true);
+                    showToast('Erro', errors[key], 'error');
                 }
             });
         } else if (Array.isArray(errors)) {
-            errors.forEach(error => showToast(error, true));
+            errors.forEach(error => showToast('Erro', error, 'error'));
         } else {
-            showToast(errors, true);
+            showToast('Erro', errors, 'error');
         }
     }
 
@@ -332,7 +314,7 @@
         }
 
         if (errors.length > 0) {
-            errors.forEach(error => showToast(error, true));
+            errors.forEach(error => showToast('Erro', error, 'error'));
             return;
         }
 
@@ -379,12 +361,12 @@
                 if (data.errors) {
                     handleFormErrors(data.errors);
                 } else {
-                    showToast('Ocorreu um erro ao salvar os dados. Tente novamente.', true);
+                    showToast('Erro', 'Ocorreu um erro ao salvar os dados. Tente novamente.', 'error');
                 }
                 return;
             }
 
-            showToast('Perfil atualizado com sucesso!');
+            showToast('Sucesso', 'Perfil atualizado com sucesso!', 'success');
 
             // Redirect if needed
             if (data.redirect) {
@@ -393,7 +375,7 @@
 
         } catch (error) {
             console.error('Erro ao enviar formulário:', error);
-            showToast('Erro ao enviar formulário. Tente novamente mais tarde.', true);
+            showToast('Erro', 'Erro ao enviar formulário. Tente novamente mais tarde.', 'error');
         }
     });
 
@@ -405,7 +387,7 @@
             this.classList.add('is-invalid');
             clearAddressFields();
             setAddressFieldsDisabled(false);
-            showToast('CEP inválido', true);
+            showToast('Erro', 'CEP inválido', 'error');
             return;
         }
 
@@ -418,7 +400,7 @@
 
             if (data.erro) {
                 this.classList.add('is-invalid');
-                showToast('CEP não encontrado', true);
+                showToast('Erro', 'CEP não encontrado', 'error');
                 clearAddressFields();
                 setAddressFieldsDisabled(false);
                 return;
@@ -470,7 +452,7 @@
 
         } catch (error) {
             console.error('Erro ao buscar CEP:', error);
-            showToast('Erro ao buscar CEP. Tente novamente mais tarde.', true);
+            showToast('Erro', 'Erro ao buscar CEP. Tente novamente mais tarde.', 'error');
             clearAddressFields();
             setAddressFieldsDisabled(false);
         }

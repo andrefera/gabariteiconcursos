@@ -388,7 +388,7 @@
                                 <img src="${product.image ?? '/images/no-image.png'}" alt="${product.name}" width="50" height="70">
                                 <div>
                                     <strong>${product.name}</strong><br>
-                                    <span>${product.sku ?? ''}</span>
+                                    <span>${product.price}</span>
                                 </div>
                             </a>
                         `).join('');

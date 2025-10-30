@@ -270,65 +270,6 @@ async function deleteAddress(addressId) {
     }
 }
 
-// Função para mostrar toast
-function showToast(title, message, type = 'success') {
-    console.log('showToast called:', { title, message, type });
-    
-    // Se a função showToast global existir, usa ela
-    if (typeof window.showToast === 'function' && window.showToast !== showToast) {
-        console.log('Using global showToast');
-        return window.showToast(title, message, type);
-    }
-
-    // Cria ou encontra o container
-    const toastContainer = document.getElementById('toastContainer') || createToastContainer();
-    console.log('Toast container:', toastContainer);
-    
-    // Cria o toast
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    toast.innerHTML = `
-        <div class="toast-icon">${type === 'success' ? '✓' : '⚠'}</div>
-        <div class="toast-content">
-            <div class="toast-title">${title}</div>
-            <div class="toast-message">${message}</div>
-        </div>
-        <button class="toast-close">&times;</button>
-    `;
-    
-    // Adiciona evento de fechar
-    const closeBtn = toast.querySelector('.toast-close');
-    closeBtn.addEventListener('click', () => {
-        toast.remove();
-    });
-    
-    // Adiciona ao container
-    toastContainer.appendChild(toast);
-    console.log('Toast added to container');
-    
-    // Força reflow e adiciona classe show
-    toast.offsetHeight; // Force reflow
-    setTimeout(() => {
-        toast.classList.add('show');
-        console.log('Toast show class added');
-    }, 10);
-    
-    // Remove automaticamente após 5 segundos
-    setTimeout(() => {
-        if (toast.parentElement) {
-            toast.classList.remove('show');
-            setTimeout(() => {
-                if (toast.parentElement) {
-                    toast.remove();
-                }
-            }, 300); // Wait for animation
-        }
-    }, 5000);
-}
-
-// Torna a função global para debug
-window.showToast = showToast;
-
 // Função para verificar se é o primeiro endereço
 function checkIfFirstAddress() {
     const addressCards = document.querySelectorAll('.addressCard');
@@ -340,14 +281,4 @@ function checkIfFirstAddress() {
     }
 }
 
-// Cria container de toast se não existir
-function createToastContainer() {
-    let container = document.getElementById('toastContainer');
-    if (!container) {
-        container = document.createElement('div');
-        container.id = 'toastContainer';
-        container.className = 'toast-container';
-        document.body.appendChild(container);
-    }
-    return container;
-}
+// Removido sistema local de toast em favor do utilitário global

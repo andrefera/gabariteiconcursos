@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\UserAddress;
+use App\Rules\ValidCep;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,7 +24,7 @@ class AddressController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'zip_code' => 'required|size:9',
+            'zip_code' => ['required', 'size:9', new ValidCep],
             'street' => 'required|max:255',
             'number' => 'required|max:20',
             'complement' => 'nullable|max:255',
@@ -84,7 +85,7 @@ class AddressController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'zip_code' => 'required|size:9',
+            'zip_code' => ['required', 'size:9', new ValidCep],
             'street' => 'required|max:255',
             'number' => 'required|max:20',
             'complement' => 'nullable|max:255',

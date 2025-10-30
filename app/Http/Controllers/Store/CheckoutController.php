@@ -75,7 +75,7 @@ class CheckoutController extends Controller
                 'Content-Type' => 'application/json',
                 'Authorization' => 'Bearer ' . env('MELHOR_ENVIO_TOKEN'),
                 'User-Agent' => 'Aplicação contato@ellonsports.com.br'
-            ])->post(env('MELHOR_ENVIO_URL'), $payload);
+            ])->post(env('MELHOR_ENVIO_URL', 'https://sandbox.melhorenvio.com.br/api/v2/me/shipment/calculate'), $payload);
 
             Log::info('Resposta Melhor Envio:', $response->json());
 
@@ -149,7 +149,7 @@ class CheckoutController extends Controller
         }
 
         try {
-            $cart->shippings()->delete(); // Remove shipping anterior se existir
+            $cart->shippings()->delete(); 
 
             $cart->shippings()->create([
                 'address_id' => $request->address_id,

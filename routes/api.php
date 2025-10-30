@@ -47,12 +47,12 @@ Route::prefix('admin')->group(function () {
         Route::prefix('order')->group(function () {
             Route::get('/get-all', [OrderController::class, 'index'])->name('order.index');
             Route::get('/get/{order}', [OrderController::class, 'edit'])->name('order.edit');
-            Route::post('/store', [OrderController::class, 'createOrUpdate'])->name('order.store');
             Route::post('/delete/{order}', [OrderController::class, 'destroy'])->name('order.destroy');
             Route::get('/filter', [OrderController::class, 'filter'])->name('order.filter');
             Route::get('/shipping-labels', [OrderController::class, 'downloadShippingLabels'])->name('order.shipping.labels');
             Route::post('/update-status', [OrderController::class, 'updateStatus'])->name('order.update.status');
-            Route::post('/update-only-status', [OrderController::class, 'updateOnlyStatus'])->name('order.update.only.status');
+            Route::post('/update-order-status', [OrderController::class, 'updateOrderStatus'])->name('order.update.order.status');
+            Route::post('/update-address', [OrderController::class, 'updateAddress'])->name('order.update.address');
         });
     });
 });

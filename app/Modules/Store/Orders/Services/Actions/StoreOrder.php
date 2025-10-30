@@ -60,7 +60,7 @@ readonly class StoreOrder
 
             // Validate cart items stock
             foreach ($cart->items as $item) {
-                if (!$item->product->checkStock($item->size, $item->quantity) || !$item->product->updateStock($item->size, $item->quantity)) {
+                if (!$item->product->checkStock($item->size, $item->quantity)) {
                     throw new Exception("Produto {$item->product->name} não possui estoque suficiente.");
                 }
             }
@@ -151,6 +151,17 @@ readonly class StoreOrder
         if ($invalid) {
             Cache::put($cacheKey, $order->id, 3600);
             return new PaymentResponseDTO($response->message, false);
+        }
+
+        $updateStockMsg = null;
+        foreach ($cart->items as $item) {
+            if (!$item->product->checkStock($item->size, $item->quantity) || !$item->product->updateStock($item->size, $item->quantity)) {
+                $updateStockMsg = "Produto {$item->product->name} não possui estoque suficiente.";
+            }
+        }
+
+        if ($updateStockMsg) {
+            return new PaymentResponseDTO($updateStockMsg, false);
         }
 
         if ($response->success) {

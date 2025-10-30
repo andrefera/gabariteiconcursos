@@ -1,0 +1,87 @@
+FROM php:8.2-fpm
+
+ARG ssh_prv_key
+ARG ssh_pub_key
+ARG uid
+
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpng-dev \
+    libjpeg-dev \
+    libjpeg62-turbo-dev \
+    libfreetype6-dev \
+    locales \
+    zip \
+    libgd-dev \
+    jpegoptim optipng pngquant gifsicle \
+    vim \
+    unzip \
+    git \
+    curl \
+    libxml2-dev \
+    libonig-dev \
+    libmagickwand-dev \
+    zlib1g-dev \
+    libzip-dev \
+    libpq-dev
+
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN docker-php-ext-install mysqli
+
+RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg
+RUN docker-php-ext-install mbstring bcmath gd
+
+RUN docker-php-ext-install pdo pdo_pgsql
+RUN pecl install redis
+RUN docker-php-ext-enable redis
+RUN docker-php-ext-install sockets
+RUN docker-php-ext-install zip
+RUN pecl install imagick
+RUN docker-php-ext-enable imagick
+RUN docker-php-ext-install pdo_mysql
+RUN docker-php-ext-install exif
+RUN docker-php-ext-install pcntl
+RUN pecl install xdebug
+RUN docker-php-ext-enable xdebug
+RUN docker-php-ext-install soap
+RUN pecl install mongodb
+RUN echo "extension=mongodb.so" > $PHP_INI_DIR/conf.d/mongo.ini
+
+RUN echo "xdebug.mode=debug" >> $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.client_host=host.docker.internal" >> $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.client_port=9003" >> $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.start_with_request=yes" >> $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.idekey=PHPSTORM" >> $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
+
+RUN echo 'pm.max_children = 30' >> /usr/local/etc/php-fpm.d/zz-docker.conf
+
+
+# Install composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Set working directory
+WORKDIR /var/www
+
+# Add user for laravel application
+RUN groupadd -g $uid www
+RUN useradd -u $uid -ms /bin/bash -g www www
+
+# Change current user to www
+USER www
+
+# Authorize SSH Host
+RUN mkdir -p /home/www/.ssh/ && \
+    chmod 0700 /home/www/.ssh
+
+# Add the keys and set permissions
+RUN echo "$ssh_prv_key" > /home/www/.ssh/id_rsa && \
+    echo "$ssh_pub_key" > /home/www/.ssh/id_rsa.pub && \
+    chmod 600 /home/www/.ssh/id_rsa && \
+    chmod 600 /home/www/.ssh/id_rsa.pub
+
+EXPOSE 9000
+CMD ["php-fpm"]

@@ -3,23 +3,20 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
 use App\Models\Enums\OrderStatus;
 use App\Models\Order;
-use App\Modules\Admin\Category\DTO\EditCategoryDTO;
-use App\Modules\Admin\Category\Services\Actions\CreateOrUpdateCategory;
 use App\Modules\Admin\Orders\DTO\OrderDTO;
 use App\Modules\Admin\Orders\DTO\OrderShippingLabelDTO;
 use App\Modules\Admin\Orders\Services\Actions\MercadoPagoWebhookHandlerAction;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Modules\Admin\Orders\Services\Actions\ListOrders;
+use App\Modules\Admin\Orders\Services\Actions\UpdateOrderAddress;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
-use function Aws\map;
 
 class OrderController extends Controller
 {
@@ -33,26 +30,6 @@ class OrderController extends Controller
     public function edit(Order $order): JsonResponse
     {
         return response()->json(OrderDTO::fromOrder($order));
-    }
-
-    public function createOrUpdate(Request $request): JsonResponse
-    {
-        return response()->json(CreateOrUpdateCategory::fromRequest($request)->execute());
-    }
-
-    public function destroy(Category $category): JsonResponse
-    {
-        try {
-            if ($category->products()->count() > 0) {
-                throw new Exception("A categoria possui produtos atrelados.");
-            }
-
-            $category->delete();
-
-            return response()->json(['success' => true]);
-        } catch (Exception $exception) {
-            return response()->json(['success' => false, 'msg' => $exception->getMessage()]);
-        }
     }
 
     public function downloadShippingLabels(Request $request): Response
@@ -72,7 +49,7 @@ class OrderController extends Controller
     {
         try {
             $status = $request->get('status');
-            if (!in_array($status, [OrderStatus::PAID->value, OrderStatus::WAITING_FOR_CARRIER->value, OrderStatus::CANCELLED->value])) {
+            if (!in_array($status, [OrderStatus::PAID->value, OrderStatus::WAITING_FOR_CARRIER->value, OrderStatus::CANCELLED->value, OrderStatus::REFUNDED->value])) {
                 return response()->json(['success' => false, 'msg' => 'Status inválido']);
             }
 
@@ -92,13 +69,12 @@ class OrderController extends Controller
                 });
 
             return response()->json(['success' => true]);
-
         } catch (Exception $exception) {
             return response()->json(['success' => false, 'msg' => 'Erro ao atualizar status dos pedidos']);
         }
     }
 
-    public function updateOnlyStatus(Request $request): JsonResponse
+    public function updateOrderStatus(Request $request): JsonResponse
     {
         try {
             $order = Order::query()->find($request->get('id'));
@@ -111,6 +87,13 @@ class OrderController extends Controller
                 return response()->json(['success' => false, 'msg' => 'Status inválido']);
             }
 
+            if ($request->get('tracking_number')) {
+                $trackingData = $order->getTrackingData() ?? [];
+                $trackingData['number'] = $request->get('tracking_number');
+
+                $order->tracking_data = json_encode($trackingData);
+            }
+
             $order->status = $status;
             $order->save();
 
@@ -118,6 +101,11 @@ class OrderController extends Controller
         } catch (Exception $exception) {
             return response()->json(['success' => false, 'msg' => 'Erro ao atualizar status do pedido']);
         }
+    }
+
+    public function updateAddress(Request $request): JsonResponse
+    {
+        return response()->json(UpdateOrderAddress::fromRequest($request)->execute());
     }
 
     public function webhookMercadoPago(Request $request): JsonResponse
@@ -132,5 +120,4 @@ class OrderController extends Controller
 
         return response()->json(['ok']);
     }
-
 }

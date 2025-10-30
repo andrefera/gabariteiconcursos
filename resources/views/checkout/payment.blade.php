@@ -2,8 +2,6 @@
 @section('title', 'Ellon Sports | Pagamento')
 <!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-<!-- Toastify -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
 @section('content')
 <section class="paymentSection">
@@ -795,18 +793,11 @@
     const pixField = document.getElementById('pixFields');
     const ticketField = document.getElementById('ticketFields');
 
-        console.log('Payment buttons found:', paymentButtons.length);
-        console.log('Card fields:', cardFields);
-        console.log('PIX field:', pixField);
-        console.log('Ticket field:', ticketField);
 
         paymentButtons.forEach((button, index) => {
         let method = button.getAttribute('data-method');
-            console.log(`Button ${index}: ${method}`);
-
             button.addEventListener('click', (e) => {
                 e.preventDefault();
-                console.log('Clicked method:', method);
                 
                 document.getElementById('paymentMethod').value = method;
 
@@ -872,16 +863,22 @@
         return /^\d{4}$/.test(cardExpiration.replaceAll('/', ''));
     }
 
-    function showToast(message, isError = false) {
-        Toastify({
-            text: message,
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "right",
-            backgroundColor: isError ? "#dc3545" : "#28a745",
-        }).showToast();
-    }
+    document.getElementById('applyCoupon').onclick = async function(e) {
+        let couponLabel = document.getElementById('couponCode');
+        let couponCode = couponLabel.value;
+        if (couponCode.trim() === '') {
+            showToast('Erro', 'Digite um cupom!', 'error');
+            return;
+        }
+        
+        e.preventDefault();
+        setTimeout(async () => {
+            showToast('Erro', 'Cupom ' + couponCode + ' inválido!', 'error');
+            couponLabel.value = '';
+        }, 700);
+
+        return;
+    };
 
     document.getElementById("submitPayment").onclick = async function(e) {
         let paymentMethod = document.getElementById("paymentMethod").value;
@@ -926,7 +923,8 @@
                 return;
             }
         } else {
-            let docNumber = document.getElementById('cpf');
+            let docInputId = paymentMethod === "pix" ? "cpf-pix" : "cpf-ticket";
+            let docNumber = document.getElementById(docInputId);
             if (docNumber.value.trim() === '' || !isValidCPF(docNumber.value)) {
                 docNumber.setCustomValidity('CPF inválido');
                 docNumber.reportValidity();
@@ -986,7 +984,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success === false) {
-                    showToast(data.message || 'Erro ao processar pagamento.', true);
+                    showToast('Erro', data.message || 'Erro ao processar pagamento.', 'error');
                     return;
                 }
                 if (data.success === true && data.orderId) {
@@ -996,21 +994,12 @@
                 document.getElementById("paymentResponse").innerHTML = `<p>${data.message}</p>`;
             })
             .catch(error => {
-                showToast('Erro inesperado ao processar pagamento.', true);
+                showToast('Erro', 'Erro inesperado ao processar pagamento.', 'error');
                 console.error(error);
             });
 
         async function createCardToken() {
             return new Promise((resolve, reject) => {
-                console.log({
-                    cardNumber: cardNumber.value.replace(/\D/g, ''),
-                    cardholderName: cardHolderName.value,
-                    securityCode: cvv.value.trim(),
-                    cardExpirationMonth: cardExpiration.value.split("/")[0],
-                    cardExpirationYear: `20${cardExpiration.value.split("/")[1]}`,
-                    identificationType: 'CPF',
-                    identificationNumber: carDocNumber.value.replaceAll('.', '').replaceAll('-', ''),
-                });
                 mp.createCardToken({
                     cardNumber: cardNumber.value.replace(/\D/g, ''),
                     cardholderName: cardHolderName.value,

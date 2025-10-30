@@ -38,6 +38,7 @@ class Order extends Model
         'shipping_days',
         'remote_ip',
         'user_agent',
+        'tracking_data',
         'paid_at',
         'cancelled_at',
         'refunded_at',
@@ -144,5 +145,10 @@ class Order extends Model
     {
         $this->increment_id = env('PREFIX_INCREMENT', 'ESL-') . str_pad($this->id, 10, "0", STR_PAD_LEFT);
         $this->save();
+    }
+
+    public function getTrackingData(): ?array
+    {
+        return $this->tracking_data ? (json_decode($this->tracking_data, true) ?: null) : null;
     }
 }

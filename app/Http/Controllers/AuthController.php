@@ -47,22 +47,30 @@ class AuthController extends Controller
             if (Auth::attempt($credentials)) {
                 $request->session()->regenerate();
 
-                // If the user was trying to access a protected page, redirect them there
-                return redirect()->intended('/');
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Login realizado com sucesso!',
+                    'redirect' => '/'
+                ]);
             }
 
-            return back()
-                ->withInput($request->only('email'))
-                ->withErrors([
-                    'email' => 'As credenciais fornecidas não correspondem aos nossos registros.',
-                ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'As credenciais fornecidas não correspondem aos nossos registros.',
+                'errors' => [
+                    'email' => 'As credenciais fornecidas não correspondem aos nossos registros.'
+                ]
+            ], 401);
+
         } catch (\Exception $e) {
-            \Log::error('Erro no login web: ' . $e->getMessage());
-            return back()
-                ->withInput($request->only('email'))
-                ->withErrors([
+            Log::error('Erro no login web: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Erro ao processar sua solicitação. Tente novamente mais tarde.',
+                'errors' => [
                     'error' => 'Erro ao processar sua solicitação. Tente novamente mais tarde.'
-                ]);
+                ]
+            ], 500);
         }
     }
 
@@ -81,22 +89,44 @@ class AuthController extends Controller
     // Web Register
     public function registerWeb(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-        ]);
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'password' => 'required|string|min:6|confirmed',
+            ]);
 
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-        ]);
+            $user = User::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+            ]);
 
-        Auth::login($user);
-        $request->session()->regenerate();
+            Auth::login($user);
+            $request->session()->regenerate();
 
-        return redirect('/');
+            return response()->json([
+                'success' => true,
+                'message' => 'Conta criada com sucesso!',
+                'redirect' => '/'
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Dados inválidos',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error('Erro no registro web: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Erro ao processar sua solicitação. Tente novamente mais tarde.',
+                'errors' => [
+                    'error' => 'Erro ao processar sua solicitação. Tente novamente mais tarde.'
+                ]
+            ], 500);
+        }
     }
 
     // API Logout

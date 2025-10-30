@@ -91,35 +91,44 @@
                             </div>
                         </div>
                     </div>
-                    <div class="thirdStep">
-                        <p class="choose">Escolha sua medida</p>
-                        <div class="buttons">
-                            @foreach($product->sizes as $key => $size)
-                                <button class="btnMeasure">{{$size->name}}</button>
-                            @endforeach
-                        </div>
-                        <button class="tableMeasure">
-                            <img width="22" height="22" src="{{ asset('images/icons/regua-icon.png') }}" alt="regua">
-                            <p> Tabela de Medidas</p>
-                        </button>
-                    </div>
-                    <div class="fourthStep">
-                        <div class="quantityArea">
-                            <div class="quantityGroup">
-                                <button class="btnQtd"><p class="less">-</p></button>
-                                <p class="quantity">1</p>
-                                <button class="btnQtd">+</button>
+                    @if(!empty($product->sizes))
+                        <div class="thirdStep">
+                            <p class="choose">Escolha sua medida</p>
+                            <div class="buttons">
+                                @foreach($product->sizes as $key => $size)
+                                    <button class="btnMeasure">{{$size->name}}</button>
+                                @endforeach
                             </div>
-                            <div class="phrase">
-                                <p>Restam apenas <span>12 itens</span></p>
-                                <p>Não perca essa!</p>
+{{--                            <button class="tableMeasure">--}}
+{{--                                <img width="22" height="22" src="{{ asset('images/icons/regua-icon.png') }}" alt="regua">--}}
+{{--                                <p> Tabela de Medidas</p>--}}
+{{--                            </button>--}}
+                        </div>
+                        <div class="fourthStep">
+                            <div class="quantityArea">
+                                <div class="quantityGroup">
+                                    <button class="btnQtd"><p class="less">-</p></button>
+                                    <p class="quantity">1</p>
+                                    <button class="btnQtd">+</button>
+                                </div>
+                                <div class="phrase">
+                                    <p>Restam apenas <span>12 itens</span></p>
+                                    <p>Não perca essa!</p>
+                                </div>
+                            </div>
+                            <div class="buyArea">
+                                <button class="btnBuy">Comprar Agora</button>
+                                <button class="btnCart">Adicionar ao Carrinho</button>
                             </div>
                         </div>
-                        <div class="buyArea">
-                            <button class="btnBuy">Comprar Agora</button>
-                            <button class="btnCart">Adicionar ao Carrinho</button>
+                    @else
+                        <div class="thirdStep">
+                            <div class="out-of-stock-message" style="padding: 20px; text-align: center; background-color: #fee2e2; border: 1px solid #fca5a5; border-radius: 8px; margin-top: 20px;">
+                                <p style="font-size: 18px; font-weight: bold; color: #dc2626; margin: 0;">Produto Fora de Estoque</p>
+                                <p style="font-size: 14px; color: #991b1b; margin-top: 8px;">Desculpe, este produto está temporariamente indisponível.</p>
+                            </div>
                         </div>
-                    </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -521,35 +530,39 @@
 
         // Seleção de tamanho
         let selectedSize = null;
-        document.querySelectorAll('.btnMeasure').forEach(btn => {
-            btn.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelectorAll('.btnMeasure').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                selectedSize = this.textContent.trim();
+        const btnMeasures = document.querySelectorAll('.btnMeasure');
+        if (btnMeasures.length > 0) {
+            btnMeasures.forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelectorAll('.btnMeasure').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedSize = this.textContent.trim();
+                });
             });
-        });
+        }
 
         // Controle de quantidade
         let quantity = 1;
         const quantityDisplay = document.querySelector('.quantity');
         const btnsQtd = document.querySelectorAll('.btnQtd');
-        btnsQtd[0].addEventListener('click', function () {
-            if (quantity > 1) {
-                quantity--;
+        if (quantityDisplay && btnsQtd.length >= 2) {
+            btnsQtd[0].addEventListener('click', function () {
+                if (quantity > 1) {
+                    quantity--;
+                    quantityDisplay.textContent = quantity;
+                }
+            });
+            btnsQtd[1].addEventListener('click', function () {
+                quantity++;
                 quantityDisplay.textContent = quantity;
-            }
-        });
-        btnsQtd[1].addEventListener('click', function () {
-            quantity++;
-            quantityDisplay.textContent = quantity;
-        });
+            });
+        }
 
-        // Adicionar ao Carrinho
-        document.querySelector('.btnCart').addEventListener('click', async function () {
+        async function addItemToCart(){
             const productId = "{{ $product->id }}";
             if (!selectedSize) {
-                alert('Selecione um tamanho!');
+                showToast('Atenção', 'Selecione um tamanho!', 'warning');
                 return;
             }
             // CSRF token do Laravel
@@ -568,17 +581,41 @@
                     })
                 });
                 if (response.ok) {
-                    // Sucesso: pode redirecionar ou mostrar mensagem
-                    alert('Produto adicionado ao carrinho!');
-                    // window.location.href = '/cart'; // descomente se quiser redirecionar
+                    return { success: true, message: 'Produto adicionado ao carrinho!' };
                 } else {
                     const data = await response.json();
-                    alert(data.message || 'Erro ao adicionar ao carrinho.');
+                    return { success: false, message: data.message || 'Erro ao adicionar ao carrinho.' };
                 }
             } catch (e) {
-                alert('Erro ao adicionar ao carrinho.');
+                return { success: false, message: 'Erro ao adicionar ao carrinho.' };
             }
-        });
+        }
+
+        // Adicionar ao Carrinho
+        const btnBuy = document.querySelector('.btnBuy');
+        const btnCart = document.querySelector('.btnCart');
+
+        if (btnBuy) {
+            btnBuy.addEventListener('click', async function () {
+                const result = await addItemToCart();
+                if (result.success) {
+                    window.location.href = '/cart';
+                } else {
+                    showToast('Erro', result.message, 'error');
+                }
+            });
+        }
+
+        if (btnCart) {
+            btnCart.addEventListener('click', async function () {
+                const result = await addItemToCart();
+                if (result.success) {
+                    showToast('Sucesso', result.message, 'success');
+                } else {
+                    showToast('Erro', result.message, 'error');
+                }
+            });
+        }
 
         // Efeito de zoom na imagem principal
         if (mainImageEl && zoomLensEl) {

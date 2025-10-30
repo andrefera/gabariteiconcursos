@@ -1,0 +1,518 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile81
+      args:
+        uid: ${UID}
+        ssh_prv_key: ${SSH_PRV_KEY}
+        ssh_pub_key: ${SSH_PUB_KEY}
+    image: novaconcursos/php:8.1-fpm
+    container_name: app
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "8055:8055" #teste
+    environment:
+      SERVICE_NAME: app
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+      - ${VOLUME_DIRECTORY}:/var/www
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - app-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  app56:
+    build:
+      context: .
+      dockerfile: Dockerfile56
+      args:
+        uid: ${UID}
+        ssh_prv_key: ${SSH_PRV_KEY}
+        ssh_pub_key: ${SSH_PUB_KEY}
+    image: novaconcursos/php:5.6-fpm
+    container_name: app56
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: app56
+      SERVICE_TAGS: dev56
+    working_dir: /var/www
+    volumes:
+      - ${VOLUME_DIRECTORY}:/var/www
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - app-network
+  app72:
+    build:
+      context: .
+      dockerfile: Dockerfile72
+      args:
+        uid: ${UID}
+        ssh_prv_key: ${SSH_PRV_KEY}
+        ssh_pub_key: ${SSH_PUB_KEY}
+    image: novaconcursos/php:7.2-fpm
+    container_name: app72
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: app72
+      SERVICE_TAGS: dev72
+    working_dir: /var/www
+    volumes:
+      - ${VOLUME_DIRECTORY}:/var/www
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - app-network
+  app82:
+    build:
+      context: .
+      dockerfile: Dockerfile82
+      args:
+        uid: ${UID}
+        ssh_prv_key: ${SSH_PRV_KEY}
+        ssh_pub_key: ${SSH_PUB_KEY}
+    image: novaconcursos/php:8.2-fpm
+    container_name: app82
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "8056:8056" #teste
+    environment:
+      SERVICE_NAME: app82
+      SERVICE_TAGS: dev82
+    working_dir: /var/www
+    volumes:
+      - ${VOLUME_DIRECTORY}:/var/www
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - app-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "8081:8081" #apicore
+      - "8000:8000" #novaapi
+      - "8001:8001" #cursoteca
+      - "8003:8003" #mapalaravel
+      - "8004:8004" #authsystem
+      - "8005:8005" #checkoutlaravel
+      - "8006:8006" #tutorialaravel
+      - "8009:8009" #corporativonova
+      - "8010:8010" #maxieduca
+      - "8011:8011" #opcaolaravel
+      - "8012:8012" #maxieducalaravel
+      - "8013:8013" #novaparceiro
+      - "8014:8014" #solucaolaravel
+      - "8015:8015" #erpgrafica
+      - "8016:8016" #novaparceiro
+      - "8017:8017" #solucaoparceiro
+      - "8018:8018" #opcaoparceiro
+      - "8019:8019" #bookstarklaravel
+      - "8020:8020" #marketeduqilaravel
+      - "8021:8021" #gestaodeconcursoslaravel
+      - "8022:8022" #pcilaravel
+      - "8023:8023" #mapaapi
+      - "8024:8024" #afiliadolaravel
+      - "8070:8070" #testes html
+      - "8026:8026" #webtoprintlaravel
+      - "80:80" #novalaravel
+      - "443:443" #novalaravel
+      - "448:448" #magento
+    volumes:
+      - ${VOLUME_DIRECTORY}:/var/www
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      app-network:
+        aliases:
+          - localhost.local
+  mysql:
+    image: mysql:5.7.43
+    container_name: mysql
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_ROOT_PASSWORD: 123123
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - mysqldata:/var/lib/mysql/
+      - ./mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - app-network
+  mysql8:
+    image: mysql:8
+    container_name: mysql8
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 123123
+    volumes:
+      - mysqldata8:/var/lib/mysql/
+      - ./mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - app-network
+  redis:
+    image: redis:6.0
+    container_name: redis
+    restart: "unless-stopped"
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+  postgres:
+    image: postgres:12
+    container_name: postgres
+    restart: "unless-stopped"
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: 123123
+    command: [ "postgres", "-c", "log_statement=all", "-c", "log_destination=stderr" ]
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+    networks:
+      - app-network
+  postgres17:
+    image: postgres:17
+    container_name: postgres17
+    restart: "unless-stopped"
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_PASSWORD: 123123
+    command: [ "postgres", "-c", "log_statement=all", "-c", "log_destination=stderr" ]
+    volumes:
+      - postgresdata17:/var/lib/postgresql/data
+    networks:
+      - app-network
+  checkoutreact:
+    image: node:20.19.4
+    container_name: checkoutreact
+    restart: unless-stopped
+    command: bash -c "npm install && npm start"
+    ports:
+      - "3000:3000"
+    tty: true
+    working_dir: /var/www/checkoutreact
+    volumes:
+      - ${VOLUME_DIRECTORY}:/var/www
+    networks:
+      - app-network
+  areaclientreact:
+    image: node:20.19.4
+    container_name: areaclientreact
+    restart: unless-stopped
+    command: bash -c "npm install && npm start"
+    ports:
+      - "3001:3001"
+    tty: true
+    working_dir: /var/www/areaclientreact
+    volumes:
+      - ${VOLUME_DIRECTORY}:/var/www
+    networks:
+      - app-network
+  novaconcursoslaravelwatch:
+    image: node:16.14.2
+    container_name: novaconcursoslaravelwatch
+    restart: unless-stopped
+    command: bash -c "npm install laravel-mix@latest && npm run watch"
+    tty: true
+    working_dir: /var/www/novaconcursoslaravel
+    volumes:
+      - ${VOLUME_DIRECTORY}:/var/www
+    networks:
+      - app-network
+  apicorefrontend:
+    image: node:20.19.4
+    container_name: apicorefrontend
+    restart: unless-stopped
+    command: bash -c "npm install && npm start"
+    ports:
+      - "3003:3003"
+    tty: true
+    working_dir: /var/www/apicorefrontend
+    volumes:
+      - ${VOLUME_DIRECTORY}:/var/www
+    networks:
+      - app-network
+  mapanext:
+    image: node:20.19.4
+    container_name: mapanext
+    restart: unless-stopped
+    command: bash -c "npm install --legacy-peer-deps && npm run dev"
+    ports:
+      - "3004:3004"
+    tty: true
+    working_dir: /var/www/mapanext
+    volumes:
+      - ${VOLUME_DIRECTORY}/mapanext:/var/www/mapanext
+    networks:
+      - app-network
+  mapaadmin:
+    image: node:20.19.4
+    container_name: mapaadmin
+    restart: unless-stopped
+    command: bash -c "node --max-old-space-size=4096 $$(which npm) install && npm start"
+    ports:
+      - "3005:3005"
+    tty: true
+    working_dir: /var/www/mapaadmin
+    volumes:
+      - ${VOLUME_DIRECTORY}:/var/www
+    networks:
+      - app-network
+  maxieducawatch:
+    image: node:12.22.0
+    container_name: maxieducawatch
+    restart: unless-stopped
+    command: bash -c "npm i && npm run watch"
+    tty: true
+    working_dir: /var/www/maxieduca
+    volumes:
+      - ${VOLUME_DIRECTORY}:/var/www
+    networks:
+      - app-network
+  tutoriareact:
+    image: node:20.19.4
+    container_name: tutoriareact
+    restart: unless-stopped
+    command: bash -c "npm install && npm start"
+    ports:
+      - "3006:3006"
+    tty: true
+    working_dir: /var/www/tutoriareact
+    volumes:
+      - ${VOLUME_DIRECTORY}:/var/www
+    networks:
+      - app-network
+  bookstarkreact:
+    image: node:22.3.0
+    container_name: bookstarkreact
+    restart: unless-stopped
+    command: bash -c "npm install && npm start"
+    ports:
+      - "3007:3007"
+    tty: true
+    working_dir: /var/www/bookstarkreact
+    environment:
+      - PORT=3007
+    volumes:
+      - ${VOLUME_DIRECTORY}:/var/www
+    networks:
+      - app-network
+  marketeduqireact:
+    image: node:22.3.0
+    container_name: marketeduqireact
+    restart: unless-stopped
+    command: bash -c "npm install && npm start"
+    ports:
+      - "3008:3008"
+    tty: true
+    working_dir: /var/www/marketeduqireact
+    environment:
+      - PORT=3008
+    volumes:
+      - ${VOLUME_DIRECTORY}:/var/www
+    networks:
+      - app-network
+  gestaodeconcursosreact:
+    image: node:22.3.0
+    container_name: gestaodeconcursosreact
+    restart: unless-stopped
+    command: bash -c "npm install && npm start"
+    ports:
+      - "3009:3009"
+    tty: true
+    working_dir: /var/www/gestaodeconcursosreact
+    environment:
+      - PORT=3009
+    volumes:
+      - ${VOLUME_DIRECTORY}:/var/www
+    networks:
+      - app-network
+  pcireact:
+    image: node:22.3.0
+    container_name: pcireact
+    restart: unless-stopped
+    command: bash -c "npm install && npm start"
+    ports:
+      - "3010:3010"
+    tty: true
+    working_dir: /var/www/pcireact
+    environment:
+      - PORT=3010
+    volumes:
+      - ${VOLUME_DIRECTORY}:/var/www
+    networks:
+      - app-network
+  afiliadoreact:
+    image: node:22.3.0
+    container_name: afiliadoreact
+    restart: unless-stopped
+    command: bash -c "npm install && npm start"
+    ports:
+      - "3011:3011"
+    tty: true
+    working_dir: /var/www/afiliadoreact
+    environment:
+      - PORT=3011
+    volumes:
+      - ${VOLUME_DIRECTORY}:/var/www
+    networks:
+      - app-network
+  mongo:
+    image: mongo:4.2.6
+    container_name: mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 123123
+    command: [ '--logpath', '/var/log/mongodb/mongo.log' ]
+    ports:
+      - "27017:27017"
+    tty: true
+    volumes:
+      - mongodata:/data/db
+      - /var/mongobackups:/var/mongobackups
+    networks:
+      - app-network
+  elasticsearch:
+    image: elasticsearch:7.17.26
+    container_name: elasticsearch
+    restart: unless-stopped
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    networks:
+      - app-network
+  apicdp:
+    image: node:16.14.2
+    container_name: apicdp
+    restart: unless-stopped
+    command: bash -c "npm install && npm start"
+    ports:
+      - "8080:8080"
+    tty: true
+    working_dir: /var/www/apicdp
+    volumes:
+      - ${VOLUME_DIRECTORY}:/var/www
+    networks:
+      - app-network
+  apostilasopcaolaravelwatch:
+    image: node:16.14.2
+    container_name: apostilasopcaolaravelwatch
+    restart: unless-stopped
+    command: bash -c "npm install laravel-mix@latest && npm install sass --save-dev --legacy-peer-deps && npm run watch"
+    tty: true
+    working_dir: /var/www/apostilasopcaolaravel
+    volumes:
+      - ${VOLUME_DIRECTORY}:/var/www
+    networks:
+      - app-network
+  maxieducalaravelwatch:
+    image: node:16.14.2
+    container_name: maxieducalaravelwatch
+    restart: unless-stopped
+    command: bash -c "npm install laravel-mix@latest && npm run watch"
+    tty: true
+    working_dir: /var/www/maxieducalaravel
+    volumes:
+      - ${VOLUME_DIRECTORY}:/var/www
+    networks:
+      - app-network
+  editorasolucaowatch:
+    image: node:16.14.2
+    container_name: editorasolucaowatch
+    restart: unless-stopped
+    command: bash -c "npm install laravel-mix@latest && npm run watch"
+    tty: true
+    working_dir: /var/www/editorasolucaolaravel
+    volumes:
+      - ${VOLUME_DIRECTORY}:/var/www
+    networks:
+      - app-network
+  erpgraficafrontend:
+    image: node:20.19.4
+    container_name: erpgraficafrontend
+    restart: unless-stopped
+    command: bash -c "npm install && npm start"
+    ports:
+      - "3015:3015"
+    tty: true
+    working_dir: /var/www/erpgraficafrontend
+    volumes:
+      - ${VOLUME_DIRECTORY}:/var/www
+    networks:
+      - app-network
+  webtoprintlaravel:
+    build:
+      context: .
+      dockerfile: Dockerfile81
+      args:
+        uid: ${UID}
+        ssh_prv_key: ${SSH_PRV_KEY}
+        ssh_pub_key: ${SSH_PUB_KEY}
+    image: novaconcursos/php:8.1-fpm
+    container_name: webtoprintlaravel
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: webtoprintlaravel
+      SERVICE_TAGS: dev
+    working_dir: /var/www/webtoprintlaravel
+    volumes:
+      - ${VOLUME_DIRECTORY}:/var/www
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - app-network
+  webtoprintreact:
+    image: node:20.19.4
+    container_name: webtoprintreact
+    restart: unless-stopped
+    command: bash -c "npm install --legacy-peer-deps && npm run dev"
+    ports:
+      - "3012:5173"
+    tty: true
+    working_dir: /var/www/webtoprintreact
+    environment:
+      - PORT=5173
+      - HOST=0.0.0.0
+      - NPMRC_FA_AUTH_TOKEN=dummy
+    volumes:
+      - ${VOLUME_DIRECTORY}:/var/www
+    networks:
+      - app-network
+networks:
+  app-network:
+    driver: bridge
+volumes:
+  mysqldata:
+    driver: local
+  mysqldata8:
+    driver: local
+  postgresdata:
+    driver: local
+  mongodata:
+    driver: local
+  esdata:
+    driver: local
+  postgresdata17:
+    driver: local

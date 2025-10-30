@@ -6,14 +6,22 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Modules\Admin\Products\Services\Actions\ListProducts;
 
-class ProductSearchController extends Controller    
+class ProductSearchController extends Controller
 {
     public function search(Request $request)
     {
         $service = new ListProducts(
             null,
             $request->get('q'),
-            null, null, 'true', null, null, null, 1, 8
+            null,
+            null,
+            true,
+            null,
+            null,
+            null,
+            null,
+            1,
+            8
         );
         $result = $service->execute();
 
@@ -23,6 +31,7 @@ class ProductSearchController extends Controller
                 'id'    => $product->id,
                 'name'  => $product->name,
                 'sku'   => $product->sku,
+                'price'   => $product->special_price ?? $product->price,
                 'image' => $product->image_url ?? '',
                 'url'   => $product->url,
             ];

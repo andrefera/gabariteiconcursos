@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Entrar / Criar Conta - Ellon Sports</title>
     <link rel="stylesheet" href="{!! asset('assets/css/auth.css') !!}">
+    <link rel="stylesheet" href="{!! asset('assets/css/toast.css') !!}">
 </head>
 <body>
 <button id="botaoVoltar" class="botaoVoltarTopo">
@@ -117,6 +118,10 @@
     </div>
 </div>
 
+<!-- Toast Container -->
+<div id="toastContainer" class="toast-container"></div>
+
+<script src="{{ asset('assets/js/toast.js') }}"></script>
 <script>
     document.getElementById('botaoVoltar').onclick = function() {
         if (document.referrer && !document.referrer.endsWith('/')) {
@@ -144,6 +149,8 @@
     // Formulários
     const formRegistro = document.getElementById('formularioRegistroForm');
     const formLogin = document.getElementById('formularioLoginForm');
+
+    // Removido: uso do utilitário global window.showToast(type, title, message)
 
     // Função para mostrar tela de seleção
     function mostrarTelaSelecao() {
@@ -188,17 +195,17 @@
 
         // Validações
         if (!document.getElementById('termos').checked) {
-            alert('Por favor, aceite os termos e condições para continuar.');
+            showToast('warning', 'Atenção', 'Por favor, aceite os termos e condições para continuar.');
             return;
         }
 
         if (!formData.password || formData.password.length < 6) {
-            alert('A senha precisa ter no mínimo 6 caracteres.');
+            showToast('warning', 'Senha Inválida', 'A senha precisa ter no mínimo 6 caracteres.');
             return;
         }
 
         if (formData.password !== formData.password_confirmation) {
-            alert('As senhas não coincidem. Por favor, verifique.');
+            showToast('warning', 'Senhas Diferentes', 'As senhas não coincidem. Por favor, verifique.');
             return;
         }
 
@@ -212,21 +219,24 @@
                 body: JSON.stringify(formData)
             });
 
-            if (response.redirected) {
-                window.location.href = response.url;
-                return;
-            }
-
             const data = await response.json();
 
             if (data.success) {
-                window.location.href = '/';
+                showToast('success', 'Sucesso!', 'Conta criada com sucesso!');
+                setTimeout(() => {
+                    window.location.href = data.redirect || '/';
+                }, 1500);
             } else {
-                alert(data.message || 'Erro ao criar conta.');
+                let errorMessage = data.message || 'Erro ao criar conta. Tente novamente.';
+                if (data.errors) {
+                    const errorMessages = Object.values(data.errors).flat();
+                    errorMessage = errorMessages.join(', ');
+                }
+                showToast('error', 'Erro no Cadastro', errorMessage);
             }
         } catch (error) {
             console.error('Erro:', error);
-            alert('Erro ao processar sua solicitação. Tente novamente mais tarde.');
+            showToast('error', 'Erro', 'Erro ao processar sua solicitação. Tente novamente mais tarde.');
         }
     });
 
@@ -240,6 +250,11 @@
             _token: token
         };
 
+        if (!formData.email || !formData.password) {
+            showToast('warning', 'Atenção', 'Por favor, preencha todos os campos para continuar.');
+            return;
+        }
+
         try {
             const response = await fetch('{{ route("login.submit") }}', {
                 method: 'POST',
@@ -250,21 +265,18 @@
                 body: JSON.stringify(formData)
             });
 
-            if (response.redirected) {
-                window.location.href = response.url;
-                return;
-            }
-
             const data = await response.json();
 
             if (data.success) {
-                window.location.href = '/';
+                setTimeout(() => {
+                    window.location.href = data.redirect || '/';
+                }, 1500);
             } else {
-                alert(data.message || 'Erro ao fazer login. Verifique suas credenciais.');
+                showToast('error', 'Erro no Login', data.message || 'Credenciais inválidas. Verifique seu email e senha.');
             }
         } catch (error) {
             console.error('Erro:', error);
-            alert('Erro ao processar sua solicitação. Tente novamente mais tarde.');
+            showToast('error', 'Erro', 'Erro ao processar sua solicitação. Tente novamente mais tarde.');
         }
     });
 </script>

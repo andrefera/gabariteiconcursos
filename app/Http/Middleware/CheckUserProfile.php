@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Session;
 
 class CheckUserProfile
 {
@@ -35,13 +36,23 @@ class CheckUserProfile
                 return redirect()->route('login');
             }
 
+            $cart = Session::get('cart');
+            if (!$cart) {
+                return redirect()->route('cart.index');
+            }
+
             if (!$user->document || !$user->phone || !$user->zip_code || !$user->street_name 
                 || !$user->street_number || !$user->street_neighborhood 
                 || !$user->city || !$user->state
             ) {
                 
-                return redirect()->route('profile.complete')
-                    ->with('warning', 'Por favor, complete seu perfil para continuar.');
+                return redirect()->route('profile.complete');
+            }
+
+            if ($request->is('checkout/payment')) {
+                if (!$cart->shipping()) {
+                    return redirect()->route('checkout.index');
+                }
             }
 
             return $next($request);
