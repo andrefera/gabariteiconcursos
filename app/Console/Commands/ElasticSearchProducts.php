@@ -61,7 +61,7 @@ class ElasticSearchProducts extends Command
         } catch (Throwable $e) {
         }
 
-        $setMap = [
+        $setMapText = [
             "type" => "text",
             "analyzer" => "folding",
             "search_analyzer" => "folding",
@@ -71,6 +71,10 @@ class ElasticSearchProducts extends Command
                     "ignore_above" => 256
                 ]
             ]
+        ];
+
+        $setMapInteger = [
+            "type" => "integer"
         ];
 
         ElasticSearchUtil::createIndex($index, [
@@ -88,7 +92,9 @@ class ElasticSearchProducts extends Command
             ]
         ], [
             'properties' => [
-                'name' => $setMap
+                'id' => $setMapInteger,        // campo numérico
+                'name' => $setMapText,         // campo de texto
+                'total_orders' => $setMapInteger // campo numérico
             ]
         ]);
     }
