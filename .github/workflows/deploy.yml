@@ -29,9 +29,6 @@ jobs:
 #            npm run build
 #          fi
 
-      - name: 📦 Compactar arquivos
-        run: tar -czf deploy.tar.gz ./
-
       - name: 📤 Enviar para o servidor
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -40,6 +37,9 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           source: "deploy.tar.gz"
           target: "/var/www/ellonsports"
+
+      - name: 📦 Compactar arquivos
+        run: tar -czf deploy.tar.gz ./
 
       - name: 🧩 Instalar dependências PHP (Composer)
         run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
