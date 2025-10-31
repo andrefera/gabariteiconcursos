@@ -31,7 +31,7 @@ jobs:
           target: "/var/www/ellonsports"
 
       - name: 🧩 Instalar dependências PHP (Composer)
-        run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+        run: composer update --no-dev  --optimize-autoloader
 
       - name: 🧨 Executar comandos no servidor (deploy)
         uses: appleboy/ssh-action@v0.1.7
