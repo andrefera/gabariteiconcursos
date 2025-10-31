@@ -110,7 +110,7 @@
         <!-- Mobile & Desktop Search -->
         <div class="searchGroup">
             <div class="searchInput">
-                <input type="text" id="product-search-input" placeholder="Pesquise por algum produto"
+                <input type="text" id="product-search-input" placeholder="Pesquise por algum produto..."
                        autocomplete="off">
                 <img src="{{ asset('images/icons/search-icon.svg') }}" width="16" height="16" alt="Search Icon"
                      class="searchIcon">
@@ -407,33 +407,33 @@
 
         // Enhanced User Menu Functionality
         const userMenus = document.querySelectorAll('.userMenu');
-        
+
         userMenus.forEach(userMenu => {
             const trigger = userMenu.querySelector('.userMenuTrigger');
             const dropdown = userMenu.querySelector('.userMenuDropdown');
-            
+
             if (trigger && dropdown) {
                 let isOpen = false;
                 let hoverTimeout = null;
                 let closeTimeout = null;
-                
+
                 // Open menu function
                 function openMenu() {
                     if (closeTimeout) {
                         clearTimeout(closeTimeout);
                         closeTimeout = null;
                     }
-                    
+
                     dropdown.classList.add('show');
                     isOpen = true;
                 }
-                
+
                 // Close menu function
                 function closeMenu() {
                     dropdown.classList.remove('show');
                     isOpen = false;
                 }
-                
+
                 // Toggle menu function
                 function toggleMenu() {
                     if (isOpen) {
@@ -442,14 +442,14 @@
                         openMenu();
                     }
                 }
-                
+
                 // Click handler
                 trigger.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
                     toggleMenu();
                 });
-                
+
                 // Hover handlers for desktop
                 if (window.innerWidth > 768) {
                     userMenu.addEventListener('mouseenter', function() {
@@ -458,7 +458,7 @@
                         }
                         hoverTimeout = setTimeout(openMenu, 150);
                     });
-                    
+
                     userMenu.addEventListener('mouseleave', function() {
                         if (hoverTimeout) {
                             clearTimeout(hoverTimeout);
@@ -466,7 +466,7 @@
                         closeTimeout = setTimeout(closeMenu, 300);
                     });
                 }
-                
+
                 // Close on escape key
                 document.addEventListener('keydown', function(e) {
                     if (e.key === 'Escape' && isOpen) {
@@ -475,7 +475,7 @@
                 });
             }
         });
-        
+
         // Close user menus when clicking outside
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.userMenu')) {
