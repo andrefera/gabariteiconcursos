@@ -1,4 +1,4 @@
-name: Deploy Laravel para VM
+name: Deploy para Hostinger
 
 on:
   push:
@@ -7,11 +7,10 @@ on:
 
 jobs:
   deploy:
-    name: Deploy Laravel para servidor remoto
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Checkout do código
+      - name: Checkout do código
         uses: actions/checkout@v4
 
       - name: 🧰 Configurar cache do Composer
@@ -22,25 +21,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-composer-
 
-#      - name: ⚙️ Instalar dependências Node (caso use Vite)
-#        run: |
-#          if [ -f package.json ]; then
-#            npm ci
-#            npm run build
-#          fi
-
-      - name: 📦 Compactar arquivos
-        run: |
-          mkdir -p /tmp/deploy
-          tar --warning=no-file-changed -czf /tmp/deploy/deploy.tar.gz .
-
-      - name: 📤 Enviar para o servidor
+      - name: Enviar arquivos para a VM
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
-          source: "/tmp/deploy/deploy.tar.gz"
+          source: "."
           target: "/var/www/ellonsports"
 
       - name: 🧩 Instalar dependências PHP (Composer)
@@ -54,12 +41,6 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd /var/www/ellonsports
-
-            echo "🧹 Limpando arquivos antigos..."
-            tar -xzf deploy.tar.gz
-            rm deploy.tar.gz
-
-            echo "🔧 Instalando dependências no servidor..."
 
             echo "⚡ Executando migrações..."
             php artisan migrate --force
