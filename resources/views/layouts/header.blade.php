@@ -110,7 +110,7 @@
         <!-- Mobile & Desktop Search -->
         <div class="searchGroup">
             <div class="searchInput">
-                <input type="text" id="product-search-input" placeholder="Pesquise por algum produto..."
+                <input type="text" id="product-search-input" placeholder="Pesquise por algum produto"
                        autocomplete="off">
                 <img src="{{ asset('images/icons/search-icon.svg') }}" width="16" height="16" alt="Search Icon"
                      class="searchIcon">
