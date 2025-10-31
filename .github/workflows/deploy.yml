@@ -13,12 +13,12 @@ jobs:
       - name: 📥 Checkout do código
         uses: actions/checkout@v4
 
-      - name: ⚙️ Instalar dependências Node (caso use Vite)
-        run: |
-          if [ -f package.json ]; then
-            npm ci
-            CI=false npm run build
-          fi
+#      - name: ⚙️ Instalar dependências Node (caso use Vite)
+#        run: |
+#          if [ -f package.json ]; then
+#            npm ci
+#            CI=false npm run build
+#          fi
 
       - name: 📦 Compactar arquivos
         run: tar -czf deploy.tar.gz ./
