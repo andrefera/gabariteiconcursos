@@ -7,17 +7,26 @@ on:
 
 jobs:
   deploy:
+    name: Deploy Laravel para servidor remoto
     runs-on: ubuntu-latest
 
     steps:
       - name: 📥 Checkout do código
         uses: actions/checkout@v4
 
+      - name: 🧰 Configurar cache do Composer
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
 #      - name: ⚙️ Instalar dependências Node (caso use Vite)
 #        run: |
 #          if [ -f package.json ]; then
 #            npm ci
-#            CI=false npm run build
+#            npm run build
 #          fi
 
       - name: 📦 Compactar arquivos
@@ -32,6 +41,9 @@ jobs:
           source: "deploy.tar.gz"
           target: "/var/www/ellonsports"
 
+      - name: 🧩 Instalar dependências PHP (Composer)
+        run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+
       - name: 🧨 Executar comandos no servidor (deploy)
         uses: appleboy/ssh-action@v0.1.7
         with:
@@ -41,17 +53,11 @@ jobs:
           script: |
             cd /var/www/ellonsports
 
-            echo "🧹 Limpando versão antiga..."
-            rm -rf old_release
-            mkdir old_release
-            mv * old_release/ || true
-
-            echo "📦 Extraindo nova versão..."
+            echo "🧹 Limpando arquivos antigos..."
             tar -xzf deploy.tar.gz
             rm deploy.tar.gz
 
-            echo "🔧 Instalando dependências PHP..."
-            composer install --no-dev --optimize-autoloader
+            echo "🔧 Instalando dependências no servidor..."
 
             echo "⚡ Executando migrações..."
             php artisan migrate --force
