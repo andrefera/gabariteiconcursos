@@ -31,7 +31,7 @@ jobs:
           target: "/var/www/ellonsports"
 
       - name: 🧩 Instalar dependências PHP (Composer)
-        run: composer update --no-dev  --optimize-autoloader
+        run: composer update --optimize-autoloader
 
       - name: 🧨 Executar comandos no servidor (deploy)
         uses: appleboy/ssh-action@v0.1.7
@@ -44,6 +44,10 @@ jobs:
 
             echo "⚡ Executando migrações..."
             php artisan migrate --force
+
+            echo "🚀 Liberando permissões..."
+            sudo chown -R www-data:www-data storage bootstrap/cache
+            sudo chmod -R 775 storage bootstrap/cache
 
             echo "🚀 Limpando e otimizando cache..."
             php artisan optimize:clear
