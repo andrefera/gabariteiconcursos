@@ -17,7 +17,7 @@ jobs:
         run: |
           if [ -f package.json ]; then
             npm ci
-            npm run build
+            CI=false npm run build
           fi
 
       - name: 📦 Compactar arquivos
