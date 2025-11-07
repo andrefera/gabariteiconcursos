@@ -328,6 +328,37 @@ $tablet: 1024px;
                             transform: translateY(-5px);
                         }
 
+                        .card-link {
+                            text-decoration: none;
+                            color: inherit;
+                            
+                            &:hover {
+                                color: inherit;
+                                text-decoration: none;
+                                
+                                * {
+                                    color: inherit;
+                                    text-decoration: none;
+                                }
+                                
+                                h3 {
+                                    color: #333;
+                                }
+                                
+                                .price {
+                                    color: #FF7C00;
+                                }
+                                
+                                .old-price {
+                                    color: #aaa;
+                                }
+                                
+                                .stars {
+                                    color: #f5c518;
+                                }
+                            }
+                        }
+
                         .cardContent {
                             padding: 20px;
 
@@ -769,6 +800,37 @@ $tablet: 1024px;
         &:hover {
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-link {
+            text-decoration: none;
+            color: inherit;
+            
+            &:hover {
+                color: inherit;
+                text-decoration: none;
+                
+                * {
+                    color: inherit;
+                    text-decoration: none;
+                }
+                
+                h3 {
+                    color: $text-color;
+                }
+                
+                .price {
+                    color: $primary-color;
+                }
+                
+                .old-price {
+                    color: #aaa;
+                }
+                
+                .stars {
+                    color: #f5c518;
+                }
+            }
         }
 
         .cardContent {

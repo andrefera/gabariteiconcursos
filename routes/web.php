@@ -23,9 +23,14 @@ Route::middleware('web')->group(function () {
     Route::post('register', [AuthController::class, 'registerWeb'])->name('register.submit');
 
 
-    Route::get('camisas', [ProductController::class, 'index'])->name('products.index');
+    // Rotas de produtos com URLs amigáveis (SEO-friendly)
+    // Rota de detalhe de produto
     Route::get('/camisa/{url?}', [ProductController::class, 'detail'])->name('products.detail');
-    Route::get('/time/{teamUrl?}', [ProductController::class, 'teamProducts'])->name('products.team');
+    
+    // Rota de listagem de produtos com filtros amigáveis (incluindo time como primeiro filtro)
+    Route::get('camisas/{filters?}', [ProductController::class, 'index'])
+        ->where('filters', '.*')
+        ->name('products.index');
 
 
     // Carrinho com middleware

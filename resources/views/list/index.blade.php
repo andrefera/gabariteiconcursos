@@ -293,7 +293,6 @@
                                             </div>
                                             <div>{{ $product['installment_price'] }}</div>
                                             <div class="stars">★★★★★ (5)</div>
-                                            <span class="free-shipping">FRETE GRÁTIS</span>
                                         </div>
                                     </a>
                                 </div>
@@ -323,7 +322,6 @@
                                             </div>
                                             <div>{{ $product['installment_price'] }}</div>
                                             <div class="stars">★★★★★ (5)</div>
-                                            <span class="free-shipping">FRETE GRÁTIS</span>
                                         </div>
                                     </a>
                                 </div>
@@ -332,17 +330,32 @@
                         
                         @if($lastPage > 1)
                             <div class="pagination">
+                                @php
+                                    $basePath = '/camisas';
+                                @endphp
                                 @if($currentPage > 1)
-                                    <a href="?{{ http_build_query(array_merge($filters, ['page' => $currentPage - 1])) }}" class="page-link">Anterior</a>
+                                    @php
+                                        $prevFilters = array_merge($filters, ['page' => $currentPage - 1]);
+                                        $prevUrl = \App\Support\Util\SeoUrlHelper::filtersToUrl($prevFilters, $basePath);
+                                    @endphp
+                                    <a href="{{ $prevUrl }}" class="page-link">Anterior</a>
                                 @endif
                                 
                                 @for($i = max(1, $currentPage - 2); $i <= min($lastPage, $currentPage + 2); $i++)
-                                    <a href="?{{ http_build_query(array_merge($filters, ['page' => $i])) }}" 
+                                    @php
+                                        $pageFilters = array_merge($filters, ['page' => $i]);
+                                        $pageUrl = \App\Support\Util\SeoUrlHelper::filtersToUrl($pageFilters, $basePath);
+                                    @endphp
+                                    <a href="{{ $pageUrl }}" 
                                        class="page-link {{ $i == $currentPage ? 'active' : '' }}">{{ $i }}</a>
                                 @endfor
                                 
                                 @if($currentPage < $lastPage)
-                                    <a href="?{{ http_build_query(array_merge($filters, ['page' => $currentPage + 1])) }}" class="page-link">Próxima</a>
+                                    @php
+                                        $nextFilters = array_merge($filters, ['page' => $currentPage + 1]);
+                                        $nextUrl = \App\Support\Util\SeoUrlHelper::filtersToUrl($nextFilters, $basePath);
+                                    @endphp
+                                    <a href="{{ $nextUrl }}" class="page-link">Próxima</a>
                                 @endif
                             </div>
                         @endif

@@ -7,63 +7,163 @@ function toggleDropdown(id) {
 // Expor a função no escopo global para uso em onclick
 window.toggleDropdown = toggleDropdown;
 
-// Função para aplicar filtros
-function applyFilters() {
-    const currentUrl = new URL(window.location);
-    const params = new URLSearchParams(currentUrl.search);
+// Mapeamento de valores para URLs amigáveis
+const friendlyMappings = {
+    gender: {
+        'masculine': 'masculino',
+        'feminine': 'feminino',
+        'unisex': 'unisex',
+        'kids': 'infantil',
+    },
+    sort: {
+        'most_sold': 'mais-vendidos',
+        'newest': 'novidades',
+        'promotions': 'promocoes',
+        'price_asc': 'preco-menor',
+        'price_desc': 'preco-maior',
+    },
+    product_type: {
+        'uniforme': 'uniforme',
+        'casual': 'casual',
+        'acessorios': 'acessorios',
+    },
+    category: {
+        'Retro': 'retro',
+        'torcedor': 'torcedor',
+        'jogador': 'jogador',
+        'treino': 'treino',
+    },
+    national_international: {
+        'Sim': 'nacional',
+        'Não': 'internacional',
+    },
+};
+
+// Função para converter filtros em URL amigável
+function filtersToFriendlyUrl(filters, basePath = '/camisas') {
+    const segments = [];
     
-    // Limpar parâmetros de página ao aplicar filtros
-    params.delete('page');
+    // Time (primeiro segmento se existir)
+    if (filters.team && filters.team !== '') {
+        segments.push(filters.team);
+    }
+    
+    // Gênero (múltiplos valores unidos por '-')
+    if (filters.gender && filters.gender !== '') {
+        const genders = filters.gender.split(',');
+        const friendlyGenders = genders
+            .map(g => friendlyMappings.gender[g.trim()])
+            .filter(g => g);
+        if (friendlyGenders.length > 0) {
+            segments.push(friendlyGenders.join('-'));
+        }
+    }
+    
+    // Temporada (formato 23-24)
+    if (filters.season && filters.season !== '') {
+        segments.push(filters.season.replace('/', '-'));
+    }
+    
+    // Categoria (múltiplos valores)
+    if (filters.category && filters.category !== '') {
+        const categories = filters.category.split(',');
+        const friendlyCategories = categories
+            .map(c => {
+                const trimmed = c.trim();
+                return friendlyMappings.category[trimmed] || trimmed.toLowerCase();
+            })
+            .filter(c => c);
+        if (friendlyCategories.length > 0) {
+            segments.push([...new Set(friendlyCategories)].join('-'));
+        }
+    }
+    
+    // Tipo de produto
+    if (filters.product_type && filters.product_type !== '') {
+        segments.push(friendlyMappings.product_type[filters.product_type] || filters.product_type.toLowerCase());
+    }
+    
+    // Nacional/Internacional (apenas se for um único valor)
+    if (filters.national_international && filters.national_international !== '') {
+        const nationalInt = filters.national_international.split(',');
+        if (nationalInt.length === 1) {
+            const value = nationalInt[0].trim();
+            segments.push(friendlyMappings.national_international[value] || '');
+        }
+    }
+    
+    // Tamanho (múltiplos valores)
+    if (filters.size && filters.size !== '') {
+        const sizes = filters.size.split(',');
+        segments.push('tamanho-' + sizes.map(s => s.toLowerCase()).join('-'));
+    }
+    
+    // Preço máximo
+    if (filters.price_max && filters.price_max !== '' && filters.price_max !== '500') {
+        segments.push('ate-' + parseInt(filters.price_max));
+    }
+    
+    // Ordenação (último segmento, padrão: mais-vendidos)
+    const sort = filters.sort || 'most_sold';
+    if (sort !== 'most_sold') {
+        segments.push(friendlyMappings.sort[sort] || 'mais-vendidos');
+    }
+    
+    // Construir URL
+    let url = basePath;
+    if (segments.length > 0) {
+        url += '/' + segments.join('/');
+    }
+    
+    // Adicionar página se for diferente de 1
+    if (filters.page && parseInt(filters.page) > 1) {
+        url += '/pagina-' + parseInt(filters.page);
+    }
+    
+    return url;
+}
+
+// Função para obter todos os filtros do formulário
+function getFiltersFromForm() {
+    const filters = {};
     
     // Filtro de preço
     const priceSlider = document.getElementById('priceSlider');
-    if (priceSlider) {
-        params.set('price_max', priceSlider.value);
+    if (priceSlider && priceSlider.value && priceSlider.value !== '500') {
+        filters.price_max = priceSlider.value;
     }
     
     // Filtro de ordenação
     const sortSelect = document.getElementById('sortSelectOrdenar');
-    if (sortSelect && sortSelect.dataset.sort) {
-        params.set('sort', sortSelect.dataset.sort);
+    if (sortSelect && sortSelect.dataset.sort && sortSelect.dataset.sort !== 'most_sold') {
+        filters.sort = sortSelect.dataset.sort;
     }
     
     // Filtro de time
     const teamSelect = document.getElementById('sortSelectTime');
-    if (teamSelect && teamSelect.dataset.team !== undefined) {
-        if (teamSelect.dataset.team && teamSelect.dataset.team !== '') {
-            params.set('team', teamSelect.dataset.team);
-        } else {
-            params.delete('team');
-        }
+    if (teamSelect && teamSelect.dataset.team !== undefined && teamSelect.dataset.team !== '') {
+        filters.team = teamSelect.dataset.team;
     }
     
     // Filtro de temporada
     const seasonSelect = document.getElementById('sortSelectTemporada');
-    if (seasonSelect && seasonSelect.dataset.season !== undefined) {
-        if (seasonSelect.dataset.season && seasonSelect.dataset.season !== '') {
-            params.set('season', seasonSelect.dataset.season);
-        } else {
-            params.delete('season');
-        }
+    if (seasonSelect && seasonSelect.dataset.season !== undefined && seasonSelect.dataset.season !== '') {
+        filters.season = seasonSelect.dataset.season;
     }
     
     // Filtro de tipo de produto
     const productTypeSelect = document.getElementById('sortSelectTipo');
-    if (productTypeSelect && productTypeSelect.dataset.productType !== undefined) {
-        if (productTypeSelect.dataset.productType && productTypeSelect.dataset.productType !== '') {
-            params.set('product_type', productTypeSelect.dataset.productType);
-        } else {
-            params.delete('product_type');
-        }
+    if (productTypeSelect && productTypeSelect.dataset.productType !== undefined && productTypeSelect.dataset.productType !== '') {
+        filters.product_type = productTypeSelect.dataset.productType;
     }
     
+    // Checkboxes
     const checkboxFilters = {
         'gender': document.querySelectorAll('input[type="checkbox"][value="masculine"], input[type="checkbox"][value="feminine"], input[type="checkbox"][value="unisex"], input[type="checkbox"][value="kids"]'),
         'size': document.querySelectorAll('input[type="checkbox"][value="P"], input[type="checkbox"][value="M"], input[type="checkbox"][value="G"], input[type="checkbox"][value="GG"]'),
         'category': document.querySelectorAll('input[type="checkbox"][value="Retro"], input[type="checkbox"][value="torcedor"], input[type="checkbox"][value="jogador"], input[type="checkbox"][value="treino"]'),
         'national_international': document.querySelectorAll('input[type="checkbox"][value="Sim"], input[type="checkbox"][value="Não"]')
     };
-
     
     Object.entries(checkboxFilters).forEach(([param, checkboxes]) => {
         const checkedValues = Array.from(checkboxes)
@@ -71,15 +171,26 @@ function applyFilters() {
             .map(cb => cb.value);
         
         if (checkedValues.length > 0) {
-            params.set(param, checkedValues.join(','));
-        } else {
-            params.delete(param);
+            filters[param] = checkedValues.join(',');
         }
     });
     
+    return filters;
+}
+
+// Função para aplicar filtros com URLs amigáveis
+function applyFilters() {
+    const currentUrl = new URL(window.location);
+    const filters = getFiltersFromForm();
     
-    // Redirecionar com os novos filtros
-    window.location.href = currentUrl.pathname + '?' + params.toString();
+    // BasePath sempre será /camisas
+    const basePath = '/camisas';
+    
+    // Gerar URL amigável
+    const friendlyUrl = filtersToFriendlyUrl(filters, basePath);
+    
+    // Redirecionar com a URL amigável
+    window.location.href = friendlyUrl;
 }
 
 // Adiciona listeners para todas as dropdowns
@@ -101,9 +212,31 @@ function setupDropdown(dropdownId, buttonId, dataAttribute) {
     });
 }
 
+// Função para extrair filtros da URL amigável (simplificada para indicadores)
+function getFiltersFromUrl() {
+    const currentUrl = new URL(window.location);
+    const pathSegments = currentUrl.pathname.split('/').filter(s => s && s !== 'camisas');
+    const filters = {};
+    
+    // Processar segmentos básicos (simplificado para indicadores)
+    pathSegments.forEach(segment => {
+        if (segment.startsWith('pagina-')) return; // Ignorar página
+        if (segment.startsWith('ate-')) {
+            filters.price_max = segment.replace('ate-', '');
+        } else if (segment.startsWith('tamanho-')) {
+            filters.size = segment.replace('tamanho-', '');
+        } else if (/^\d{2}-\d{2}$/.test(segment)) {
+            filters.season = segment.replace('-', '/');
+        }
+    });
+    
+    return filters;
+}
+
 // Função para atualizar indicadores visuais de filtros ativos
 function updateActiveFilterIndicators() {
     let hasAnyActiveFilters = false;
+    const urlFilters = getFiltersFromUrl();
 
     // Atualizar indicadores de checkboxes
     document.querySelectorAll('.filter-group.checkbox').forEach(group => {
@@ -118,41 +251,46 @@ function updateActiveFilterIndicators() {
         }
     });
 
-    // Atualizar indicadores de dropdowns
-    const dropdowns = [
-        { id: 'sortSelectOrdenar', param: 'sort' },
-        { id: 'sortSelectTime', param: 'team' },
-        { id: 'sortSelectTemporada', param: 'season' },
-        { id: 'sortSelectTipo', param: 'product_type' }
-    ];
-
-    dropdowns.forEach(dropdown => {
-        const element = document.getElementById(dropdown.id);
-        const currentValue = new URLSearchParams(window.location.search).get(dropdown.param);
-        
-        // Considerar ativo apenas se houver valor e não for o valor padrão
-        const isActive = currentValue && 
-                        currentValue !== '' && 
-                        currentValue !== 'most_sold' && 
-                        currentValue !== '2023/24' && 
-                        currentValue !== 'uniforme';
-        
-        if (isActive) {
-            element.classList.add('active');
-            hasAnyActiveFilters = true;
-        } else {
-            element.classList.remove('active');
-        }
-    });
+    // Atualizar indicadores de dropdowns baseado na URL e no estado do formulário
+    const sortSelect = document.getElementById('sortSelectOrdenar');
+    if (sortSelect && sortSelect.dataset.sort && sortSelect.dataset.sort !== 'most_sold') {
+        sortSelect.classList.add('active');
+        hasAnyActiveFilters = true;
+    } else {
+        sortSelect?.classList.remove('active');
+    }
+    
+    const teamSelect = document.getElementById('sortSelectTime');
+    if (teamSelect && teamSelect.dataset.team && teamSelect.dataset.team !== '') {
+        teamSelect.classList.add('active');
+        hasAnyActiveFilters = true;
+    } else {
+        teamSelect?.classList.remove('active');
+    }
+    
+    const seasonSelect = document.getElementById('sortSelectTemporada');
+    if (seasonSelect && seasonSelect.dataset.season && seasonSelect.dataset.season !== '' && seasonSelect.dataset.season !== 'Todos') {
+        seasonSelect.classList.add('active');
+        hasAnyActiveFilters = true;
+    } else {
+        seasonSelect?.classList.remove('active');
+    }
+    
+    const productTypeSelect = document.getElementById('sortSelectTipo');
+    if (productTypeSelect && productTypeSelect.dataset.productType && productTypeSelect.dataset.productType !== '' && productTypeSelect.dataset.productType !== 'Todos') {
+        productTypeSelect.classList.add('active');
+        hasAnyActiveFilters = true;
+    } else {
+        productTypeSelect?.classList.remove('active');
+    }
 
     // Atualizar indicador do slider de preço
     const priceSlider = document.getElementById('priceSlider');
-    const currentPriceMax = new URLSearchParams(window.location.search).get('price_max');
-    if (priceSlider && currentPriceMax && currentPriceMax !== '250') {
+    if (priceSlider && ((urlFilters.price_max && urlFilters.price_max !== '250') || (priceSlider.value && priceSlider.value !== '250' && priceSlider.value !== '500'))) {
         priceSlider.parentElement.classList.add('has-active-filters');
         hasAnyActiveFilters = true;
     } else {
-        priceSlider.parentElement.classList.remove('has-active-filters');
+        priceSlider?.parentElement.classList.remove('has-active-filters');
     }
 
     // Mostrar/ocultar botão "Limpar Filtros"
@@ -251,34 +389,41 @@ function updateMobileFilterCount() {
     if (!countElement) return;
     
     let count = 0;
-    const urlParams = new URLSearchParams(window.location.search);
+    const urlFilters = getFiltersFromUrl();
     
-    // Count active filters
-    const filterParams = ['sort', 'team', 'season', 'product_type', 'price_max', 'gender', 'size', 'category', 'national_international'];
+    // Count active filters baseado na URL e no estado do formulário
+    if (urlFilters.team) count++;
+    if (urlFilters.season) count++;
+    if (urlFilters.price_max) count++;
+    if (urlFilters.size) count++;
     
-    filterParams.forEach(param => {
-        const value = urlParams.get(param);
-        if (value && value !== '' && value !== 'most_sold' && value !== '250') {
-            count++;
-        }
-    });
+    // Verificar checkboxes marcados
+    const checkboxes = document.querySelectorAll('.filter input[type="checkbox"]:checked, #mobileFilterSidebar input[type="checkbox"]:checked');
+    count += checkboxes.length;
+    
+    // Verificar dropdowns não padrão
+    const sortSelect = document.getElementById('sortSelectOrdenar') || document.getElementById('mobileSortSelectOrdenar');
+    if (sortSelect && sortSelect.dataset.sort && sortSelect.dataset.sort !== 'most_sold') {
+        count++;
+    }
+    
+    const productTypeSelect = document.getElementById('sortSelectTipo') || document.getElementById('mobileSortSelectTipo');
+    if (productTypeSelect && productTypeSelect.dataset.productType && productTypeSelect.dataset.productType !== '') {
+        count++;
+    }
     
     countElement.textContent = count;
     countElement.style.display = count > 0 ? 'inline-block' : 'none';
 }
 
-// Mobile filter application
-function applyMobileFilters() {
-    const currentUrl = new URL(window.location);
-    const params = new URLSearchParams(currentUrl.search);
-    
-    // Clear page parameter
-    params.delete('page');
+// Função para obter filtros do formulário mobile
+function getMobileFiltersFromForm() {
+    const filters = {};
     
     // Get mobile filter values
     const mobilePriceSlider = document.getElementById('mobilePriceSlider');
-    if (mobilePriceSlider) {
-        params.set('price_max', mobilePriceSlider.value);
+    if (mobilePriceSlider && mobilePriceSlider.value && mobilePriceSlider.value !== '500') {
+        filters.price_max = mobilePriceSlider.value;
     }
     
     // Get mobile dropdown values
@@ -294,9 +439,7 @@ function applyMobileFilters() {
         if (element && element.dataset[dropdown.dataAttr] !== undefined) {
             const value = element.dataset[dropdown.dataAttr];
             if (value && value !== '') {
-                params.set(dropdown.param, value);
-            } else {
-                params.delete(dropdown.param);
+                filters[dropdown.param] = value;
             }
         }
     });
@@ -315,30 +458,46 @@ function applyMobileFilters() {
             .map(cb => cb.value);
         
         if (checkedValues.length > 0) {
-            params.set(param, checkedValues.join(','));
-        } else {
-            params.delete(param);
+            filters[param] = checkedValues.join(',');
         }
     });
     
+    return filters;
+}
+
+// Mobile filter application
+function applyMobileFilters() {
+    const currentUrl = new URL(window.location);
+    const filters = getMobileFiltersFromForm();
+    
+    // BasePath sempre será /camisas
+    const basePath = '/camisas';
+    
+    // Gerar URL amigável
+    const friendlyUrl = filtersToFriendlyUrl(filters, basePath);
+    
     // Redirect with new filters
-    window.location.href = currentUrl.pathname + '?' + params.toString();
+    window.location.href = friendlyUrl;
 }
 
 // Mobile sort application
 function applyMobileSort(sortValue) {
     const currentUrl = new URL(window.location);
-    const params = new URLSearchParams(currentUrl.search);
+    
+    // Obter filtros atuais da URL (se houver)
+    const currentFilters = {};
+    const basePath = '/camisas';
+    
+    // Processar segmentos da URL atual para manter outros filtros
+    const pathSegments = currentUrl.pathname.split('/').filter(s => s);
+    // Aqui poderia processar os segmentos, mas por simplicidade vamos apenas aplicar o sort
     
     if (sortValue && sortValue !== 'most_sold') {
-        params.set('sort', sortValue);
-    } else {
-        params.delete('sort');
+        currentFilters.sort = sortValue;
     }
     
-    params.delete('page');
-    
-    window.location.href = currentUrl.pathname + '?' + params.toString();
+    const friendlyUrl = filtersToFriendlyUrl(currentFilters, basePath);
+    window.location.href = friendlyUrl;
 }
 
 // Mobile price slider setup
@@ -437,16 +596,16 @@ document.addEventListener('DOMContentLoaded', function() {
     updateActiveFilterIndicators();
     updateMobileFilterCount();
     
-    // Inicializar o valor do time no dropdown se houver um filtro ativo
-    const currentTeam = new URLSearchParams(window.location.search).get('team');
-    if (currentTeam) {
+    // Inicializar o valor do time no dropdown se houver um filtro ativo na URL
+    const urlFilters = getFiltersFromUrl();
+    if (urlFilters.team) {
         const teamSelect = document.getElementById('sortSelectTime');
         const mobileTeamSelect = document.getElementById('mobileSortSelectTime');
         if (teamSelect) {
-            teamSelect.dataset.team = currentTeam;
+            teamSelect.dataset.team = urlFilters.team;
         }
         if (mobileTeamSelect) {
-            mobileTeamSelect.dataset.team = currentTeam;
+            mobileTeamSelect.dataset.team = urlFilters.team;
         }
     }
     
@@ -454,8 +613,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const clearFiltersBtn = document.getElementById('clearFilters');
     if (clearFiltersBtn) {
         clearFiltersBtn.addEventListener('click', function() {
-            const currentUrl = new URL(window.location);
-            window.location.href = currentUrl.pathname;
+            window.location.href = '/camisas';
         });
     }
 
@@ -491,8 +649,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (mobileClearFiltersBtn) {
         mobileClearFiltersBtn.addEventListener('click', function() {
-            const currentUrl = new URL(window.location);
-            window.location.href = currentUrl.pathname;
+            window.location.href = '/camisas';
         });
     }
     

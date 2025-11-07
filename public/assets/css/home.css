@@ -6,6 +6,36 @@ body {
   background-color: #f9f9f9;
 }
 
+.title-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+.title-header .title {
+  color: #333;
+  font-size: 24px;
+  border-bottom: 3px solid #FF7C00;
+  display: inline-block;
+  margin-bottom: 0;
+}
+.title-header .ver-todos {
+  color: #FF7C00;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s ease, transform 0.3s ease;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+.title-header .ver-todos:hover {
+  color: #ff4e1a;
+  transform: translateX(3px);
+  text-decoration: none;
+}
+
 .title {
   color: #333;
   font-size: 24px;
@@ -118,6 +148,30 @@ body {
 }
 .destaques .card:hover {
   transform: translateY(-5px);
+}
+.destaques .card .card-link {
+  text-decoration: none;
+  color: inherit;
+}
+.destaques .card .card-link:hover {
+  color: inherit;
+  text-decoration: none;
+}
+.destaques .card .card-link:hover * {
+  color: inherit;
+  text-decoration: none;
+}
+.destaques .card .card-link:hover h3 {
+  color: #333;
+}
+.destaques .card .card-link:hover .price {
+  color: #FF7C00;
+}
+.destaques .card .card-link:hover .old-price {
+  color: #aaa;
+}
+.destaques .card .card-link:hover .stars {
+  color: #f5c518;
 }
 .destaques .card .cardContent {
   padding: 20px;
