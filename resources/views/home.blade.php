@@ -24,7 +24,7 @@
                     @if(count($brazilianTeams) > 0)
                         @foreach($brazilianTeams as $team)
                             <div class="swiper-slide">
-                                <a href="/time/{{ $team['url'] }}" class="team">
+                                <a href="/camisas/{{ $team['url'] }}" class="team">
                                     @if($team['logo'])
                                         <img src="{{ $team['logo'] }}" alt="{{ $team['name'] }}">
                                     @else
@@ -113,7 +113,6 @@
                                         </div>
                                         <div>{{ $product['installment_price'] }}</div>
                                         <div class="stars">★★★★★ (5)</div>
-                                        <span class="free-shipping">FRETE GRÁTIS</span>
                                     </div>
                                 </a>
                             </div>
@@ -172,7 +171,6 @@
                                         </div>
                                         <div>{{ $product['installment_price'] }}</div>
                                         <div class="stars">★★★★★ (5)</div>
-                                        <span class="free-shipping">FRETE GRÁTIS</span>
                                     </div>
                                 </a>
                             </div>

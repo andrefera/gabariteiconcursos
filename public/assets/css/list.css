@@ -273,6 +273,30 @@
 .listSection .alignSection .groupList .productList .grid .card:hover {
   transform: translateY(-5px);
 }
+.listSection .alignSection .groupList .productList .grid .card .card-link {
+  text-decoration: none;
+  color: inherit;
+}
+.listSection .alignSection .groupList .productList .grid .card .card-link:hover {
+  color: inherit;
+  text-decoration: none;
+}
+.listSection .alignSection .groupList .productList .grid .card .card-link:hover * {
+  color: inherit;
+  text-decoration: none;
+}
+.listSection .alignSection .groupList .productList .grid .card .card-link:hover h3 {
+  color: #333;
+}
+.listSection .alignSection .groupList .productList .grid .card .card-link:hover .price {
+  color: #FF7C00;
+}
+.listSection .alignSection .groupList .productList .grid .card .card-link:hover .old-price {
+  color: #aaa;
+}
+.listSection .alignSection .groupList .productList .grid .card .card-link:hover .stars {
+  color: #f5c518;
+}
 .listSection .alignSection .groupList .productList .grid .card .cardContent {
   padding: 20px;
 }
@@ -653,6 +677,30 @@
 .mobile-product-grid .card:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.mobile-product-grid .card .card-link {
+  text-decoration: none;
+  color: inherit;
+}
+.mobile-product-grid .card .card-link:hover {
+  color: inherit;
+  text-decoration: none;
+}
+.mobile-product-grid .card .card-link:hover * {
+  color: inherit;
+  text-decoration: none;
+}
+.mobile-product-grid .card .card-link:hover h3 {
+  color: #333;
+}
+.mobile-product-grid .card .card-link:hover .price {
+  color: #ff6600;
+}
+.mobile-product-grid .card .card-link:hover .old-price {
+  color: #aaa;
+}
+.mobile-product-grid .card .card-link:hover .stars {
+  color: #f5c518;
 }
 .mobile-product-grid .card .cardContent {
   padding: 12px;

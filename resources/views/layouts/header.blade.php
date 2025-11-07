@@ -320,7 +320,7 @@
             const brasileirosDropdown = document.getElementById('desktop-brasileiros-content');
             if (brasileirosDropdown) {
                 brasileirosDropdown.innerHTML = brasileiros.map(team =>
-                    `<a href="/time/${team.url}" class="${team.logo ? 'has-logo' : ''}">${team.logo ? `<img src="${team.logo}" alt="${team.name}" width="16" height="16" style="margin-right: 4px;">` : '⚽'} ${team.name}</a>`
+                    `<a href="/camisas/${team.url}" class="${team.logo ? 'has-logo' : ''}">${team.logo ? `<img src="${team.logo}" alt="${team.name}" width="16" height="16" style="margin-right: 4px;">` : '⚽'} ${team.name}</a>`
                 ).join('');
             }
 
@@ -328,7 +328,7 @@
             const internacionaisDropdown = document.getElementById('desktop-internacionais-content');
             if (internacionaisDropdown) {
                 internacionaisDropdown.innerHTML = internacionais.map(team =>
-                    `<a href="/time/${team.url}" class="${team.logo ? 'has-logo' : ''}">${team.logo ? `<img src="${team.logo}" alt="${team.name}" width="16" height="16" style="margin-right: 4px;">` : '⚽'} ${team.name}</a>`
+                    `<a href="/camisas/${team.url}" class="${team.logo ? 'has-logo' : ''}">${team.logo ? `<img src="${team.logo}" alt="${team.name}" width="16" height="16" style="margin-right: 4px;">` : '⚽'} ${team.name}</a>`
                 ).join('');
             }
 
@@ -336,7 +336,7 @@
             const selecoesDropdown = document.getElementById('desktop-selecoes-content');
             if (selecoesDropdown) {
                 selecoesDropdown.innerHTML = selecoes.map(team =>
-                    `<a href="/time/${team.url}" class="${team.logo ? 'has-logo' : ''}">${team.logo ? `<img src="${team.logo}" alt="${team.name}" width="16" height="16" style="margin-right: 4px;">` : '⚽'} ${team.name}</a>`
+                    `<a href="/camisas/${team.url}" class="${team.logo ? 'has-logo' : ''}">${team.logo ? `<img src="${team.logo}" alt="${team.name}" width="16" height="16" style="margin-right: 4px;">` : '⚽'} ${team.name}</a>`
                 ).join('');
             }
 

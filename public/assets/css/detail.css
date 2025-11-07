@@ -622,6 +622,30 @@ hr {
 .productSection .card:hover {
   transform: translateY(-5px);
 }
+.productSection .card .card-link {
+  text-decoration: none;
+  color: inherit;
+}
+.productSection .card .card-link:hover {
+  color: inherit;
+  text-decoration: none;
+}
+.productSection .card .card-link:hover * {
+  color: inherit;
+  text-decoration: none;
+}
+.productSection .card .card-link:hover h3 {
+  color: #333;
+}
+.productSection .card .card-link:hover .price {
+  color: #FF7C00;
+}
+.productSection .card .card-link:hover .old-price {
+  color: #aaa;
+}
+.productSection .card .card-link:hover .stars {
+  color: #f5c518;
+}
 .productSection .card .cardContent {
   padding: 20px;
 }

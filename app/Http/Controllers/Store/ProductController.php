@@ -8,7 +8,9 @@ use App\Modules\Store\Products\DTO\ProductDetailDTO;
 use App\Modules\Store\Products\Services\Actions\ListStoreProducts;
 use App\Modules\Store\Teams\Services\Actions\GetTeamByUrl;
 use App\Modules\Store\Teams\Services\Actions\GetTeams;
+use App\Support\Util\SeoUrlHelper;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -17,20 +19,33 @@ class ProductController extends Controller
     {
     }
 
-    public function index(Request $request): View
+    public function index(Request $request, ?string $filters = null): View|RedirectResponse
     {
+        // Se houver query strings, redirecionar para URL amigável (301 redirect para SEO)
+        if ($request->hasAny(['team', 'gender', 'season', 'category', 'price_min', 'price_max', 'size', 'product_type', 'national_international', 'sort', 'page'])) {
+            $queryParams = $request->query();
+            $friendlyUrl = SeoUrlHelper::queryStringToUrl('/camisas', $queryParams);
+            return redirect($friendlyUrl, 301);
+        }
+
+        // Processar filtros da URL amigável
+        $filtersArray = [];
+        if ($filters) {
+            $filtersArray = SeoUrlHelper::urlToFilters('/camisas/' . $filters);
+        }
+
         $search = $request->get('search');
-        $team = $request->get('team');
-        $gender = $request->get('gender');
-        $season = $request->get('season');
-        $category = $request->get('category');
-        $priceMin = $request->get('price_min');
-        $priceMax = $request->get('price_max');
-        $size = $request->get('size');
-        $productType = $request->get('product_type');
-        $nationalInternational = $request->get('national_international');
-        $sort = $request->get('sort', 'most_sold');
-        $page = (int) $request->get('page', 1);
+        $team = $filtersArray['team'] ?? null;
+        $gender = $filtersArray['gender'] ?? null;
+        $season = $filtersArray['season'] ?? null;
+        $category = $filtersArray['category'] ?? null;
+        $priceMin = $filtersArray['price_min'] ?? null;
+        $priceMax = $filtersArray['price_max'] ?? null;
+        $size = $filtersArray['size'] ?? null;
+        $productType = $filtersArray['product_type'] ?? null;
+        $nationalInternational = $filtersArray['national_international'] ?? null;
+        $sort = $filtersArray['sort'] ?? 'most_sold';
+        $page = (int) ($filtersArray['page'] ?? 1);
         $perPage = 12;
 
         $action = new ListStoreProducts(
@@ -55,12 +70,20 @@ class ProductController extends Controller
         $getTeamsAction = new GetTeams();
         $teams = $getTeamsAction->execute();
 
+        // Se houver um time nos filtros, buscar informações do time
+        $teamData = null;
+        if ($team) {
+            $getTeamAction = new GetTeamByUrl($team);
+            $teamData = $getTeamAction->execute();
+        }
+
         return view('list.index', [
             'products' => $result['products'],
             'total' => $result['total'],
             'currentPage' => $result['current_page'],
             'lastPage' => $result['last_page'],
             'perPage' => $result['per_page'],
+            'team' => $teamData,
             'teams' => $teams,
             'filters' => [
                 'search' => $search,
@@ -93,73 +116,5 @@ class ProductController extends Controller
         return view('details.index', ['product' => ProductDetailDTO::fromProduct($product)]);
     }
 
-    public function teamProducts(Request $request, string $teamUrl): View
-    {
-        // Buscar informações do time
-        $getTeamAction = new GetTeamByUrl($teamUrl);
-        $team = $getTeamAction->execute();
-
-        if (!$team) {
-            abort(404);
-        }
-
-        $search = $request->get('search');
-        $gender = $request->get('gender');
-        $season = $request->get('season');
-        $category = $request->get('category');
-        $priceMin = $request->get('price_min');
-        $priceMax = $request->get('price_max');
-        $size = $request->get('size');
-        $productType = $request->get('product_type');
-        $nationalInternational = $request->get('national_international');
-        $sort = $request->get('sort', 'most_sold');
-        $page = (int) $request->get('page', 1);
-        $perPage = 12;
-
-        $action = new ListStoreProducts(
-            search: $search,
-            team: $teamUrl,
-            gender: $gender,
-            season: $season,
-            category: $category,
-            priceMin: $priceMin,
-            priceMax: $priceMax,
-            size: $size,
-            productType: $productType,
-            nationalInternational: $nationalInternational,
-            sort: $sort,
-            page: $page,
-            perPage: $perPage
-        );
-
-        $result = $action->execute();
-
-        // Buscar times para o filtro
-        $getTeamsAction = new GetTeams();
-        $teams = $getTeamsAction->execute();
-
-        return view('list.index', [
-            'products' => $result['products'],
-            'total' => $result['total'],
-            'currentPage' => $result['current_page'],
-            'lastPage' => $result['last_page'],
-            'perPage' => $result['per_page'],
-            'team' => $team,
-            'teams' => $teams,
-            'filters' => [
-                'search' => $search,
-                'team' => $teamUrl,
-                'gender' => $gender,
-                'season' => $season,
-                'category' => $category,
-                'price_min' => $priceMin,
-                'price_max' => $priceMax,
-                'size' => $size,
-                'product_type' => $productType,
-                'national_international' => $nationalInternational,
-                'sort' => $sort
-            ]
-        ]);
-    }
 
 }

@@ -6,6 +6,39 @@ body {
     background-color: #f9f9f9;
 }
 
+.title-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+
+    .title {
+        color: #333;
+        font-size: 24px;
+        border-bottom: 3px solid #FF7C00;
+        display: inline-block;
+        margin-bottom: 0;
+    }
+
+    .ver-todos {
+        color: #FF7C00;
+        font-size: 16px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: color 0.3s ease, transform 0.3s ease;
+        padding: 5px 10px;
+        border-radius: 4px;
+
+        &:hover {
+            color: #ff4e1a;
+            transform: translateX(3px);
+            text-decoration: none;
+        }
+    }
+}
+
 .title {
     color: #333;
     font-size: 24px;
@@ -132,6 +165,37 @@ body {
 
         &:hover {
             transform: translateY(-5px);
+        }
+
+        .card-link {
+            text-decoration: none;
+            color: inherit;
+            
+            &:hover {
+                color: inherit;
+                text-decoration: none;
+                
+                * {
+                    color: inherit;
+                    text-decoration: none;
+                }
+                
+                h3 {
+                    color: #333;
+                }
+                
+                .price {
+                    color: #FF7C00;
+                }
+                
+                .old-price {
+                    color: #aaa;
+                }
+                
+                .stars {
+                    color: #f5c518;
+                }
+            }
         }
 
         .cardContent {

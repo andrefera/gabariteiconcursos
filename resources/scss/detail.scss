@@ -741,6 +741,37 @@ hr {
             transform: translateY(-5px);
         }
 
+        .card-link {
+            text-decoration: none;
+            color: inherit;
+            
+            &:hover {
+                color: inherit;
+                text-decoration: none;
+                
+                * {
+                    color: inherit;
+                    text-decoration: none;
+                }
+                
+                h3 {
+                    color: #333;
+                }
+                
+                .price {
+                    color: #FF7C00;
+                }
+                
+                .old-price {
+                    color: #aaa;
+                }
+                
+                .stars {
+                    color: #f5c518;
+                }
+            }
+        }
+
         .cardContent {
             padding: 20px;
 

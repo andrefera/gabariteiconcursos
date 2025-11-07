@@ -286,7 +286,6 @@
                         </div>
                         <div>em até 12x de R$ 18,55</div>
                         <div class="stars">★★★★★ (5)</div>
-                        <span class="free-shipping">FRETE GRÁTIS</span>
                     </div>
                 </div>
 
@@ -306,7 +305,6 @@
                         </div>
                         <div>em até 12x de R$ 24,74</div>
                         <div class="stars">★★★★★ (5)</div>
-                        <span class="free-shipping">FRETE GRÁTIS</span>
                     </div>
                 </div>
 
@@ -326,7 +324,6 @@
                         </div>
                         <div>em até 12x de R$ 18,55</div>
                         <div class="stars">★★★★★ (5)</div>
-                        <span class="free-shipping">FRETE GRÁTIS</span>
                     </div>
                 </div>
 
@@ -346,7 +343,6 @@
                         </div>
                         <div>em até 12x de R$ 18,55</div>
                         <div class="stars">★★★★★ (5)</div>
-                        <span class="free-shipping">FRETE GRÁTIS</span>
                     </div>
                 </div>
 
@@ -365,7 +361,6 @@
                         </div>
                         <div>em até 12x de R$ 18,55</div>
                         <div class="stars">★★★★★ (5)</div>
-                        <span class="free-shipping">FRETE GRÁTIS</span>
                     </div>
                 </div>
             </div>
