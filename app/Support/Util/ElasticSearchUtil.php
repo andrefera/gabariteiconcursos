@@ -31,7 +31,7 @@ class ElasticSearchUtil
     {
         if (!self::$client) {
             self::$client = ClientBuilder::create()
-                ->setHosts([env('ELASTIC_SEARCH_TLS_HOST', '127.0.0.1:9200')])
+                ->setHosts([config('services.elastic_search.tls_host')])
                 ->build();
         }
 

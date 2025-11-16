@@ -11,6 +11,9 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
+
 
 readonly class CreateOrUpdateProduct
 {
@@ -80,16 +83,31 @@ readonly class CreateOrUpdateProduct
                 "season" => $this->season
             ]);
 
-            $product->save();
+            $product->saveQuietly();
 
             $product->categories()->sync($this->category_ids);
 
+            $manager = new ImageManager(new Driver());
+
             if ($this->sizes_image) {
-                $sizesImagePath = 'products/' . $product->id . '/sizes_image.png';
-                if (Storage::disk('s3')->put($sizesImagePath, fopen($this->sizes_image, 'r'))) {
-                    $product->sizes_image = env('S3_URL') . $sizesImagePath;
-                    $product->save();
+                if ($product->sizes_image) {
+                    $replacedPath = str_replace(config('app.url'), '', $product->sizes_image);
+                    if (Storage::disk('public')->exists($replacedPath)) {
+                        Log::warning("Deleting image: " . $product->sizes_image);
+                        Storage::disk('public')->delete($replacedPath);
+                    }
                 }
+
+                $sizesImage = $manager
+                    ->read($this->sizes_image)
+                    ->toWebp(80);
+
+                $time = time();
+                $sizesImagePath = 'products/' . $product->id . "/sizes_image_$time.webp";
+                Storage::disk('public')->put($sizesImagePath, $sizesImage);
+
+                $product->sizes_image = config('app.url') . "/storage/" . $sizesImagePath;
+                $product->saveQuietly();
             }
 
             $imageIds = [];
@@ -100,11 +118,15 @@ readonly class CreateOrUpdateProduct
 
                 } else {
                     $productImage = new ProductImage();
-                    $time = time();
-                    $imagePath = 'products/' . $product->id . "/images/image_$time.png";
-                    Storage::disk('s3')->put($imagePath, fopen($image['file'], 'r'));
-                    $imageUrl = env('S3_URL') . $imagePath;
+                    $img = $manager
+                        ->read($image['file'])
+                        ->toWebp(80);
 
+                    $time = time();
+                    $imagePath = "products/{$product->id}/images/image_{$image["order"]}_$time.webp";
+
+                    Storage::disk('public')->put($imagePath, $img);
+                    $imageUrl = config('app.url') . "/storage/" . $imagePath;
                 }
 
                 $productImage->fill([
@@ -118,13 +140,17 @@ readonly class CreateOrUpdateProduct
                 $imageIds[] = $productImage->id;
             }
 
-            $deletedImages = ProductImage::query()->where("product_id", $product->id)->whereNotIn("id", $imageIds)->get();
-            foreach ($deletedImages as $deletedImage) {
-                $imagePath = str_replace(env('S3_URL'), '', $deletedImage->url);
+            $deletedImages = ProductImage::query()
+                ->where("product_id", $product->id)
+                ->whereNotIn("id", $imageIds)
+                ->get();
 
-                if (Storage::disk('s3')->exists($imagePath)) {
+            foreach ($deletedImages as $deletedImage) {
+                $imagePath = str_replace('/storage/', '', $deletedImage->url);
+
+                if (Storage::disk('public')->exists($imagePath)) {
                     Log::warning("Deleting image: " . $deletedImage->url);
-                    Storage::disk('s3')->delete($imagePath);
+                    Storage::disk('public')->delete($imagePath);
                 }
 
                 $deletedImage->delete();

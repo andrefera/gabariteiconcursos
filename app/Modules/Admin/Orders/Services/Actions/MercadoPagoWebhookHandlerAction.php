@@ -16,7 +16,7 @@ readonly class MercadoPagoWebhookHandlerAction
         private string $id
     ) {
 
-        MercadoPagoConfig::setAccessToken(env('MERCADOPAGO_ACCESS_TOKEN'));
+        MercadoPagoConfig::setAccessToken(config('services.mercado_pago.access_token'));
     }
 
     public function execute(): void

@@ -295,8 +295,8 @@
 
 @endsection
 @section('footer_content')
-<link rel="stylesheet" href="{{ asset('assets/css/plugins.css') }}?v={{ env('STATIC_VERSION', time()) }}">
-<script src="{{ asset('assets/js/swiper.min.js') }}?v={{ env('STATIC_VERSION', time()) }}"></script>
-<script src="{{ asset('assets/js/home.min.js') }}?v={{ env('STATIC_VERSION', time()) }}"></script>
+<link rel="stylesheet" href="{{ asset('assets/css/plugins.css') }}?v={{ config('app.static_version') }}">
+<script src="{{ asset('assets/js/swiper.min.js') }}?v={{ config('app.static_version') }}"></script>
+<script src="{{ asset('assets/js/home.min.js') }}?v={{ config('app.static_version') }}"></script>
 @endsection
 

@@ -486,8 +486,8 @@
 @endsection
 
 <!-- Scripts -->
-<script src="{{ asset('assets/js/plugins.min.js') }}?v={{ env('STATIC_VERSION', time()) }}"></script>
-<script src="{{ asset('assets/js/detail.min.js') }}?v={{ env('STATIC_VERSION', time()) }}"></script>
+<script src="{{ asset('assets/js/plugins.min.js') }}?v={{ config('app.static_version') }}"></script>
+<script src="{{ asset('assets/js/detail.min.js') }}?v={{ config('app.static_version') }}"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {

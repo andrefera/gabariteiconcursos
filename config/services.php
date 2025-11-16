@@ -47,4 +47,17 @@ return [
         'redirect' => env('FACEBOOK_REDIRECT_URI', '/auth/facebook/callback'),
     ],
 
+    'mercado_pago' => [
+        'access_token' => env('MERCADOPAGO_ACCESS_TOKEN', 'TEST-8583111996650966-020815-c0922bfe9c3d38d09bd7743b369de6fe-1294252760'),
+    ],
+
+    'melhor_envio' => [
+        'token' => env('MELHOR_ENVIO_TOKEN'),
+        'url' => env('MELHOR_ENVIO_URL', 'https://sandbox.melhorenvio.com.br/api/v2/me/shipment/calculate'),
+    ],
+
+    'elastic_search' => [
+        'products_index' => env('ELASTIC_SEARCH_INDEX_PRODUCTS', 'products_index'),
+        'tls_host' => env('ELASTIC_SEARCH_TLS_HOST', '127.0.0.1:9200')
+    ]
 ];

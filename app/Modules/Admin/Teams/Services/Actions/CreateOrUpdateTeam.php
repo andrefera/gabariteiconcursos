@@ -9,6 +9,8 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 
 readonly class CreateOrUpdateTeam
 {
@@ -49,16 +51,29 @@ readonly class CreateOrUpdateTeam
                 "country" => $this->country,
                 "league" => $this->league
             ]);
-
+            $team->save();
 
             if ($this->logo) {
-                $logoPath = 'teams/' . $team->name . '/logo.png';
-                if (Storage::disk('s3')->put($logoPath, fopen($this->logo, 'r'))) {
-                    $team->logo = env('S3_URL') . $logoPath;
+                if ($team->logo) {
+                    $replacedPath = str_replace(config('app.url'), '', $team->logo);
+                    if (Storage::disk('public')->exists($replacedPath)) {
+                        Log::warning("Deleting image: " . $team->logo);
+                        Storage::disk('public')->delete($replacedPath);
+                    }
                 }
-            }
 
-            $team->save();
+                $manager = new ImageManager(new Driver());
+                $img = $manager
+                    ->read($this->logo)
+                    ->toWebp(80);
+
+                $time = time();
+                $logoPath = 'teams/' . $team->id . "/logo_$time.webp";
+                Storage::disk('public')->put($logoPath, $img);
+
+                $team->logo = config('app.url') . "/storage/" . $logoPath;
+                $team->save();
+            }
 
             DB::commit();
 

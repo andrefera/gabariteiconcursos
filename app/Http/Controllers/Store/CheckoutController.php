@@ -73,9 +73,9 @@ class CheckoutController extends Controller
             $response = Http::withHeaders([
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
-                'Authorization' => 'Bearer ' . env('MELHOR_ENVIO_TOKEN'),
+                'Authorization' => 'Bearer ' . config('services.melhor_envio.token'),
                 'User-Agent' => 'Aplicação contato@ellonsports.com.br'
-            ])->post(env('MELHOR_ENVIO_URL', 'https://sandbox.melhorenvio.com.br/api/v2/me/shipment/calculate'), $payload);
+            ])->post(config('services.melhor_envio.url'), $payload);
 
             Log::info('Resposta Melhor Envio:', $response->json());
 
@@ -149,7 +149,7 @@ class CheckoutController extends Controller
         }
 
         try {
-            $cart->shippings()->delete(); 
+            $cart->shippings()->delete();
 
             $cart->shippings()->create([
                 'address_id' => $request->address_id,

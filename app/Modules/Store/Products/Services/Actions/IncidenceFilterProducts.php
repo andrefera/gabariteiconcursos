@@ -23,7 +23,7 @@ readonly class IncidenceFilterProducts
             ]
         ];
 
-        $products = ElasticSearchUtil::search(env('ELASTIC_SEARCH_INDEX_PRODUCTS', 'products_index'),
+        $products = ElasticSearchUtil::search(config('services.elastic_search.products_index'),
             $query,
             [
                 "unique_ids" => [

@@ -23,7 +23,7 @@ readonly class InsertProductElasticSearch
 
     public function execute(): void
     {
-        $index = env('ELASTIC_SEARCH_INDEX_PRODUCTS', 'products_index');
+        $index = config('services.elastic_search.products_index');
 
         if ($this->product->trashed()) {
             try {

@@ -27,7 +27,7 @@ readonly class Pay
         public float   $totalAmount,
         public int     $installments,
     ) {
-        MercadoPagoConfig::setAccessToken(env('MERCADOPAGO_ACCESS_TOKEN', 'TEST-8583111996650966-020815-c0922bfe9c3d38d09bd7743b369de6fe-1294252760'));
+        MercadoPagoConfig::setAccessToken(config('services.mercado_pago.access_token'));
     }
 
     public function execute(): ResponseMercadoPagoDTO

@@ -54,7 +54,11 @@ class ElasticSearchProducts extends Command
      */
     public function createIndex(): void
     {
-        $index = env('ELASTIC_SEARCH_INDEX_PRODUCTS', 'products_index');
+        $index = config('services.elastic_search.products_index');
+        if (!$index) {
+            Log::warning('Index not configured');
+            return;
+        }
 
         try {
             ElasticSearchUtil::deleteIndex($index);

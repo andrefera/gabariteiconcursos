@@ -50,7 +50,7 @@
            "@context": "https://schema.org",
            "@type": "Organization",
            "name": "Nova Concursos",
-           "url": "{{ env('APP_URL') }}",
+           "url": "{{ config('app.url') }}",
         {{--        "logo": "{{ asset_cdn('assets/img/logo.svg') }}",--}}
         "sameAs": [
           "https://www.instagram.com/novaconcursos/",
@@ -75,6 +75,6 @@
         }
     }
     </script>
-    <script src="{{ asset('assets/js/header.min.js') }}?v={{ env('STATIC_VERSION', time()) }}" defer></script>
-    <script src="{{ asset('assets/js/toast.js') }}?v={{ env('STATIC_VERSION', time()) }}" defer></script>
+    <script src="{{ asset('assets/js/header.min.js') }}?v={{ config('app.static_version') }}" defer></script>
+    <script src="{{ asset('assets/js/toast.js') }}?v={{ config('app.static_version') }}" defer></script>
 </head>

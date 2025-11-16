@@ -35,7 +35,7 @@ readonly class ListStoreProducts
         $start = ($this->page - 1) * $this->perPage;
 
         $products = ElasticSearchUtil::search(
-            env('ELASTIC_SEARCH_INDEX_PRODUCTS', 'products_index'),
+            config('services.elastic_search.products_index'),
             $query,
             $this->buildAggregations(),
             $start,
@@ -153,7 +153,7 @@ readonly class ListStoreProducts
             if ($this->priceMax) {
                 $range['lte'] = (float) $this->priceMax;
             }
-            
+
             $must->push([
                 'range' => [
                     'price' => $range

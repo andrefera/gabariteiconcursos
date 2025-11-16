@@ -143,7 +143,7 @@ class Order extends Model
 
     public function generateIncrementId(): void
     {
-        $this->increment_id = env('PREFIX_INCREMENT', 'ESL-') . str_pad($this->id, 10, "0", STR_PAD_LEFT);
+        $this->increment_id = config('app.prefix') . str_pad($this->id, 10, "0", STR_PAD_LEFT);
         $this->save();
     }
 

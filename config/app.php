@@ -129,4 +129,7 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'prefix' => env('PREFIX_INCREMENT', 'ESL-'),
+
+    'static_version' => env('STATIC_VERSION', time()),
 ];

@@ -42,7 +42,7 @@ class SessionTokenMiddleware
         Session::put('cart', $cart);
 
         return tap($next($request), function ($response) use ($cartToken) {
-            $response->headers->setCookie(cookie('session_token', $cartToken, (((int)env('SESSION_TOKEN_DAYS', 7)) * 1440), null, null, true));
+            $response->headers->setCookie(cookie('session_token', $cartToken, (((int)config('jwt.session_token_days')) * 1440), null, null, true));
         });
     }
 }

@@ -297,4 +297,6 @@ return [
 
         'storage' => PHPOpenSourceSaver\JWTAuth\Providers\Storage\Illuminate::class,
     ],
+
+    'session_token_days' => env('SESSION_TOKEN_DAYS', 7),
 ];
