@@ -292,10 +292,57 @@
         border: 1px solid #ddd;
         border-radius: 4px;
         align-items: flex-start;
+        cursor: pointer;
+        transition: all 0.2s ease;
     }
 
     .address-card:hover {
         border-color: #FF7F00;
+        background-color: #fff8f0;
+    }
+
+    .address-card.selected {
+        border-color: #FF7F00;
+        background-color: #fff8f0;
+        box-shadow: 0 0 0 2px rgba(255, 127, 0, 0.2);
+    }
+
+    .address-select {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .address-select input[type="radio"] {
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        border: 2px solid #ddd;
+        border-radius: 50%;
+        background-color: #fff;
+        position: relative;
+        margin: 0;
+    }
+
+    .address-select input[type="radio"]:checked {
+        border-color: #FF7F00;
+        background-color: #fff;
+    }
+
+    .address-select input[type="radio"]:checked::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: #FF7F00;
     }
 
     .address-info {
@@ -313,6 +360,10 @@
         align-items: flex-start;
     }
 
+    .address-actions button {
+        pointer-events: auto;
+    }
+
     .btn-edit,
     .btn-delete {
         background: none;
@@ -324,6 +375,8 @@
         align-items: center;
         justify-content: center;
         border-radius: 4px;
+        position: relative;
+        z-index: 1;
     }
 
     .btn-edit {
@@ -359,10 +412,50 @@
         border-radius: 4px;
         margin-bottom: 10px;
         cursor: pointer;
+        transition: all 0.2s ease;
     }
 
     .shipping-method:hover {
         border-color: #FF7F00;
+        background-color: #fff8f0;
+    }
+
+    .shipping-method.selected {
+        border-color: #FF7F00;
+        background-color: #fff8f0;
+        box-shadow: 0 0 0 2px rgba(255, 127, 0, 0.2);
+    }
+
+    .shipping-method input[type="radio"] {
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        border: 2px solid #ddd;
+        border-radius: 50%;
+        background-color: #fff;
+        position: relative;
+        margin: 0;
+    }
+
+    .shipping-method input[type="radio"]:checked {
+        border-color: #FF7F00;
+        background-color: #fff;
+    }
+
+    .shipping-method input[type="radio"]:checked::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: #FF7F00;
     }
 
     .shipping-method-info {
@@ -1056,6 +1149,15 @@
                 // Adiciona listeners para os métodos de envio
                 document.querySelectorAll('input[name="shipping_method"]').forEach(radio => {
                     radio.addEventListener('change', function(e) {
+                        // Atualiza visualmente os métodos de envio
+                        document.querySelectorAll('.shipping-method').forEach(method => {
+                            method.classList.remove('selected');
+                        });
+                        const selectedMethod = e.target.closest('.shipping-method');
+                        if (selectedMethod) {
+                            selectedMethod.classList.add('selected');
+                        }
+
                         const shippingMethod = e.target.closest('.shipping-method');
                         const shippingPrice = parseFloat(shippingMethod.dataset.price);
 
@@ -1065,11 +1167,30 @@
                     });
                 });
 
+                // Torna os cards de método de envio clicáveis
+                document.querySelectorAll('.shipping-method').forEach(method => {
+                    method.addEventListener('click', function(e) {
+                        // Não aciona se clicar diretamente no radio
+                        if (e.target.type === 'radio') {
+                            return;
+                        }
+                        
+                        const radio = this.querySelector('input[type="radio"]');
+                        if (radio) {
+                            radio.checked = true;
+                            radio.dispatchEvent(new Event('change', { bubbles: true }));
+                        }
+                    });
+                });
+
                 // Seleciona automaticamente o primeiro método de envio
                 const firstShippingMethod = document.querySelector('input[name="shipping_method"]');
                 if (firstShippingMethod) {
                     firstShippingMethod.checked = true;
                     const shippingMethod = firstShippingMethod.closest('.shipping-method');
+                    if (shippingMethod) {
+                        shippingMethod.classList.add('selected');
+                    }
                     const shippingPrice = parseFloat(shippingMethod.dataset.price);
 
                     updateTotals(shippingPrice);
@@ -1088,6 +1209,15 @@
         // Adiciona listeners para os endereços
         addressRadios.forEach(radio => {
             radio.addEventListener('change', (e) => {
+                // Atualiza visualmente os cards
+                document.querySelectorAll('.address-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                const selectedCard = e.target.closest('.address-card');
+                if (selectedCard) {
+                    selectedCard.classList.add('selected');
+                }
+
                 calculateShipping(e.target.value);
                 btnCompleteOrder.disabled = true;
                 selectedShippingMethod = null;
@@ -1095,8 +1225,28 @@
 
             // Se o endereço já estiver selecionado, calcula o frete
             if (radio.checked) {
+                const selectedCard = radio.closest('.address-card');
+                if (selectedCard) {
+                    selectedCard.classList.add('selected');
+                }
                 calculateShipping(radio.value);
             }
+        });
+
+        // Torna os cards de endereço clicáveis
+        document.querySelectorAll('.address-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                // Não aciona se clicar nos botões de ação
+                if (e.target.closest('.address-actions')) {
+                    return;
+                }
+                
+                const radio = this.querySelector('input[type="radio"]');
+                if (radio) {
+                    radio.checked = true;
+                    radio.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+            });
         });
 
         // Máscaras de input

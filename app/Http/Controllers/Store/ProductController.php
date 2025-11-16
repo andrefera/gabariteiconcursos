@@ -85,6 +85,7 @@ class ProductController extends Controller
             'perPage' => $result['per_page'],
             'team' => $teamData,
             'teams' => $teams,
+            'availableFilters' => $result['available_filters'] ?? [],
             'filters' => [
                 'search' => $search,
                 'team' => $team,

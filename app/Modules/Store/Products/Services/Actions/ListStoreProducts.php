@@ -5,7 +5,6 @@ namespace App\Modules\Store\Products\Services\Actions;
 use App\Modules\Admin\Products\Mappers\ProductGenderMapper;
 use App\Support\Util\ElasticSearchUtil;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 readonly class ListStoreProducts
 {
@@ -38,7 +37,7 @@ readonly class ListStoreProducts
         $products = ElasticSearchUtil::search(
             env('ELASTIC_SEARCH_INDEX_PRODUCTS', 'products_index'),
             $query,
-            [],
+            $this->buildAggregations(),
             $start,
             $this->perPage,
             $this->getSortOrder()
@@ -62,15 +61,13 @@ readonly class ListStoreProducts
             return $this->mapToHomeProductDTO($source);
         })->toArray();
 
-        Log::info($productData);
-        Log::info($query);
-
         return [
             'products' => $productData,
             'total' => $total,
             'current_page' => $this->page,
             'per_page' => $this->perPage,
-            'last_page' => $lastPage
+            'last_page' => $lastPage,
+            'available_filters' => $this->mapAvailableFilters($products['aggregations'] ?? [])
         ];
     }
 
@@ -244,5 +241,105 @@ readonly class ListStoreProducts
             'season' => $source['season'] ?? '',
             'stock' => $stock,
         ];
+    }
+
+    private function buildAggregations(): array
+    {
+        return [
+            'teams' => [
+                'terms' => [
+                    'field' => 'team_url.keyword',
+                    'size' => 100,
+                    'order' => ['_key' => 'asc'],
+                ],
+            ],
+            'genders' => [
+                'terms' => [
+                    'field' => 'gender.keyword',
+                    'size' => 10,
+                    'order' => ['_key' => 'asc'],
+                ],
+            ],
+            'seasons' => [
+                'terms' => [
+                    'field' => 'season.keyword',
+                    'size' => 50,
+                    'order' => ['_key' => 'desc'],
+                ],
+            ],
+            'categories' => [
+                'terms' => [
+                    'field' => 'categories.keyword',
+                    'size' => 50,
+                    'order' => ['_key' => 'asc'],
+                ],
+            ],
+            'sizes' => [
+                'terms' => [
+                    'field' => 'sizes.keyword',
+                    'size' => 20,
+                    'order' => ['_key' => 'asc'],
+                ],
+            ],
+            'product_types' => [
+                'terms' => [
+                    'field' => 'type.keyword',
+                    'size' => 20,
+                    'order' => ['_key' => 'asc'],
+                ],
+            ],
+            'national_international' => [
+                'terms' => [
+                    'field' => 'is_national.keyword',
+                    'size' => 5,
+                    'order' => ['_key' => 'asc'],
+                ],
+            ],
+        ];
+    }
+
+    private function mapAvailableFilters(array $aggregations): array
+    {
+        return [
+            'team' => $this->extractTermAggregation($aggregations, 'teams'),
+            'gender' => $this->extractTermAggregation($aggregations, 'genders', function (string $key) {
+                return match ($key) {
+                    'Masculino' => 'masculine',
+                    'Feminino' => 'feminine',
+                    'Unisex' => 'unisex',
+                    'Infantil' => 'kids',
+                    default => null,
+                };
+            }),
+            'season' => $this->extractTermAggregation($aggregations, 'seasons'),
+            'category' => $this->extractTermAggregation($aggregations, 'categories'),
+            'size' => $this->extractTermAggregation($aggregations, 'sizes'),
+            'product_type' => $this->extractTermAggregation($aggregations, 'product_types'),
+            'national_international' => $this->extractTermAggregation($aggregations, 'national_international'),
+        ];
+    }
+
+    private function extractTermAggregation(array $aggregations, string $key, ?callable $transform = null): array
+    {
+        if (!isset($aggregations[$key]['buckets'])) {
+            return [];
+        }
+
+        $result = [];
+
+        foreach ($aggregations[$key]['buckets'] as $bucket) {
+            $bucketKey = $bucket['key'] ?? null;
+            if ($transform) {
+                $bucketKey = $transform($bucketKey ?? '');
+            }
+
+            if ($bucketKey === null || $bucketKey === '') {
+                continue;
+            }
+
+            $result[$bucketKey] = (int) ($bucket['doc_count'] ?? 0);
+        }
+
+        return $result;
     }
 }

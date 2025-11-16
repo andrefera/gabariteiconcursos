@@ -122,14 +122,13 @@ class SeoUrlHelper
 
         // Nacional/Internacional
         if (!empty($filters['national_international'])) {
-            $nationalInt = explode(',', $filters['national_international']);
-            $friendlyNationalInt = array_map(function($ni) {
-                $ni = trim($ni);
-                return self::$reverseMappings['national_international'][strtolower($ni)] ?? null;
-            }, $nationalInt);
-            // Se houver apenas um valor, adiciona como segmento
-            if (count($friendlyNationalInt) === 1) {
-                $segments[] = self::$friendlyMappings['national_international'][$friendlyNationalInt[0]] ?? '';
+            $nationalValues = array_filter(array_map('trim', explode(',', $filters['national_international'])));
+            if (count($nationalValues) === 1) {
+                $value = $nationalValues[0];
+                $friendly = self::$friendlyMappings['national_international'][$value] ?? null;
+                if ($friendly) {
+                    $segments[] = $friendly;
+                }
             }
         }
 

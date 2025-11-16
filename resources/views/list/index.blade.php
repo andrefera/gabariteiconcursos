@@ -19,6 +19,79 @@
                     Camisetas
                 @endif
             </h1>
+
+            @php
+                $availableFilters = $availableFilters ?? [];
+                $availableTeamsCounts = $availableFilters['team'] ?? [];
+                $availableSeasonCounts = $availableFilters['season'] ?? [];
+                $availableGenderCounts = $availableFilters['gender'] ?? [];
+                $availableCategoryCounts = $availableFilters['category'] ?? [];
+                $availableSizeCounts = $availableFilters['size'] ?? [];
+                $availableTypeCounts = $availableFilters['product_type'] ?? [];
+                $availableNationalCounts = $availableFilters['national_international'] ?? [];
+
+                $selectedTeam = $filters['team'] ?? null;
+                $selectedSeason = $filters['season'] ?? null;
+                $selectedProductType = $filters['product_type'] ?? null;
+
+                $selectedGender = array_values(array_filter(array_map('trim', explode(',', $filters['gender'] ?? ''))));
+                $selectedSizes = array_values(array_filter(array_map('trim', explode(',', $filters['size'] ?? ''))));
+                $selectedCategories = array_values(array_filter(array_map('trim', explode(',', $filters['category'] ?? ''))));
+                $selectedNational = array_values(array_filter(array_map('trim', explode(',', $filters['national_international'] ?? ''))));
+
+                $teamOptions = collect($teams ?? [])->filter(function ($teamOption) use ($availableTeamsCounts, $selectedTeam) {
+                    $url = $teamOption['url'] ?? null;
+                    if (!$url) {
+                        return false;
+                    }
+
+                    return ($availableTeamsCounts[$url] ?? 0) > 0 || $selectedTeam === $url;
+                })->values();
+
+                $seasonOptions = collect(array_keys($availableSeasonCounts))
+                    ->when($selectedSeason && !isset($availableSeasonCounts[$selectedSeason]), function ($collection) use ($selectedSeason) {
+                        return $collection->prepend($selectedSeason);
+                    })
+                    ->unique()
+                    ->sortDesc()
+                    ->values();
+
+                $genderLabels = [
+                    'masculine' => 'Masculino',
+                    'feminine' => 'Feminino',
+                    'unisex' => 'Unisex',
+                    'kids' => 'Infantil',
+                ];
+
+                $categoryLabels = [
+                    'Retro' => 'Retro',
+                    'torcedor' => 'Torcedor',
+                    'jogador' => 'Jogador',
+                    'treino' => 'Treino',
+                ];
+
+                $primaryCategoryKeys = ['Retro'];
+                $shirtCategoryKeys = ['torcedor', 'jogador', 'treino'];
+
+                $productTypeLabels = [
+                    '' => 'Todos',
+                    'uniforme' => 'Uniforme',
+                    'casual' => 'Casual',
+                    'acessorios' => 'Acessórios',
+                ];
+
+                $sizeLabels = [
+                    'P' => 'P',
+                    'M' => 'M',
+                    'G' => 'G',
+                    'GG' => 'GG',
+                ];
+
+                $nationalityLabels = [
+                    'Sim' => 'Nacional',
+                    'Não' => 'Internacional',
+                ];
+            @endphp
             
             <!-- Mobile Sort Bar -->
             <div class="mobile-sort-bar">
@@ -40,20 +113,41 @@
             <div class="groupList">
                 <div class="filter">
                     <div class="filter-header">
-                        <h3>Filtrar por</h3>
-                        <button id="clearFilters" class="clear-filters-btn">Limpar Filtros</button>
+                        <div class="filter-header-title">
+                            <h3>Filtrar por</h3>
+                        </div>
+                        <button id="clearFilters" class="clear-filters-btn" type="button" disabled>
+                            <span class="icon" aria-hidden="true">⟳</span>
+                            <span class="text">
+                                <strong>Limpar filtros</strong>
+                                <small>Voltar para todos os produtos</small>
+                            </span>
+                        </button>
                     </div>
                     <!-- Filtro por Preço -->
-                    <div class="filter-group">
+                    <div class="filter-group" style="display: none;">
                         <h4>Preço</h4>
-                        <input type="range" min="50" max="500" value="{{ $filters['price_max'] ?? 250 }}" class="price-slider" id="priceSlider">
-                        <div class="price-range" id="priceRange">R$ 50 - R$ {{ $filters['price_max'] ?? 250 }}</div>
+                        <input
+                            type="range"
+                            min="50"
+                            max="500"
+                            value="{{ $filters['price_max'] ?? 500 }}"
+                            data-default="500"
+                            class="price-slider"
+                            id="priceSlider"
+                        >
+                        <div class="price-range" id="priceRange">R$ 50 - R$ {{ $filters['price_max'] ?? 500 }}</div>
                     </div>
 
                     <!-- Ordenar por -->
                     <div class="filter-group">
                         <h4>Ordenar por</h4>
-                        <div class="sort-select" id="sortSelectOrdenar" onclick="toggleDropdown('dropdownMenu')">
+                        <div
+                            class="sort-select"
+                            id="sortSelectOrdenar"
+                            data-sort="{{ $filters['sort'] ?? 'most_sold' }}"
+                            onclick="toggleDropdown('dropdownMenu')"
+                        >
                             @switch($filters['sort'] ?? 'most_sold')
                                 @case('newest')
                                     Novidades
@@ -87,7 +181,12 @@
 
                     <div class="filter-group">
                         <h4>Time</h4>
-                        <div class="sort-select" id="sortSelectTime" onclick="toggleDropdown('dropdownTime')">
+                        <div
+                            class="sort-select"
+                            id="sortSelectTime"
+                            data-team="{{ $filters['team'] ?? '' }}"
+                            onclick="toggleDropdown('dropdownTime')"
+                        >
                             @if(isset($filters['team']) && $filters['team'])
                                 @php
                                     $selectedTeam = collect($teams)->firstWhere('url', $filters['team']);
@@ -103,69 +202,83 @@
                         </div>
                         <div class="dropdown">
                             <div class="dropdown-content" id="dropdownTime">
-                                <a href="#" data-team="">Todos</a>
-                                @if(isset($teams) && count($teams) > 0)
-                                    @foreach($teams as $team)
-                                        <a href="#" data-team="{{ $team['url'] }}">{{ $team['name'] }}</a>
-                                    @endforeach
-                                @endif
+                                <a href="#" data-team="" data-count="{{ array_sum($availableTeamsCounts) }}">
+                                    <span>Todos</span>
+                                </a>
+                                @foreach($teamOptions as $teamOption)
+                                    @php
+                                        $teamUrl = $teamOption['url'] ?? '';
+                                        $teamCount = $teamUrl ? ($availableTeamsCounts[$teamUrl] ?? 0) : 0;
+                                    @endphp
+                                    @continue(!$teamUrl)
+                                    <a href="#" data-team="{{ $teamUrl }}" data-count="{{ $teamCount }}">
+                                        <span>{{ $teamOption['name'] }}</span>
+                                    </a>
+                                @endforeach
                             </div>
                         </div>
                     </div>
 
                     <div class="filter-group checkbox">
                         <h4>Gênero</h4>
-                        <label>
-                            <input type="checkbox" value="masculine" {{ in_array('masculine', explode(',', $filters['gender'] ?? '')) ? 'checked' : '' }} />
-                            <span class="custom-checkbox"></span>
-                            Masculino
-                        </label>
-                        <label>
-                            <input type="checkbox" value="feminine" {{ in_array('feminine', explode(',', $filters['gender'] ?? '')) ? 'checked' : '' }} />
-                            <span class="custom-checkbox"></span>
-                            Feminino
-                        </label>
-                        <label>
-                            <input type="checkbox" value="unisex" {{ in_array('unisex', explode(',', $filters['gender'] ?? '')) ? 'checked' : '' }} />
-                            <span class="custom-checkbox"></span>
-                            Unisex
-                        </label>
-                        <label>
-                            <input type="checkbox" value="kids" {{ in_array('kids', explode(',', $filters['gender'] ?? '')) ? 'checked' : '' }} />
-                            <span class="custom-checkbox"></span>
-                            Infantil
-                        </label>
+                        @foreach($genderLabels as $value => $label)
+                            @php
+                                $count = $availableGenderCounts[$value] ?? 0;
+                                $isSelected = in_array($value, $selectedGender, true);
+                            @endphp
+                            @if($count > 0 || $isSelected)
+                                <label data-count="{{ $count }}">
+                                    <input
+                                        type="checkbox"
+                                        name="gender[]"
+                                        value="{{ $value }}"
+                                        data-filter-group="gender"
+                                        data-filter-value="{{ $value }}"
+                                        data-filter-origin="desktop"
+                                        {{ $isSelected ? 'checked' : '' }}
+                                    />
+                                    <span class="custom-checkbox"></span>
+                                    <span class="label-text">{{ $label }}</span>
+                                </label>
+                            @endif
+                        @endforeach
                     </div>
 
                     <!-- Filtro por Tamanho -->
                     <div class="filter-group checkbox">
                         <h4>Tamanho</h4>
-                        <label>
-                            <input type="checkbox" value="P" {{ in_array('P', explode(',', $filters['size'] ?? '')) ? 'checked' : '' }} />
-                            <span class="custom-checkbox"></span>
-                            P
-                        </label>
-                        <label>
-                            <input type="checkbox" value="M" {{ in_array('M', explode(',', $filters['size'] ?? '')) ? 'checked' : '' }} />
-                            <span class="custom-checkbox"></span>
-                            M
-                        </label>
-                        <label>
-                            <input type="checkbox" value="G" {{ in_array('G', explode(',', $filters['size'] ?? '')) ? 'checked' : '' }} />
-                            <span class="custom-checkbox"></span>
-                            G
-                        </label>
-                        <label>
-                            <input type="checkbox" value="GG" {{ in_array('GG', explode(',', $filters['size'] ?? '')) ? 'checked' : '' }} />
-                            <span class="custom-checkbox"></span>
-                            GG
-                        </label>
+                        @foreach($sizeLabels as $value => $label)
+                            @php
+                                $count = $availableSizeCounts[$value] ?? 0;
+                                $isSelected = in_array($value, $selectedSizes, true);
+                            @endphp
+                            @if($count > 0 || $isSelected)
+                                <label data-count="{{ $count }}">
+                                    <input
+                                        type="checkbox"
+                                        name="size[]"
+                                        value="{{ $value }}"
+                                        data-filter-group="size"
+                                        data-filter-value="{{ $value }}"
+                                        data-filter-origin="desktop"
+                                        {{ $isSelected ? 'checked' : '' }}
+                                    />
+                                    <span class="custom-checkbox"></span>
+                                    <span class="label-text">{{ $label }}</span>
+                                </label>
+                            @endif
+                        @endforeach
                     </div>
 
                     <!-- Temporada -->
                     <div class="filter-group">
                         <h4>Temporada</h4>
-                        <div class="sort-select" id="sortSelectTemporada" onclick="toggleDropdown('dropdownTemporada')">
+                        <div
+                            class="sort-select"
+                            id="sortSelectTemporada"
+                            data-season="{{ $filters['season'] ?? '' }}"
+                            onclick="toggleDropdown('dropdownTemporada')"
+                        >
                             {{ $filters['season'] ?? 'Todos' }}
                             <svg class="arrow" width="16" height="16" viewBox="0 0 24 24">
                                 <path fill="#ff6600" d="M7 10l5 5 5-5z"/>
@@ -173,89 +286,126 @@
                         </div>
                         <div class="dropdown">
                             <div class="dropdown-content" id="dropdownTemporada">
-                                <a href="#" data-season="">Todos</a>
-                                @php
-                                    $currentYear = date('Y');
-                                    for ($year = $currentYear; $year >= 2010; $year--) {
-                                        $value = substr($year, 2);
-                                        $nextYear = substr($year + 1, 2);
-                                        $season = $value . '/' . $nextYear;
-                                        echo '<a href="#" data-season="' . $season . '">' . $season . '</a>';
-                                    }
-                                @endphp
+                                <a href="#" data-season="" data-count="{{ array_sum($availableSeasonCounts) }}">
+                                    <span>Todos</span>
+                                </a>
+                                @foreach($seasonOptions as $season)
+                                    @php
+                                        $seasonCount = $availableSeasonCounts[$season] ?? 0;
+                                    @endphp
+                                    <a href="#" data-season="{{ $season }}" data-count="{{ $seasonCount }}">
+                                        <span>{{ $season }}</span>
+                                    </a>
+                                @endforeach
                             </div>
                         </div>
                     </div>
 
                     <div class="filter-group checkbox">
                         <h4>Categoria</h4>
-                        <label>
-                            <input type="checkbox" value="Retro" {{ in_array('Retro', explode(',', $filters['category'] ?? '')) ? 'checked' : '' }} />
-                            <span class="custom-checkbox"></span>
-                            Retro
-                        </label>
+                        @foreach($primaryCategoryKeys as $categoryKey)
+                            @php
+                                $count = $availableCategoryCounts[$categoryKey] ?? 0;
+                                $isSelected = in_array($categoryKey, $selectedCategories, true);
+                                $label = $categoryLabels[$categoryKey] ?? $categoryKey;
+                            @endphp
+                            @if($count > 0 || $isSelected)
+                                <label data-count="{{ $count }}">
+                                    <input
+                                        type="checkbox"
+                                        name="category[]"
+                                        value="{{ $categoryKey }}"
+                                        data-filter-group="category"
+                                        data-filter-value="{{ $categoryKey }}"
+                                        data-filter-origin="desktop"
+                                        {{ $isSelected ? 'checked' : '' }}
+                                    />
+                                    <span class="custom-checkbox"></span>
+                                    <span class="label-text">{{ $label }}</span>
+                                </label>
+                            @endif
+                        @endforeach
                     </div>
                     <div class="filter-group checkbox">
                         <h4>Nacional / Internacional</h4>
-                        <label>
-                            <input type="checkbox" value="Sim" {{ in_array('Sim', explode(',', $filters['national_international'] ?? '')) ? 'checked' : '' }} />
-                            <span class="custom-checkbox"></span>
-                            Nacional
-                        </label>
-                        <label>
-                            <input type="checkbox" value="Não" {{ in_array('Não', explode(',', $filters['national_international'] ?? '')) ? 'checked' : '' }} />
-                            <span class="custom-checkbox"></span>
-                            Internacional
-                        </label>
+                        @foreach($nationalityLabels as $value => $label)
+                            @php
+                                $count = $availableNationalCounts[$value] ?? 0;
+                                $isSelected = in_array($value, $selectedNational, true);
+                            @endphp
+                            @if($count > 0 || $isSelected)
+                                <label data-count="{{ $count }}">
+                                    <input
+                                        type="checkbox"
+                                        name="national_international[]"
+                                        value="{{ $value }}"
+                                        data-filter-group="national_international"
+                                        data-filter-value="{{ $value }}"
+                                        data-filter-origin="desktop"
+                                        {{ $isSelected ? 'checked' : '' }}
+                                    />
+                                    <span class="custom-checkbox"></span>
+                                    <span class="label-text">{{ $label }}</span>
+                                </label>
+                            @endif
+                        @endforeach
                     </div>
 
-                    <div class="filter-group">
+                    <div class="filter-group" style="display: none;">
                         <h4>Tipo de produto</h4>
-                        <div class="sort-select" id="sortSelectTipo" onclick="toggleDropdown('dropdownTipo')">
-                            @switch($filters['product_type'] ?? '')
-                                @case('casual')
-                                    Casual
-                                    @break
-                                @case('acessorios')
-                                    Acessórios
-                                    @break
-                                @case('uniforme')
-                                    Uniforme
-                                    @break
-                                @default
-                                    Todos
-                            @endswitch
+                        <div
+                            class="sort-select"
+                            id="sortSelectTipo"
+                            data-product-type="{{ $filters['product_type'] ?? '' }}"
+                            onclick="toggleDropdown('dropdownTipo')"
+                        >
+                            {{ $productTypeLabels[$filters['product_type'] ?? ''] ?? 'Todos' }}
                             <svg class="arrow" width="16" height="16" viewBox="0 0 24 24">
                                 <path fill="#ff6600" d="M7 10l5 5 5-5z"/>
                             </svg>
                         </div>
                         <div class="dropdown">
                             <div class="dropdown-content" id="dropdownTipo">
-                                <a href="#" data-product-type="">Todos</a>
-                                <a href="#" data-product-type="uniforme">Uniforme</a>
-                                <a href="#" data-product-type="casual">Casual</a>
-                                <a href="#" data-product-type="acessorios">Acessórios</a>
+                                @foreach($productTypeLabels as $value => $label)
+                                    @php
+                                        $count = $value === '' ? array_sum($availableTypeCounts) : ($availableTypeCounts[$value] ?? 0);
+                                        $isSelected = ($filters['product_type'] ?? '') === $value;
+                                        $shouldShow = $value === '' || $count > 0 || $isSelected;
+                                    @endphp
+                                    @if($shouldShow)
+                                        <a href="#" data-product-type="{{ $value }}" data-count="{{ $count }}">
+                                            <span>{{ $label }}</span>
+                                        </a>
+                                    @endif
+                                @endforeach
                             </div>
                         </div>
                     </div>
 
-                    <div class="filter-group checkbox">
+                    <div class="filter-group checkbox" style="display: none;">
                         <h4>Tipo de Camisa</h4>
-                        <label>
-                            <input type="checkbox" value="torcedor" {{ in_array('torcedor', explode(',', $filters['category'] ?? '')) ? 'checked' : '' }} />
-                            <span class="custom-checkbox"></span>
-                            Torcedor
-                        </label>
-                        <label>
-                            <input type="checkbox" value="jogador" {{ in_array('jogador', explode(',', $filters['category'] ?? '')) ? 'checked' : '' }} />
-                            <span class="custom-checkbox"></span>
-                            Jogador
-                        </label>
-                        <label>
-                            <input type="checkbox" value="treino" {{ in_array('treino', explode(',', $filters['category'] ?? '')) ? 'checked' : '' }} />
-                            <span class="custom-checkbox"></span>
-                            Treino
-                        </label>
+                        @foreach($shirtCategoryKeys as $categoryKey)
+                            @php
+                                $count = $availableCategoryCounts[$categoryKey] ?? 0;
+                                $isSelected = in_array($categoryKey, $selectedCategories, true);
+                                $label = $categoryLabels[$categoryKey] ?? ucfirst($categoryKey);
+                            @endphp
+                            @if($count > 0 || $isSelected)
+                                <label data-count="{{ $count }}">
+                                    <input
+                                        type="checkbox"
+                                        name="category[]"
+                                        value="{{ $categoryKey }}"
+                                        data-filter-group="category"
+                                        data-filter-value="{{ $categoryKey }}"
+                                        data-filter-origin="desktop"
+                                        {{ $isSelected ? 'checked' : '' }}
+                                    />
+                                    <span class="custom-checkbox"></span>
+                                    <span class="label-text">{{ $label }}</span>
+                                </label>
+                            @endif
+                        @endforeach
                     </div>
 
                 </div>
@@ -265,9 +415,7 @@
                         <!-- Desktop product count (hidden on mobile) -->
                         <div class="desktop-product-count" style="margin-bottom: 20px; color: #666; font-size: 14px;">
                             {{ $total }} produto{{ $total > 1 ? 's' : '' }} encontrado{{ $total > 1 ? 's' : '' }}
-                            @if(isset($filters) && array_filter($filters))
-                                com os filtros aplicados
-                            @endif
+                         
                         </div>
                         
                         <!-- Desktop Grid -->
@@ -382,16 +530,29 @@
         
         <div class="mobile-filter-content">
             <!-- Filtro por Preço -->
-            <div class="filter-group">
+            <div class="filter-group" style="display: none;">
                 <h4>Preço</h4>
-                <input type="range" min="50" max="500" value="{{ $filters['price_max'] ?? 250 }}" class="price-slider" id="mobilePriceSlider">
-                <div class="price-range" id="mobilePriceRange">R$ 50 - R$ {{ $filters['price_max'] ?? 250 }}</div>
+                <input
+                    type="range"
+                    min="50"
+                    max="500"
+                    value="{{ $filters['price_max'] ?? 500 }}"
+                    data-default="500"
+                    class="price-slider"
+                    id="mobilePriceSlider"
+                >
+                <div class="price-range" id="mobilePriceRange">R$ 50 - R$ {{ $filters['price_max'] ?? 500 }}</div>
             </div>
 
             <!-- Ordenar por -->
             <div class="filter-group">
                 <h4>Ordenar por</h4>
-                <div class="sort-select" id="mobileSortSelectOrdenar" onclick="toggleDropdown('mobileDropdownMenu')">
+                <div
+                    class="sort-select"
+                    id="mobileSortSelectOrdenar"
+                    data-sort="{{ $filters['sort'] ?? 'most_sold' }}"
+                    onclick="toggleDropdown('mobileDropdownMenu')"
+                >
                     @switch($filters['sort'] ?? 'most_sold')
                         @case('newest')
                             Novidades
@@ -425,7 +586,12 @@
 
             <div class="filter-group">
                 <h4>Time</h4>
-                <div class="sort-select" id="mobileSortSelectTime" onclick="toggleDropdown('mobileDropdownTime')">
+                <div
+                    class="sort-select"
+                    id="mobileSortSelectTime"
+                    data-team="{{ $filters['team'] ?? '' }}"
+                    onclick="toggleDropdown('mobileDropdownTime')"
+                >
                     @if(isset($filters['team']) && $filters['team'])
                         @php
                             $selectedTeam = collect($teams)->firstWhere('url', $filters['team']);
@@ -441,69 +607,83 @@
                 </div>
                 <div class="dropdown">
                     <div class="dropdown-content" id="mobileDropdownTime">
-                        <a href="#" data-team="">Todos</a>
-                        @if(isset($teams) && count($teams) > 0)
-                            @foreach($teams as $team)
-                                <a href="#" data-team="{{ $team['url'] }}">{{ $team['name'] }}</a>
-                            @endforeach
-                        @endif
+                        <a href="#" data-team="" data-count="{{ array_sum($availableTeamsCounts) }}">
+                            <span>Todos</span>
+                        </a>
+                        @foreach($teamOptions as $teamOption)
+                            @php
+                                $teamUrl = $teamOption['url'] ?? '';
+                                $teamCount = $teamUrl ? ($availableTeamsCounts[$teamUrl] ?? 0) : 0;
+                            @endphp
+                            @continue(!$teamUrl)
+                            <a href="#" data-team="{{ $teamUrl }}" data-count="{{ $teamCount }}">
+                                <span>{{ $teamOption['name'] }}</span>
+                            </a>
+                        @endforeach
                     </div>
                 </div>
             </div>
 
             <div class="filter-group checkbox">
                 <h4>Gênero</h4>
-                <label>
-                    <input type="checkbox" value="masculine" {{ in_array('masculine', explode(',', $filters['gender'] ?? '')) ? 'checked' : '' }} />
-                    <span class="custom-checkbox"></span>
-                    Masculino
-                </label>
-                <label>
-                    <input type="checkbox" value="feminine" {{ in_array('feminine', explode(',', $filters['gender'] ?? '')) ? 'checked' : '' }} />
-                    <span class="custom-checkbox"></span>
-                    Feminino
-                </label>
-                <label>
-                    <input type="checkbox" value="unisex" {{ in_array('unisex', explode(',', $filters['gender'] ?? '')) ? 'checked' : '' }} />
-                    <span class="custom-checkbox"></span>
-                    Unisex
-                </label>
-                <label>
-                    <input type="checkbox" value="kids" {{ in_array('kids', explode(',', $filters['gender'] ?? '')) ? 'checked' : '' }} />
-                    <span class="custom-checkbox"></span>
-                    Infantil
-                </label>
+                @foreach($genderLabels as $value => $label)
+                    @php
+                        $count = $availableGenderCounts[$value] ?? 0;
+                        $isSelected = in_array($value, $selectedGender, true);
+                    @endphp
+                    @if($count > 0 || $isSelected)
+                        <label data-count="{{ $count }}">
+                            <input
+                                type="checkbox"
+                                name="gender[]"
+                                value="{{ $value }}"
+                                data-filter-group="gender"
+                                data-filter-value="{{ $value }}"
+                                data-filter-origin="mobile"
+                                {{ $isSelected ? 'checked' : '' }}
+                            />
+                            <span class="custom-checkbox"></span>
+                            <span class="label-text">{{ $label }}</span>
+                        </label>
+                    @endif
+                @endforeach
             </div>
 
             <!-- Filtro por Tamanho -->
             <div class="filter-group checkbox">
                 <h4>Tamanho</h4>
-                <label>
-                    <input type="checkbox" value="P" {{ in_array('P', explode(',', $filters['size'] ?? '')) ? 'checked' : '' }} />
-                    <span class="custom-checkbox"></span>
-                    P
-                </label>
-                <label>
-                    <input type="checkbox" value="M" {{ in_array('M', explode(',', $filters['size'] ?? '')) ? 'checked' : '' }} />
-                    <span class="custom-checkbox"></span>
-                    M
-                </label>
-                <label>
-                    <input type="checkbox" value="G" {{ in_array('G', explode(',', $filters['size'] ?? '')) ? 'checked' : '' }} />
-                    <span class="custom-checkbox"></span>
-                    G
-                </label>
-                <label>
-                    <input type="checkbox" value="GG" {{ in_array('GG', explode(',', $filters['size'] ?? '')) ? 'checked' : '' }} />
-                    <span class="custom-checkbox"></span>
-                    GG
-                </label>
+                @foreach($sizeLabels as $value => $label)
+                    @php
+                        $count = $availableSizeCounts[$value] ?? 0;
+                        $isSelected = in_array($value, $selectedSizes, true);
+                    @endphp
+                    @if($count > 0 || $isSelected)
+                        <label data-count="{{ $count }}">
+                            <input
+                                type="checkbox"
+                                name="size[]"
+                                value="{{ $value }}"
+                                data-filter-group="size"
+                                data-filter-value="{{ $value }}"
+                                data-filter-origin="mobile"
+                                {{ $isSelected ? 'checked' : '' }}
+                            />
+                            <span class="custom-checkbox"></span>
+                            <span class="label-text">{{ $label }}</span>
+                        </label>
+                    @endif
+                @endforeach
             </div>
 
             <!-- Temporada -->
             <div class="filter-group">
                 <h4>Temporada</h4>
-                <div class="sort-select" id="mobileSortSelectTemporada" onclick="toggleDropdown('mobileDropdownTemporada')">
+                <div
+                    class="sort-select"
+                    id="mobileSortSelectTemporada"
+                    data-season="{{ $filters['season'] ?? '' }}"
+                    onclick="toggleDropdown('mobileDropdownTemporada')"
+                >
                     {{ $filters['season'] ?? 'Todos' }}
                     <svg class="arrow" width="16" height="16" viewBox="0 0 24 24">
                         <path fill="#ff6600" d="M7 10l5 5 5-5z"/>
@@ -511,89 +691,126 @@
                 </div>
                 <div class="dropdown">
                     <div class="dropdown-content" id="mobileDropdownTemporada">
-                        <a href="#" data-season="">Todos</a>
-                        @php
-                            $currentYear = date('Y');
-                            for ($year = $currentYear; $year >= 2010; $year--) {
-                                $value = substr($year, 2);
-                                $nextYear = substr($year + 1, 2);
-                                $season = $value . '/' . $nextYear;
-                                echo '<a href="#" data-season="' . $season . '">' . $season . '</a>';
-                            }
-                        @endphp
+                        <a href="#" data-season="" data-count="{{ array_sum($availableSeasonCounts) }}">
+                            <span>Todos</span>
+                        </a>
+                        @foreach($seasonOptions as $season)
+                            @php
+                                $seasonCount = $availableSeasonCounts[$season] ?? 0;
+                            @endphp
+                            <a href="#" data-season="{{ $season }}" data-count="{{ $seasonCount }}">
+                                <span>{{ $season }}</span>
+                            </a>
+                        @endforeach
                     </div>
                 </div>
             </div>
 
             <div class="filter-group checkbox">
                 <h4>Categoria</h4>
-                <label>
-                    <input type="checkbox" value="Retro" {{ in_array('Retro', explode(',', $filters['category'] ?? '')) ? 'checked' : '' }} />
-                    <span class="custom-checkbox"></span>
-                    Retro
-                </label>
+                @foreach($primaryCategoryKeys as $categoryKey)
+                    @php
+                        $count = $availableCategoryCounts[$categoryKey] ?? 0;
+                        $isSelected = in_array($categoryKey, $selectedCategories, true);
+                        $label = $categoryLabels[$categoryKey] ?? $categoryKey;
+                    @endphp
+                    @if($count > 0 || $isSelected)
+                        <label data-count="{{ $count }}">
+                            <input
+                                type="checkbox"
+                                name="category[]"
+                                value="{{ $categoryKey }}"
+                                data-filter-group="category"
+                                data-filter-value="{{ $categoryKey }}"
+                                data-filter-origin="mobile"
+                                {{ $isSelected ? 'checked' : '' }}
+                            />
+                            <span class="custom-checkbox"></span>
+                            <span class="label-text">{{ $label }}</span>
+                        </label>
+                    @endif
+                @endforeach
             </div>
             <div class="filter-group checkbox">
                 <h4>Nacional / Internacional</h4>
-                <label>
-                    <input type="checkbox" value="Sim" {{ in_array('Sim', explode(',', $filters['national_international'] ?? '')) ? 'checked' : '' }} />
-                    <span class="custom-checkbox"></span>
-                    Nacional
-                </label>
-                <label>
-                    <input type="checkbox" value="Não" {{ in_array('Não', explode(',', $filters['national_international'] ?? '')) ? 'checked' : '' }} />
-                    <span class="custom-checkbox"></span>
-                    Internacional
-                </label>
+                @foreach($nationalityLabels as $value => $label)
+                    @php
+                        $count = $availableNationalCounts[$value] ?? 0;
+                        $isSelected = in_array($value, $selectedNational, true);
+                    @endphp
+                    @if($count > 0 || $isSelected)
+                        <label data-count="{{ $count }}">
+                            <input
+                                type="checkbox"
+                                name="national_international[]"
+                                value="{{ $value }}"
+                                data-filter-group="national_international"
+                                data-filter-value="{{ $value }}"
+                                data-filter-origin="mobile"
+                                {{ $isSelected ? 'checked' : '' }}
+                            />
+                            <span class="custom-checkbox"></span>
+                            <span class="label-text">{{ $label }}</span>
+                        </label>
+                    @endif
+                @endforeach
             </div>
 
-            <div class="filter-group">
+            <div class="filter-group" style="display: none;">
                 <h4>Tipo de produto</h4>
-                <div class="sort-select" id="mobileSortSelectTipo" onclick="toggleDropdown('mobileDropdownTipo')">
-                    @switch($filters['product_type'] ?? '')
-                        @case('casual')
-                            Casual
-                            @break
-                        @case('acessorios')
-                            Acessórios
-                            @break
-                        @case('uniforme')
-                            Uniforme
-                            @break
-                        @default
-                            Todos
-                    @endswitch
+                <div
+                    class="sort-select"
+                    id="mobileSortSelectTipo"
+                    data-product-type="{{ $filters['product_type'] ?? '' }}"
+                    onclick="toggleDropdown('mobileDropdownTipo')"
+                >
+                    {{ $productTypeLabels[$filters['product_type'] ?? ''] ?? 'Todos' }}
                     <svg class="arrow" width="16" height="16" viewBox="0 0 24 24">
                         <path fill="#ff6600" d="M7 10l5 5 5-5z"/>
                     </svg>
                 </div>
                 <div class="dropdown">
                     <div class="dropdown-content" id="mobileDropdownTipo">
-                        <a href="#" data-product-type="">Todos</a>
-                        <a href="#" data-product-type="uniforme">Uniforme</a>
-                        <a href="#" data-product-type="casual">Casual</a>
-                        <a href="#" data-product-type="acessorios">Acessórios</a>
+                        @foreach($productTypeLabels as $value => $label)
+                            @php
+                                $count = $value === '' ? array_sum($availableTypeCounts) : ($availableTypeCounts[$value] ?? 0);
+                                $isSelected = ($filters['product_type'] ?? '') === $value;
+                                $shouldShow = $value === '' || $count > 0 || $isSelected;
+                            @endphp
+                            @if($shouldShow)
+                                <a href="#" data-product-type="{{ $value }}" data-count="{{ $count }}">
+                                    <span>{{ $label }}</span>
+                                </a>
+                            @endif
+                        @endforeach
                     </div>
                 </div>
             </div>
 
-            <div class="filter-group checkbox">
+            <div class="filter-group checkbox" style="display: none;">
                 <h4>Tipo de Camisa</h4>
-                <label>
-                    <input type="checkbox" value="torcedor" {{ in_array('torcedor', explode(',', $filters['category'] ?? '')) ? 'checked' : '' }} />
-                    <span class="custom-checkbox"></span>
-                    Torcedor
-                </label>
-                <label>
-                    <input type="checkbox" value="jogador" {{ in_array('jogador', explode(',', $filters['category'] ?? '')) ? 'checked' : '' }} />
-                    <span class="custom-checkbox"></span>
-                    Jogador
-                </label>
-                <label>
-                    <input type="checkbox" value="treino" {{ in_array('treino', explode(',', $filters['category'] ?? '')) ? 'checked' : '' }} />
-                    <span class="custom-checkbox"></span>
-                    Treino
-                </label>
+                @foreach($shirtCategoryKeys as $categoryKey)
+                    @php
+                        $count = $availableCategoryCounts[$categoryKey] ?? 0;
+                        $isSelected = in_array($categoryKey, $selectedCategories, true);
+                        $label = $categoryLabels[$categoryKey] ?? ucfirst($categoryKey);
+                    @endphp
+                    @if($count > 0 || $isSelected)
+                        <label data-count="{{ $count }}">
+                            <input
+                                type="checkbox"
+                                name="category[]"
+                                value="{{ $categoryKey }}"
+                                data-filter-group="category"
+                                data-filter-value="{{ $categoryKey }}"
+                                data-filter-origin="mobile"
+                                {{ $isSelected ? 'checked' : '' }}
+                            />
+                            <span class="custom-checkbox"></span>
+                            <span class="label-text">{{ $label }}</span>
+                        </label>
+                    @endif
+                @endforeach
             </div>
         </div>
         

@@ -88,7 +88,10 @@
 
     <section class="destaques">
         <div class="alignSection">
-            <h2 class="title">Destaques</h2>
+            <div class="title-header">
+                <h2 class="title">Destaques</h2>
+                <a href="/camisas" class="ver-todos">Ver Todos</a>
+            </div>
             <div class="grid swiper-container mySwiper">
                 <div class="swiper-wrapper">
                     @if(count($products) > 0)
@@ -146,7 +149,10 @@
 
     <section class="destaques">
         <div class="alignSection">
-            <h2 class="title">Times Europeus</h2>
+            <div class="title-header">
+                <h2 class="title">Times Europeus</h2>
+                <a href="/camisas/internacional" class="ver-todos">Ver Todos</a>
+            </div>
             <div class="grid swiper-container mySwiperEuropeus">
                 <div class="swiper-wrapper">
                     @if(count($europeanProducts) > 0)

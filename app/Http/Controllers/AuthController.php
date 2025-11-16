@@ -94,6 +94,17 @@ class AuthController extends Controller
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users',
                 'password' => 'required|string|min:6|confirmed',
+            ], [
+                'name.required' => 'O nome é obrigatório.',
+                'name.string' => 'O nome deve ser um texto válido.',
+                'name.max' => 'O nome não pode ter mais de 255 caracteres.',
+                'email.required' => 'O e-mail é obrigatório.',
+                'email.email' => 'O e-mail deve ser um endereço válido.',
+                'email.max' => 'O e-mail não pode ter mais de 255 caracteres.',
+                'email.unique' => 'Este e-mail já está cadastrado.',
+                'password.required' => 'A senha é obrigatória.',
+                'password.min' => 'A senha deve ter no mínimo 6 caracteres.',
+                'password.confirmed' => 'A confirmação da senha não confere.',
             ]);
 
             $user = User::create([
@@ -112,10 +123,26 @@ class AuthController extends Controller
             ]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
+            $errors = $e->errors();
+            // Traduzir mensagens em inglês para português
+            $translatedErrors = [];
+            foreach ($errors as $field => $messages) {
+                $translatedErrors[$field] = array_map(function($message) {
+                    $translations = [
+                        'The email has already been taken.' => 'Este e-mail já está cadastrado.',
+                        'The name field is required.' => 'O nome é obrigatório.',
+                        'The email field is required.' => 'O e-mail é obrigatório.',
+                        'The password field is required.' => 'A senha é obrigatória.',
+                        'The password confirmation does not match.' => 'A confirmação da senha não confere.',
+                    ];
+                    return $translations[$message] ?? $message;
+                }, $messages);
+            }
+            
             return response()->json([
                 'success' => false,
                 'message' => 'Dados inválidos',
-                'errors' => $e->errors()
+                'errors' => $translatedErrors
             ], 422);
         } catch (\Exception $e) {
             Log::error('Erro no registro web: ' . $e->getMessage());

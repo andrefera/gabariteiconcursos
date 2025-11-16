@@ -88,11 +88,11 @@
                     <div class="footer-column">
                         <h4>❓ Ajuda</h4>
                         <ul class="footer-links">
-                            <li><a href="/sobre">📖 Sobre Nós</a></li>
-                            <li><a href="/atendimento">📞 Atendimento</a></li>
-                            <li><a href="/trocas-devolucoes">🔄 Trocas e Devoluções</a></li>
+                            <li><a href="/informacoes#sobre-nos">📖 Sobre Nós</a></li>
+                            <li><a href="/informacoes#atendimento-contato">📞 Atendimento</a></li>
+                            <li><a href="/informacoes#trocas-devolucoes">🔄 Trocas e Devoluções</a></li>
                             <li><a href="/frete">📦 Cálculo de Frete</a></li>
-                            <li><a href="/pagamento">💳 Formas de Pagamento</a></li>
+                            <li><a href="/informacoes#formas-pagamento">💳 Formas de Pagamento</a></li>
                         </ul>
                     </div>
 

@@ -72,6 +72,14 @@
             <label for="password_confirmation" class="form-label">Confirme a Senha</label>
             <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Confirme sua senha" required>
         </div>
+        <div class="mb-3">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="termos" required>
+                <label class="form-check-label" for="termos">
+                    Concordo com os <a href="{{ route('terms.use') }}" target="_blank">Termos de Uso</a> e <a href="{{ route('privacy.policy') }}" target="_blank">Política de Privacidade</a>
+                </label>
+            </div>
+        </div>
         <button type="submit" class="btn btn-primary w-100">Registrar</button>
     </form>
     <div class="text-center mt-3">

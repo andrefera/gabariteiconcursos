@@ -9,6 +9,7 @@ use App\Http\Controllers\Store\ProductController;
 use App\Http\Controllers\Store\ProductSearchController;
 use App\Http\Controllers\PrivacyController;
 use App\Http\Controllers\TermsController;
+use App\Http\Controllers\InformacoesController;
 use App\Http\Middleware\CheckUserProfile;
 use App\Http\Middleware\SessionTokenMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -101,6 +102,9 @@ Route::middleware('web')->group(function () {
 
     // Termos de Uso
     Route::get('/termos-uso', [TermsController::class, 'index'])->name('terms.use');
+
+    // Informações
+    Route::get('/informacoes', [InformacoesController::class, 'index'])->name('informacoes.index');
 
     // Times
     Route::get('/teams', [App\Http\Controllers\HomeController::class, 'getTeams'])->name('teams.get');

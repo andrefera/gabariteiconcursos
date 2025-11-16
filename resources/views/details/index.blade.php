@@ -366,7 +366,7 @@
             </div>
         </div>
     </section>
-
+    {{--
     <section class="linkSection">
         <div class="alignSection">
             <hr>
@@ -482,6 +482,7 @@
             </div>
         </div>
     </section>
+    --}}
 @endsection
 
 <!-- Scripts -->

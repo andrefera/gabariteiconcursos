@@ -78,10 +78,10 @@
                 </div>
                 <div class="aceiteTermos">
                     <input type="checkbox" id="termos" required/>
-                    <label for="termos">Concordo com os <a href="#">Termos & Privacidade</a></label>
+                    <label for="termos">Concordo com os <a href="{{ route('terms.use') }}" target="_blank">Termos de Uso</a> e <a href="{{ route('privacy.policy') }}" target="_blank">Política de Privacidade</a></label>
                 </div>
 
-                <button type="submit" class="botaoLogin">Criar Conta</button>
+                <button type="submit" class="botaoLogin"><span>Criar Conta</span></button>
             </form>
 
             <p class="textoRodape">
@@ -108,7 +108,7 @@
                     <input type="password" id="senhaLogin" name="password" placeholder="Digite sua senha" required/>
                 </div>
 
-                <button type="submit" class="botaoLogin">Entrar</button>
+                <button type="submit" class="botaoLogin"><span>Entrar</span></button>
             </form>
 
             <p class="textoRodape">
@@ -209,6 +209,20 @@
             return;
         }
 
+        // Obter o botão de submit e adicionar estado de loading
+        const submitButton = formRegistro.querySelector('button[type="submit"]');
+        const buttonSpan = submitButton.querySelector('span');
+        const originalButtonText = buttonSpan ? buttonSpan.textContent : submitButton.textContent;
+        
+        // Ativar loading
+        submitButton.disabled = true;
+        submitButton.classList.add('loading');
+        if (buttonSpan) {
+            buttonSpan.textContent = 'Criando conta...';
+        } else {
+            submitButton.textContent = 'Criando conta...';
+        }
+
         try {
             const response = await fetch('{{ route("register.submit") }}', {
                 method: 'POST',
@@ -222,11 +236,24 @@
             const data = await response.json();
 
             if (data.success) {
+                if (buttonSpan) {
+                    buttonSpan.textContent = 'Sucesso!';
+                } else {
+                    submitButton.textContent = 'Sucesso!';
+                }
                 showToast('success', 'Sucesso!', 'Conta criada com sucesso!');
                 setTimeout(() => {
                     window.location.href = data.redirect || '/';
                 }, 1500);
             } else {
+                // Remover loading em caso de erro
+                submitButton.disabled = false;
+                submitButton.classList.remove('loading');
+                if (buttonSpan) {
+                    buttonSpan.textContent = originalButtonText;
+                } else {
+                    submitButton.textContent = originalButtonText;
+                }
                 let errorMessage = data.message || 'Erro ao criar conta. Tente novamente.';
                 if (data.errors) {
                     const errorMessages = Object.values(data.errors).flat();
@@ -236,6 +263,14 @@
             }
         } catch (error) {
             console.error('Erro:', error);
+            // Remover loading em caso de erro
+            submitButton.disabled = false;
+            submitButton.classList.remove('loading');
+            if (buttonSpan) {
+                buttonSpan.textContent = originalButtonText;
+            } else {
+                submitButton.textContent = originalButtonText;
+            }
             showToast('error', 'Erro', 'Erro ao processar sua solicitação. Tente novamente mais tarde.');
         }
     });
@@ -255,6 +290,20 @@
             return;
         }
 
+        // Obter o botão de submit e adicionar estado de loading
+        const submitButton = formLogin.querySelector('button[type="submit"]');
+        const buttonSpan = submitButton.querySelector('span');
+        const originalButtonText = buttonSpan ? buttonSpan.textContent : submitButton.textContent;
+        
+        // Ativar loading
+        submitButton.disabled = true;
+        submitButton.classList.add('loading');
+        if (buttonSpan) {
+            buttonSpan.textContent = 'Entrando...';
+        } else {
+            submitButton.textContent = 'Entrando...';
+        }
+
         try {
             const response = await fetch('{{ route("login.submit") }}', {
                 method: 'POST',
@@ -268,14 +317,35 @@
             const data = await response.json();
 
             if (data.success) {
+                if (buttonSpan) {
+                    buttonSpan.textContent = 'Sucesso!';
+                } else {
+                    submitButton.textContent = 'Sucesso!';
+                }
                 setTimeout(() => {
                     window.location.href = data.redirect || '/';
                 }, 1500);
             } else {
+                // Remover loading em caso de erro
+                submitButton.disabled = false;
+                submitButton.classList.remove('loading');
+                if (buttonSpan) {
+                    buttonSpan.textContent = originalButtonText;
+                } else {
+                    submitButton.textContent = originalButtonText;
+                }
                 showToast('error', 'Erro no Login', data.message || 'Credenciais inválidas. Verifique seu email e senha.');
             }
         } catch (error) {
             console.error('Erro:', error);
+            // Remover loading em caso de erro
+            submitButton.disabled = false;
+            submitButton.classList.remove('loading');
+            if (buttonSpan) {
+                buttonSpan.textContent = originalButtonText;
+            } else {
+                submitButton.textContent = originalButtonText;
+            }
             showToast('error', 'Erro', 'Erro ao processar sua solicitação. Tente novamente mais tarde.');
         }
     });

@@ -372,13 +372,13 @@
 
 /* Header da página */
 .terms-header {
-    background: linear-gradient(135deg, #076035 0%, #0d8a4a 100%);
+    background: linear-gradient(135deg, #FF7C00 0%, #FFB800 100%);
     border-radius: 20px;
     padding: 40px;
     margin-bottom: 40px;
     text-align: center;
     color: white;
-    box-shadow: 0 10px 30px rgba(7, 96, 53, 0.3);
+    box-shadow: 0 10px 30px rgba(255, 124, 0, 0.3);
 }
 
 .terms-header h1 {
@@ -419,7 +419,7 @@
 .terms-section h2 {
     font-size: 1.8rem;
     font-weight: 600;
-    color: #076035;
+    color: #FF7C00;
     margin-bottom: 25px;
     font-family: 'Montserrat', sans-serif;
     border-bottom: 3px solid #e2e8f0;
@@ -431,7 +431,7 @@
     border-radius: 12px;
     padding: 25px;
     margin-bottom: 20px;
-    border-left: 4px solid #076035;
+    border-left: 4px solid #FF7C00;
 }
 
 .terms-card:last-child {
@@ -464,7 +464,7 @@
 
 .terms-card li::before {
     content: "✓";
-    color: #076035;
+    color: #FF7C00;
     font-weight: bold;
     margin-right: 10px;
     font-size: 1.1rem;
@@ -478,8 +478,8 @@
 
 /* Card de contato especial */
 .contact-card {
-    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-    border-left: 4px solid #0284c7;
+    background: linear-gradient(135deg, #fff5e6 0%, #ffe6cc 100%);
+    border-left: 4px solid #FF7C00;
 }
 
 .contact-info {
@@ -500,7 +500,7 @@
 }
 
 .contact-item svg {
-    color: #076035;
+    color: #FF7C00;
     flex-shrink: 0;
 }
 
@@ -557,19 +557,19 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: linear-gradient(135deg, #076035 0%, #0d8a4a 100%);
+    background: linear-gradient(135deg, #FF7C00 0%, #FFB800 100%);
     color: white;
     padding: 12px 24px;
     border-radius: 25px;
     text-decoration: none;
     font-weight: 500;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(7, 96, 53, 0.3);
+    box-shadow: 0 4px 15px rgba(255, 124, 0, 0.3);
 }
 
 .back-home-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(7, 96, 53, 0.4);
+    box-shadow: 0 6px 20px rgba(255, 124, 0, 0.4);
     color: white;
 }
 

@@ -414,16 +414,9 @@
 
             if (trigger && dropdown) {
                 let isOpen = false;
-                let hoverTimeout = null;
-                let closeTimeout = null;
 
                 // Open menu function
                 function openMenu() {
-                    if (closeTimeout) {
-                        clearTimeout(closeTimeout);
-                        closeTimeout = null;
-                    }
-
                     dropdown.classList.add('show');
                     isOpen = true;
                 }
@@ -449,23 +442,6 @@
                     e.stopPropagation();
                     toggleMenu();
                 });
-
-                // Hover handlers for desktop
-                if (window.innerWidth > 768) {
-                    userMenu.addEventListener('mouseenter', function() {
-                        if (hoverTimeout) {
-                            clearTimeout(hoverTimeout);
-                        }
-                        hoverTimeout = setTimeout(openMenu, 150);
-                    });
-
-                    userMenu.addEventListener('mouseleave', function() {
-                        if (hoverTimeout) {
-                            clearTimeout(hoverTimeout);
-                        }
-                        closeTimeout = setTimeout(closeMenu, 300);
-                    });
-                }
 
                 // Close on escape key
                 document.addEventListener('keydown', function(e) {

@@ -458,6 +458,7 @@
 }
 
 .descriptionSection {
+    margin-bottom: 40px;
     .title {
         font-size: 1.5rem;
         font-weight: bold;
@@ -710,7 +711,7 @@ hr {
 }
 
 .productSection {
-
+    margin-bottom: 40px;
     .alignSection {
         @media (max-width: 769px) {
             padding: 0 1rem;

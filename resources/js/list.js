@@ -123,58 +123,167 @@ function filtersToFriendlyUrl(filters, basePath = '/camisas') {
     return url;
 }
 
-// Função para obter todos os filtros do formulário
-function getFiltersFromForm() {
+function extractCheckboxFilters(container) {
     const filters = {};
-    
-    // Filtro de preço
-    const priceSlider = document.getElementById('priceSlider');
-    if (priceSlider && priceSlider.value && priceSlider.value !== '500') {
-        filters.price_max = priceSlider.value;
+
+    if (!container) {
+        return filters;
     }
-    
-    // Filtro de ordenação
-    const sortSelect = document.getElementById('sortSelectOrdenar');
-    if (sortSelect && sortSelect.dataset.sort && sortSelect.dataset.sort !== 'most_sold') {
-        filters.sort = sortSelect.dataset.sort;
-    }
-    
-    // Filtro de time
-    const teamSelect = document.getElementById('sortSelectTime');
-    if (teamSelect && teamSelect.dataset.team !== undefined && teamSelect.dataset.team !== '') {
-        filters.team = teamSelect.dataset.team;
-    }
-    
-    // Filtro de temporada
-    const seasonSelect = document.getElementById('sortSelectTemporada');
-    if (seasonSelect && seasonSelect.dataset.season !== undefined && seasonSelect.dataset.season !== '') {
-        filters.season = seasonSelect.dataset.season;
-    }
-    
-    // Filtro de tipo de produto
-    const productTypeSelect = document.getElementById('sortSelectTipo');
-    if (productTypeSelect && productTypeSelect.dataset.productType !== undefined && productTypeSelect.dataset.productType !== '') {
-        filters.product_type = productTypeSelect.dataset.productType;
-    }
-    
-    // Checkboxes
-    const checkboxFilters = {
-        'gender': document.querySelectorAll('input[type="checkbox"][value="masculine"], input[type="checkbox"][value="feminine"], input[type="checkbox"][value="unisex"], input[type="checkbox"][value="kids"]'),
-        'size': document.querySelectorAll('input[type="checkbox"][value="P"], input[type="checkbox"][value="M"], input[type="checkbox"][value="G"], input[type="checkbox"][value="GG"]'),
-        'category': document.querySelectorAll('input[type="checkbox"][value="Retro"], input[type="checkbox"][value="torcedor"], input[type="checkbox"][value="jogador"], input[type="checkbox"][value="treino"]'),
-        'national_international': document.querySelectorAll('input[type="checkbox"][value="Sim"], input[type="checkbox"][value="Não"]')
-    };
-    
-    Object.entries(checkboxFilters).forEach(([param, checkboxes]) => {
-        const checkedValues = Array.from(checkboxes)
-            .filter(cb => cb.checked)
-            .map(cb => cb.value);
-        
+
+    const checkboxes = container.querySelectorAll('input[type="checkbox"][data-filter-group]');
+    const grouped = {};
+
+    checkboxes.forEach((checkbox) => {
+        const group = checkbox.dataset.filterGroup;
+        if (!group) {
+            return;
+        }
+
+        if (!grouped[group]) {
+            grouped[group] = [];
+        }
+
+        grouped[group].push(checkbox);
+    });
+
+    Object.entries(grouped).forEach(([group, items]) => {
+        const checkedValues = items
+            .filter((checkbox) => checkbox.checked)
+            .map((checkbox) => checkbox.value);
+
         if (checkedValues.length > 0) {
-            filters[param] = checkedValues.join(',');
+            const uniqueValues = Array.from(new Set(checkedValues));
+            filters[group] = uniqueValues.join(',');
         }
     });
-    
+
+    return filters;
+}
+
+function isSliderActive(slider) {
+    if (!slider) {
+        return false;
+    }
+
+    const currentValue = slider.value ?? '';
+    const defaultValue = slider.dataset.default ?? slider.getAttribute('max') ?? '';
+
+    if (currentValue === '') {
+        return false;
+    }
+
+    return currentValue !== defaultValue;
+}
+
+function collectActiveFilters({ container, sliderId, dropdowns = [] }) {
+    const activeSet = new Set();
+
+    if (container) {
+        container.querySelectorAll('input[type="checkbox"][data-filter-group]:checked').forEach((checkbox) => {
+            const group = checkbox.dataset.filterGroup;
+            const value = checkbox.dataset.filterValue ?? checkbox.value;
+
+            if (group && value !== undefined) {
+                activeSet.add(`${group}:${value}`);
+            }
+        });
+    }
+
+    if (sliderId) {
+        const slider = document.getElementById(sliderId);
+        if (slider && isSliderActive(slider)) {
+            activeSet.add(`${sliderId}:value`);
+        }
+    }
+
+    dropdowns.forEach(({ id, datasetKey, defaultValue = '', key }) => {
+        const element = document.getElementById(id);
+        if (!element) {
+            return;
+        }
+
+        const value = element.dataset[datasetKey] ?? '';
+        if (value && value !== defaultValue) {
+            activeSet.add(`${key}:${value}`);
+        }
+    });
+
+    return activeSet;
+}
+
+function syncLinkedCheckboxes(changedCheckbox) {
+    if (!changedCheckbox || !changedCheckbox.dataset) {
+        return;
+    }
+
+    const group = changedCheckbox.dataset.filterGroup;
+    const value = changedCheckbox.dataset.filterValue ?? changedCheckbox.value;
+
+    if (!group || value === undefined) {
+        return;
+    }
+
+    document.querySelectorAll(`input[type="checkbox"][data-filter-group="${group}"]`).forEach((checkbox) => {
+        if (checkbox === changedCheckbox) {
+            return;
+        }
+
+        const checkboxValue = checkbox.dataset.filterValue ?? checkbox.value;
+        if (checkboxValue === value) {
+            checkbox.checked = changedCheckbox.checked;
+        }
+    });
+}
+
+function dataAttributeToDatasetKey(dataAttribute) {
+    return dataAttribute
+        .replace(/^data-/, '')
+        .split('-')
+        .map((part, index) => (index === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1)))
+        .join('');
+}
+
+// Função para obter todos os filtros do formulário
+function getFiltersFromForm() {
+    const filters = extractCheckboxFilters(document.querySelector('.filter'));
+
+    const priceSlider = document.getElementById('priceSlider');
+    if (priceSlider && isSliderActive(priceSlider)) {
+        filters.price_max = priceSlider.value;
+    }
+
+    const sortSelect = document.getElementById('sortSelectOrdenar');
+    if (sortSelect) {
+        const sortValue = sortSelect.dataset.sort ?? 'most_sold';
+        if (sortValue && sortValue !== 'most_sold') {
+            filters.sort = sortValue;
+        }
+    }
+
+    const teamSelect = document.getElementById('sortSelectTime');
+    if (teamSelect) {
+        const teamValue = teamSelect.dataset.team ?? '';
+        if (teamValue) {
+            filters.team = teamValue;
+        }
+    }
+
+    const seasonSelect = document.getElementById('sortSelectTemporada');
+    if (seasonSelect) {
+        const seasonValue = seasonSelect.dataset.season ?? '';
+        if (seasonValue) {
+            filters.season = seasonValue;
+        }
+    }
+
+    const productTypeSelect = document.getElementById('sortSelectTipo');
+    if (productTypeSelect) {
+        const productTypeValue = productTypeSelect.dataset.productType ?? '';
+        if (productTypeValue) {
+            filters.product_type = productTypeValue;
+        }
+    }
+
     return filters;
 }
 
@@ -204,9 +313,12 @@ function setupDropdown(dropdownId, buttonId, dataAttribute) {
             const button = document.getElementById(buttonId);
             
             button.childNodes[0].nodeValue = selectedText + " ";
-            button.dataset[dataAttribute.replace('data-', '')] = selectedValue;
+            const datasetKey = dataAttributeToDatasetKey(dataAttribute);
+            button.dataset[datasetKey] = selectedValue;
             
             document.getElementById(dropdownId).style.display = "none";
+            updateActiveFilterIndicators();
+            updateMobileFilterCount();
             applyFilters();
         });
     });
@@ -235,73 +347,59 @@ function getFiltersFromUrl() {
 
 // Função para atualizar indicadores visuais de filtros ativos
 function updateActiveFilterIndicators() {
-    let hasAnyActiveFilters = false;
-    const urlFilters = getFiltersFromUrl();
-
-    // Atualizar indicadores de checkboxes
-    document.querySelectorAll('.filter-group.checkbox').forEach(group => {
-        const checkboxes = group.querySelectorAll('input[type="checkbox"]');
-        const hasActiveFilters = Array.from(checkboxes).some(cb => cb.checked);
-        
-        if (hasActiveFilters) {
-            group.classList.add('has-active-filters');
-            hasAnyActiveFilters = true;
-        } else {
-            group.classList.remove('has-active-filters');
-        }
+    const filterContainer = document.querySelector('.filter');
+    const activeSet = collectActiveFilters({
+        container: filterContainer,
+        sliderId: 'priceSlider',
+        dropdowns: [
+            { id: 'sortSelectOrdenar', datasetKey: 'sort', defaultValue: 'most_sold', key: 'sort' },
+            { id: 'sortSelectTime', datasetKey: 'team', defaultValue: '', key: 'team' },
+            { id: 'sortSelectTemporada', datasetKey: 'season', defaultValue: '', key: 'season' },
+            { id: 'sortSelectTipo', datasetKey: 'productType', defaultValue: '', key: 'product_type' }
+        ]
     });
 
-    // Atualizar indicadores de dropdowns baseado na URL e no estado do formulário
-    const sortSelect = document.getElementById('sortSelectOrdenar');
-    if (sortSelect && sortSelect.dataset.sort && sortSelect.dataset.sort !== 'most_sold') {
-        sortSelect.classList.add('active');
-        hasAnyActiveFilters = true;
-    } else {
-        sortSelect?.classList.remove('active');
-    }
-    
-    const teamSelect = document.getElementById('sortSelectTime');
-    if (teamSelect && teamSelect.dataset.team && teamSelect.dataset.team !== '') {
-        teamSelect.classList.add('active');
-        hasAnyActiveFilters = true;
-    } else {
-        teamSelect?.classList.remove('active');
-    }
-    
-    const seasonSelect = document.getElementById('sortSelectTemporada');
-    if (seasonSelect && seasonSelect.dataset.season && seasonSelect.dataset.season !== '' && seasonSelect.dataset.season !== 'Todos') {
-        seasonSelect.classList.add('active');
-        hasAnyActiveFilters = true;
-    } else {
-        seasonSelect?.classList.remove('active');
-    }
-    
-    const productTypeSelect = document.getElementById('sortSelectTipo');
-    if (productTypeSelect && productTypeSelect.dataset.productType && productTypeSelect.dataset.productType !== '' && productTypeSelect.dataset.productType !== 'Todos') {
-        productTypeSelect.classList.add('active');
-        hasAnyActiveFilters = true;
-    } else {
-        productTypeSelect?.classList.remove('active');
-    }
+    const activeCount = activeSet.size;
 
-    // Atualizar indicador do slider de preço
+    document.querySelectorAll('.filter-group.checkbox').forEach((group) => {
+        const hasChecked = group.querySelector('input[type="checkbox"][data-filter-group]:checked');
+        group.classList.toggle('has-active-filters', !!hasChecked);
+    });
+
     const priceSlider = document.getElementById('priceSlider');
-    if (priceSlider && ((urlFilters.price_max && urlFilters.price_max !== '250') || (priceSlider.value && priceSlider.value !== '250' && priceSlider.value !== '500'))) {
-        priceSlider.parentElement.classList.add('has-active-filters');
-        hasAnyActiveFilters = true;
-    } else {
-        priceSlider?.parentElement.classList.remove('has-active-filters');
-    }
-
-    // Mostrar/ocultar botão "Limpar Filtros"
-    const clearFiltersBtn = document.getElementById('clearFilters');
-    if (clearFiltersBtn) {
-        if (hasAnyActiveFilters) {
-            clearFiltersBtn.style.display = 'inline-block';
-        } else {
-            clearFiltersBtn.style.display = 'none';
+    if (priceSlider) {
+        const sliderWrapper = priceSlider.parentElement;
+        if (sliderWrapper) {
+            sliderWrapper.classList.toggle('has-active-filters', isSliderActive(priceSlider));
         }
     }
+
+    ['sortSelectOrdenar', 'sortSelectTime', 'sortSelectTemporada', 'sortSelectTipo'].forEach((id) => {
+        const element = document.getElementById(id);
+        if (!element) {
+            return;
+        }
+
+        const datasetKeys = {
+            sortSelectOrdenar: { key: 'sort', defaultValue: 'most_sold' },
+            sortSelectTime: { key: 'team', defaultValue: '' },
+            sortSelectTemporada: { key: 'season', defaultValue: '' },
+            sortSelectTipo: { key: 'productType', defaultValue: '' }
+        };
+
+        const { key, defaultValue } = datasetKeys[id];
+        const value = element.dataset[key] ?? '';
+        element.classList.toggle('active', !!value && value !== defaultValue);
+    });
+
+    const clearFiltersBtn = document.getElementById('clearFilters');
+    if (clearFiltersBtn) {
+        const isActive = activeCount > 0;
+        clearFiltersBtn.disabled = !isActive;
+        clearFiltersBtn.classList.toggle('is-active', isActive);
+    }
+
+    updateMobileFilterCount();
 }
 
 // Função para configurar o slider de preço
@@ -320,6 +418,7 @@ function setupPriceSlider() {
 
         slider.style.background = `linear-gradient(to right, #ff6600 ${percentage}%, #ddd ${percentage}%)`;
         priceRange.textContent = `R$ 50 - R$ ${value}`;
+        updateActiveFilterIndicators();
     }
 
     slider.addEventListener("input", updateSliderTrack);
@@ -387,81 +486,65 @@ function closeMobileSortDropdown() {
 function updateMobileFilterCount() {
     const countElement = document.getElementById('mobileFilterCount');
     if (!countElement) return;
-    
-    let count = 0;
-    const urlFilters = getFiltersFromUrl();
-    
-    // Count active filters baseado na URL e no estado do formulário
-    if (urlFilters.team) count++;
-    if (urlFilters.season) count++;
-    if (urlFilters.price_max) count++;
-    if (urlFilters.size) count++;
-    
-    // Verificar checkboxes marcados
-    const checkboxes = document.querySelectorAll('.filter input[type="checkbox"]:checked, #mobileFilterSidebar input[type="checkbox"]:checked');
-    count += checkboxes.length;
-    
-    // Verificar dropdowns não padrão
-    const sortSelect = document.getElementById('sortSelectOrdenar') || document.getElementById('mobileSortSelectOrdenar');
-    if (sortSelect && sortSelect.dataset.sort && sortSelect.dataset.sort !== 'most_sold') {
-        count++;
-    }
-    
-    const productTypeSelect = document.getElementById('sortSelectTipo') || document.getElementById('mobileSortSelectTipo');
-    if (productTypeSelect && productTypeSelect.dataset.productType && productTypeSelect.dataset.productType !== '') {
-        count++;
-    }
-    
-    countElement.textContent = count;
-    countElement.style.display = count > 0 ? 'inline-block' : 'none';
+
+    const desktopSet = collectActiveFilters({
+        container: document.querySelector('.filter'),
+        sliderId: 'priceSlider',
+        dropdowns: [
+            { id: 'sortSelectOrdenar', datasetKey: 'sort', defaultValue: 'most_sold', key: 'sort' },
+            { id: 'sortSelectTime', datasetKey: 'team', defaultValue: '', key: 'team' },
+            { id: 'sortSelectTemporada', datasetKey: 'season', defaultValue: '', key: 'season' },
+            { id: 'sortSelectTipo', datasetKey: 'productType', defaultValue: '', key: 'product_type' }
+        ]
+    });
+
+    const mobileSet = collectActiveFilters({
+        container: document.getElementById('mobileFilterSidebar'),
+        sliderId: 'mobilePriceSlider',
+        dropdowns: [
+            { id: 'mobileSortSelectOrdenar', datasetKey: 'sort', defaultValue: 'most_sold', key: 'sort' },
+            { id: 'mobileSortSelectTime', datasetKey: 'team', defaultValue: '', key: 'team' },
+            { id: 'mobileSortSelectTemporada', datasetKey: 'season', defaultValue: '', key: 'season' },
+            { id: 'mobileSortSelectTipo', datasetKey: 'productType', defaultValue: '', key: 'product_type' }
+        ]
+    });
+
+    const combinedSet = new Set([...desktopSet, ...mobileSet]);
+
+    const activeCount = combinedSet.size;
+    countElement.textContent = activeCount;
+    countElement.style.display = activeCount > 0 ? 'inline-block' : 'none';
 }
 
 // Função para obter filtros do formulário mobile
 function getMobileFiltersFromForm() {
-    const filters = {};
-    
-    // Get mobile filter values
+    const mobileContainer = document.getElementById('mobileFilterSidebar');
+    const filters = extractCheckboxFilters(mobileContainer);
+
     const mobilePriceSlider = document.getElementById('mobilePriceSlider');
-    if (mobilePriceSlider && mobilePriceSlider.value && mobilePriceSlider.value !== '500') {
+    if (mobilePriceSlider && isSliderActive(mobilePriceSlider)) {
         filters.price_max = mobilePriceSlider.value;
     }
-    
-    // Get mobile dropdown values
+
     const mobileDropdowns = [
-        { id: 'mobileSortSelectOrdenar', param: 'sort', dataAttr: 'sort' },
-        { id: 'mobileSortSelectTime', param: 'team', dataAttr: 'team' },
-        { id: 'mobileSortSelectTemporada', param: 'season', dataAttr: 'season' },
-        { id: 'mobileSortSelectTipo', param: 'product_type', dataAttr: 'productType' }
+        { id: 'mobileSortSelectOrdenar', param: 'sort', datasetKey: 'sort', defaultValue: 'most_sold' },
+        { id: 'mobileSortSelectTime', param: 'team', datasetKey: 'team', defaultValue: '' },
+        { id: 'mobileSortSelectTemporada', param: 'season', datasetKey: 'season', defaultValue: '' },
+        { id: 'mobileSortSelectTipo', param: 'product_type', datasetKey: 'productType', defaultValue: '' }
     ];
-    
-    mobileDropdowns.forEach(dropdown => {
-        const element = document.getElementById(dropdown.id);
-        if (element && element.dataset[dropdown.dataAttr] !== undefined) {
-            const value = element.dataset[dropdown.dataAttr];
-            if (value && value !== '') {
-                filters[dropdown.param] = value;
-            }
+
+    mobileDropdowns.forEach(({ id, param, datasetKey, defaultValue }) => {
+        const element = document.getElementById(id);
+        if (!element) {
+            return;
+        }
+
+        const value = element.dataset[datasetKey] ?? '';
+        if (value && value !== defaultValue) {
+            filters[param] = value;
         }
     });
-    
-    // Get mobile checkbox values
-    const mobileCheckboxFilters = {
-        'gender': document.querySelectorAll('#mobileFilterSidebar input[type="checkbox"][value="masculine"], #mobileFilterSidebar input[type="checkbox"][value="feminine"], #mobileFilterSidebar input[type="checkbox"][value="unisex"], #mobileFilterSidebar input[type="checkbox"][value="kids"]'),
-        'size': document.querySelectorAll('#mobileFilterSidebar input[type="checkbox"][value="P"], #mobileFilterSidebar input[type="checkbox"][value="M"], #mobileFilterSidebar input[type="checkbox"][value="G"], #mobileFilterSidebar input[type="checkbox"][value="GG"]'),
-        'category': document.querySelectorAll('#mobileFilterSidebar input[type="checkbox"][value="Retro"], #mobileFilterSidebar input[type="checkbox"][value="torcedor"], #mobileFilterSidebar input[type="checkbox"][value="jogador"], #mobileFilterSidebar input[type="checkbox"][value="treino"]'),
-        'national_international': document.querySelectorAll('#mobileFilterSidebar input[type="checkbox"][value="Sim"], #mobileFilterSidebar input[type="checkbox"][value="Não"]')
-    };
-    
-    Object.entries(mobileCheckboxFilters).forEach(([param, checkboxes]) => {
-        const checkedValues = Array.from(checkboxes)
-            .filter(cb => cb.checked)
-            .map(cb => cb.value);
-        
-        if (checkedValues.length > 0) {
-            filters[param] = checkedValues.join(',');
-        }
-    });
-    
+
     return filters;
 }
 
@@ -516,6 +599,7 @@ function setupMobilePriceSlider() {
 
         slider.style.background = `linear-gradient(to right, #ff6600 ${percentage}%, #ddd ${percentage}%)`;
         priceRange.textContent = `R$ 50 - R$ ${value}`;
+        updateMobileFilterCount();
     }
 
     slider.addEventListener("input", updateMobileSliderTrack);
@@ -534,10 +618,12 @@ function setupMobileDropdown(dropdownId, buttonId, dataAttribute) {
             
             if (button) {
                 button.childNodes[0].nodeValue = selectedText + " ";
-                button.dataset[dataAttribute.replace('data-', '')] = selectedValue;
+                const datasetKey = dataAttributeToDatasetKey(dataAttribute);
+                button.dataset[datasetKey] = selectedValue;
             }
             
             document.getElementById(dropdownId).style.display = "none";
+            updateMobileFilterCount();
         });
     });
 }
@@ -561,14 +647,20 @@ document.addEventListener('DOMContentLoaded', function() {
     setupMobileDropdown("mobileDropdownTipo", "mobileSortSelectTipo", "data-product-type");
 
     // Adicionar listeners para checkboxes desktop
-    document.querySelectorAll('.filter input[type="checkbox"]').forEach(checkbox => {
-        checkbox.addEventListener('change', applyFilters);
+    document.querySelectorAll('.filter input[type="checkbox"][data-filter-group]').forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            syncLinkedCheckboxes(this);
+            updateActiveFilterIndicators();
+            updateMobileFilterCount();
+            applyFilters();
+        });
     });
 
     // Adicionar listeners para checkboxes mobile
-    document.querySelectorAll('#mobileFilterSidebar input[type="checkbox"]').forEach(checkbox => {
+    document.querySelectorAll('#mobileFilterSidebar input[type="checkbox"][data-filter-group]').forEach(checkbox => {
         checkbox.addEventListener('change', function() {
-            // Don't auto-apply on mobile, wait for user to click "Apply"
+            syncLinkedCheckboxes(this);
+            updateMobileFilterCount();
         });
     });
 

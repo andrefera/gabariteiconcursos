@@ -31,14 +31,14 @@
                 <nav class="sidebar">
                     <ul>
                         <li>
-                            <a href="#">
+                            <a href="/minha-conta">
                                 <img width="24" height="24" src="{{ asset('images/icons/mini-profile.svg') }}"
                                      alt="Perfil">
                                 Minha Conta
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <a href="/meus-pedidos">
                                 <img width="24" height="24" src="{{ asset('images/icons/mini-order.svg') }}"
                                      alt="Pedido">
                                 Meus Pedidos
@@ -46,14 +46,14 @@
                         </li>
 
                         <li>
-                            <a href="#">
+                            <a href="/meus-enderecos">
                                 <img width="24" height="24" src="{{ asset('images/icons/mini-address.svg') }}"
                                      alt="Endereço">
                                 Meus Endereços
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <a href="/meus-dados" class="active">
                                 <img  src="{{ asset('images/icons/mini-data.svg') }}"
                                      alt="Dados">
                                 Meus Dados
