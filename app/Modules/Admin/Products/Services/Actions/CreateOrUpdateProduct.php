@@ -184,7 +184,7 @@ readonly class CreateOrUpdateProduct
 
             DB::commit();
 
-            return ["success" => true, "msg" => ""];
+            return ["success" => true, "msg" => "", "product_id" => $product->id];
 
         } catch (Exception $exception) {
             Log::error("Erro ao salvar produto: " . $exception->getMessage());
