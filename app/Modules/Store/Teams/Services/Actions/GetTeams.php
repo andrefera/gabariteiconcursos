@@ -19,7 +19,7 @@ class GetTeams
 
     public function execute(): array
     {
-        $this->getTeamsFromDatabase();
+        return $this->getTeamsFromDatabase();
     }
 
     private function getTeamsFromDatabase(): array
