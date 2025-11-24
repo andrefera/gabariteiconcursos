@@ -301,31 +301,33 @@
                         </div>
                     </div>
 
-                    <div class="filter-group checkbox">
-                        <h4>Categoria</h4>
-                        @foreach($primaryCategoryKeys as $categoryKey)
-                            @php
-                                $count = $availableCategoryCounts[$categoryKey] ?? 0;
-                                $isSelected = in_array($categoryKey, $selectedCategories, true);
-                                $label = $categoryLabels[$categoryKey] ?? $categoryKey;
-                            @endphp
-                            @if($count > 0 || $isSelected)
-                                <label data-count="{{ $count }}">
-                                    <input
-                                        type="checkbox"
-                                        name="category[]"
-                                        value="{{ $categoryKey }}"
-                                        data-filter-group="category"
-                                        data-filter-value="{{ $categoryKey }}"
-                                        data-filter-origin="desktop"
-                                        {{ $isSelected ? 'checked' : '' }}
-                                    />
-                                    <span class="custom-checkbox"></span>
-                                    <span class="label-text">{{ $label }}</span>
-                                </label>
-                            @endif
-                        @endforeach
-                    </div>
+                    @if(count($primaryCategoryKeys) > 0)
+                        <div class="filter-group checkbox">
+                            <h4>Categoria</h4>
+                            @foreach($primaryCategoryKeys as $categoryKey)
+                                @php
+                                    $count = $availableCategoryCounts[$categoryKey] ?? 0;
+                                    $isSelected = in_array($categoryKey, $selectedCategories, true);
+                                    $label = $categoryLabels[$categoryKey] ?? $categoryKey;
+                                @endphp
+                                @if($count > 0 || $isSelected)
+                                    <label data-count="{{ $count }}">
+                                        <input
+                                            type="checkbox"
+                                            name="category[]"
+                                            value="{{ $categoryKey }}"
+                                            data-filter-group="category"
+                                            data-filter-value="{{ $categoryKey }}"
+                                            data-filter-origin="desktop"
+                                            {{ $isSelected ? 'checked' : '' }}
+                                        />
+                                        <span class="custom-checkbox"></span>
+                                        <span class="label-text">{{ $label }}</span>
+                                    </label>
+                                @endif
+                            @endforeach
+                        </div>
+                    @endif
                     <div class="filter-group checkbox">
                         <h4>Nacional / Internacional</h4>
                         @foreach($nationalityLabels as $value => $label)
@@ -708,31 +710,33 @@
                 </div>
             </div>
 
-            <div class="filter-group checkbox">
-                <h4>Categoria</h4>
-                @foreach($primaryCategoryKeys as $categoryKey)
-                    @php
-                        $count = $availableCategoryCounts[$categoryKey] ?? 0;
-                        $isSelected = in_array($categoryKey, $selectedCategories, true);
-                        $label = $categoryLabels[$categoryKey] ?? $categoryKey;
-                    @endphp
-                    @if($count > 0 || $isSelected)
-                        <label data-count="{{ $count }}">
-                            <input
-                                type="checkbox"
-                                name="category[]"
-                                value="{{ $categoryKey }}"
-                                data-filter-group="category"
-                                data-filter-value="{{ $categoryKey }}"
-                                data-filter-origin="mobile"
-                                {{ $isSelected ? 'checked' : '' }}
-                            />
-                            <span class="custom-checkbox"></span>
-                            <span class="label-text">{{ $label }}</span>
-                        </label>
-                    @endif
-                @endforeach
-            </div>
+            @if(count($primaryCategoryKeys) > 0)
+                <div class="filter-group checkbox">
+                    <h4>Categoria</h4>
+                    @foreach($primaryCategoryKeys as $categoryKey)
+                        @php
+                            $count = $availableCategoryCounts[$categoryKey] ?? 0;
+                            $isSelected = in_array($categoryKey, $selectedCategories, true);
+                            $label = $categoryLabels[$categoryKey] ?? $categoryKey;
+                        @endphp
+                        @if($count > 0 || $isSelected)
+                            <label data-count="{{ $count }}">
+                                <input
+                                    type="checkbox"
+                                    name="category[]"
+                                    value="{{ $categoryKey }}"
+                                    data-filter-group="category"
+                                    data-filter-value="{{ $categoryKey }}"
+                                    data-filter-origin="mobile"
+                                    {{ $isSelected ? 'checked' : '' }}
+                                />
+                                <span class="custom-checkbox"></span>
+                                <span class="label-text">{{ $label }}</span>
+                            </label>
+                        @endif
+                    @endforeach
+                </div>
+            @endif
             <div class="filter-group checkbox">
                 <h4>Nacional / Internacional</h4>
                 @foreach($nationalityLabels as $value => $label)
