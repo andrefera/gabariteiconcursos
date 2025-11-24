@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Store;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Modules\Store\Products\DTO\ProductDetailDTO;
+use App\Modules\Store\Products\Services\Actions\GetRelatedProducts;
 use App\Modules\Store\Products\Services\Actions\ListStoreProducts;
 use App\Modules\Store\Teams\Services\Actions\GetTeamByUrl;
 use App\Modules\Store\Teams\Services\Actions\GetTeams;
@@ -114,7 +115,10 @@ class ProductController extends Controller
             abort(404);
         }
 
-        return view('details.index', ['product' => ProductDetailDTO::fromProduct($product)]);
+        return view('details.index', [
+            'product' => ProductDetailDTO::fromProduct($product),
+            'related_products' => (new GetRelatedProducts($product->id))->execute()
+        ]);
     }
 
 

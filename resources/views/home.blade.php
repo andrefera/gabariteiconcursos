@@ -115,7 +115,6 @@
                                             @endif
                                         </div>
                                         <div>{{ $product['installment_price'] }}</div>
-                                        <div class="stars">★★★★★ (5)</div>
                                     </div>
                                 </a>
                             </div>
@@ -176,7 +175,6 @@
                                             @endif
                                         </div>
                                         <div>{{ $product['installment_price'] }}</div>
-                                        <div class="stars">★★★★★ (5)</div>
                                     </div>
                                 </a>
                             </div>
@@ -257,7 +255,6 @@
                         <span class="author">João Silva</span>
                         <span class="date">10/01/2025</span>
                     </div>
-                    <div class="stars">★★★★★</div>
                 </div>
 
                 <!-- Review 2 -->
@@ -267,7 +264,6 @@
                         <span class="author">Ana Costa</span>
                         <span class="date">08/01/2025</span>
                     </div>
-                    <div class="stars">★★★★★</div>
                 </div>
 
                 <!-- Review 3 -->
@@ -277,7 +273,6 @@
                         <span class="author">Carlos Pereira</span>
                         <span class="date">05/01/2025</span>
                     </div>
-                    <div class="stars">★★★★☆</div>
                 </div>
 
                 <!-- Review 4 -->
@@ -287,7 +282,6 @@
                         <span class="author">Beatriz Almeida</span>
                         <span class="date">03/01/2025</span>
                     </div>
-                    <div class="stars">★★★★☆</div>
                 </div>
             </div>
         </div>

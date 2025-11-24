@@ -434,9 +434,11 @@
                                         <div class="info">
                                             <h3>{{ $product['name'] }}</h3>
                                             <div>
-                                                <span class="price">{{ $product['price'] }}</span>
                                                 @if($product['special_price'])
-                                                    <span class="old-price">{{ $product['special_price'] }}</span>
+                                                    <span class="price">{{ $product['special_price'] }}</span>
+                                                    <span class="old-price">{{ $product['price'] }}</span>
+                                                @else
+                                                    <span class="price">{{ $product['price'] }}</span>
                                                 @endif
                                             </div>
                                             <div>{{ $product['installment_price'] }}</div>
