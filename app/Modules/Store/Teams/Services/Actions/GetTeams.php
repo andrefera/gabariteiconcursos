@@ -19,9 +19,7 @@ class GetTeams
 
     public function execute(): array
     {
-        return Cache::remember(self::CACHE_KEY, self::CACHE_TTL, function () {
-            return $this->getTeamsFromDatabase();
-        });
+        $this->getTeamsFromDatabase();
     }
 
     private function getTeamsFromDatabase(): array

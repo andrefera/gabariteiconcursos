@@ -19,9 +19,7 @@ class GetHomeProducts
 
     public function execute(): array
     {
-        return Cache::remember(self::CACHE_KEY, self::CACHE_TTL, function () {
-            return $this->getProductsFromDatabase();
-        });
+        return $this->getProductsFromDatabase();
     }
 
     private function getProductsFromDatabase(): array
