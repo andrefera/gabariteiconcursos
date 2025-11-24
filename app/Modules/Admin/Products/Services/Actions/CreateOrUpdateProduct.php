@@ -5,6 +5,7 @@ namespace App\Modules\Admin\Products\Services\Actions;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\ProductSize;
+use App\Support\Util\StringUtil;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -44,8 +45,10 @@ readonly class CreateOrUpdateProduct
         try {
             DB::beginTransaction();
 
+            $sku = strtoupper(StringUtil::removeAccents($this->sku));
+
             $existSku = Product::query()
-                ->where('sku', $this->sku)
+                ->where('sku', $sku)
                 ->when($this->id, fn($query) => $query->where('id', '<>', $this->id))
                 ->first();
 
@@ -53,8 +56,10 @@ readonly class CreateOrUpdateProduct
                 return ["success" => false, "msg" => "Sku já existe."];
             }
 
+            $url = trim(strtolower(StringUtil::removeAccents($this->url)));
+
             $existUrl = Product::query()
-                ->where('url', trim(strtolower($this->url)))
+                ->where('url', $url)
                 ->when($this->id, fn($query) => $query->where('id', '<>', $this->id))
                 ->first();
 
@@ -66,12 +71,12 @@ readonly class CreateOrUpdateProduct
                 $product = Product::query()->find($this->id);
             } else {
                 $product = new Product();
+                $product->url = $url;
             }
 
             $product->fill([
                 "name" => trim($this->name),
-                "sku" => strtoupper($this->sku),
-                "url" => trim(strtolower($this->url)),
+                "sku" => $sku,
                 "description" => $this->description ? trim($this->description) : null,
                 "cost" => $this->cost,
                 "price" => $this->price,
@@ -112,7 +117,7 @@ readonly class CreateOrUpdateProduct
 
             $imageIds = [];
             foreach ($this->images as $image) {
-                if (isset($image["id"])) {
+                if (isset($image["id"]) && !isset($image["file"])) {
                     $productImage = ProductImage::query()->find($image["id"]);
                     $imageUrl = $productImage->url;
 
@@ -162,10 +167,10 @@ readonly class CreateOrUpdateProduct
                     $productSize = ProductSize::query()->find($size["id"]);
                 } else {
                     $productSize = new ProductSize();
+                    $productSize->product_id = $product->id;
                 }
 
                 $productSize->fill([
-                    "product_id" => $product->id,
                     "name" => $size["name"],
                     "stock" => $size["stock"]
                 ]);

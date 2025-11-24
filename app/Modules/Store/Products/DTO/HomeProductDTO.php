@@ -34,7 +34,7 @@ readonly class HomeProductDTO
         return new self(
             $product->id,
             $product->name,
-            UrlUtil::formatUrlKey($product->name),
+            $product->url,
             "R$ " . number_format($product->price, 2, ',', '.'),
             $product->special_price ? ("R$ " . number_format($product->special_price, 2, ',', '.')) : null,
             NumberUtil::calculateDiscountPercentage($product->price, $product->special_price),

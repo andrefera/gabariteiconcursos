@@ -97,7 +97,7 @@
                     @if(count($products) > 0)
                         @foreach($products as $product)
                             <div class="card swiper-slide">
-                                <a href="/camisa/{{ $product['url'] }}" class="card-link">
+                                <a href="{{ $product['url'] }}" class="card-link">
                                     <div class="cardContent">
                                         @if($product['discount_percentage'])
                                             <span class="badge">{{ $product['discount_percentage'] }}</span>
