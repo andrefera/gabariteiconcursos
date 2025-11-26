@@ -79,7 +79,7 @@ jobs:
 
             echo "📦 Instalando dependências do Composer..."
             set -e
-            composer install --no-interaction --no-dev --optimize-autoloader
+            composer install --no-interaction
 
             echo "📦 Instalando dependências do NPM..."
             npm ci --prefer-offline --no-audit --production || npm install --production
