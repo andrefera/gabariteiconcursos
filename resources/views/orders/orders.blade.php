@@ -2,65 +2,65 @@
 @section('title', 'Ellon Sports | Meus Pedidos')
 <link rel="stylesheet" href="{!! asset('assets/css/order_list.css') !!}">
 @section('content')
-<div class="alignSection">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li><a href="#">Início</a></li>
-            <li class="active">Minha Conta</li>
-        </ol>
-    </nav>
-</div>
-<main class="minhaConta">
     <div class="alignSection">
-        <div class="container">
-            <nav class="sidebar">
-                <ul>
-                    <li>
-                        <a href="{{ route('profile.index') }}">
-                            <img width="24" height="24" src="{{ asset('images/icons/mini-profile.svg') }}"
-                                alt="Perfil">
-                            Minha Conta
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('orders.index') }}" class="active">
-                            <img width="24" height="24" src="{{ asset('images/icons/mini-order.svg') }}"
-                                alt="Pedido">
-                            Meus Pedidos
-                        </a>
-                    </li>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li><a href="#">Início</a></li>
+                <li class="active">Minha Conta</li>
+            </ol>
+        </nav>
+    </div>
+    <main class="minhaConta">
+        <div class="alignSection">
+            <div class="container">
+                <nav class="sidebar">
+                    <ul>
+                        <li>
+                            <a href="{{ route('profile.index') }}">
+                                <img width="24" height="24" src="{{ asset('images/icons/mini-profile.svg') }}"
+                                    alt="Perfil">
+                                Minha Conta
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('orders.index') }}" class="active">
+                                <img width="24" height="24" src="{{ asset('images/icons/mini-order.svg') }}"
+                                    alt="Pedido">
+                                Meus Pedidos
+                            </a>
+                        </li>
 
-                    <li>
-                        <a href="{{ route('orders.addresses') }}">
-                            <img width="24" height="24" src="{{ asset('images/icons/mini-address.svg') }}"
-                                alt="Endereço">
-                            Meus Endereços
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('orders.data') }}">
-                            <img width="24" height="24" src="{{ asset('images/icons/mini-data.svg') }}"
-                                alt="Dados">
-                            Meus Dados
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+                        <li>
+                            <a href="{{ route('orders.addresses') }}">
+                                <img width="24" height="24" src="{{ asset('images/icons/mini-address.svg') }}"
+                                    alt="Endereço">
+                                Meus Endereços
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('orders.data') }}">
+                                <img width="24" height="24" src="{{ asset('images/icons/mini-data.svg') }}"
+                                    alt="Dados">
+                                Meus Dados
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
 
-            <section class="mainContent">
-                <header class="userGreeting">
-                    <div class="group">
-                        <div class="profileImage">
-                            <img width="56" height="56" src="{{ asset('images/icons/profile-circle.svg') }}" alt="Perfil">
+                <section class="mainContent">
+                    <header class="userGreeting">
+                        <div class="group">
+                            <div class="profileImage">
+                                <img width="56" height="56" src="{{ asset('images/icons/profile-circle.svg') }}" alt="Perfil">
+                            </div>
+                            <div class="userInfo">
+                                <h1>Meus Pedidos</h1>
+                                <p>Acompanhe todos os seus pedidos</p>
+                            </div>
                         </div>
-                        <div class="userInfo">
-                            <h1>Meus Pedidos</h1>
-                            <p>Acompanhe todos os seus pedidos</p>
-                        </div>
-                    </div>
-                </header>
+                    </header>
 
-                <div class="meusPedidos">
+                    <div class="meusPedidos">
                     @if(count($orders) > 0)
                     @foreach($orders as $order)
                     <div class="card orderCard-detalhado">
@@ -96,9 +96,9 @@
                             <div class="orderActions-detalhado">
                                 <button class="btnPrimary-green order-detail-btn" data-order-id="{{ $order['id'] }}">VER PEDIDO</button>
                                 @if($order['tracking_number'])
-                                <button class="btnSecondary-green">RASTREAR PEDIDO</button>
+                                <a href="https://rastreamento.correios.com.br/app/index.php" target="_blank" class="btnSecondary-green">RASTREAR PEDIDO</a>
                                 @endif
-                                <button class="btnOutline-green">CONTATAR SUPORTE</button>
+                                {{-- <button class="btnOutline-green">CONTATAR SUPORTE</button> --}}
                             </div>
                         </div>
                         @if (count($order['progress_steps']) > 0)
@@ -132,12 +132,12 @@
                 <div class="no-orders">
                     <p>Nenhum pedido encontrado.</p>
                 </div>
-                @endif
+                    @endif
+                    </div>
+                </section>
+            </div>
         </div>
-        </section>
-    </div>
-    </div>
-</main>
+    </main>
 
 <!-- Modal de Detalhes do Pedido -->
 <div id="orderModal" class="modal">
@@ -406,10 +406,6 @@
     }
 
     /* Prevent horizontal overflow */
-    .alignSection {
-        max-width: 100%;
-        overflow-x: hidden;
-    }
 
     * {
         box-sizing: border-box;
@@ -643,10 +639,6 @@
     }
 
     @media (max-width: 768px) {
-        .alignSection {
-            padding: 10px;
-        }
-
         .container {
             padding: 0;
             flex-direction: column;
@@ -819,10 +811,6 @@
     }
 
     @media (max-width: 480px) {
-        .alignSection {
-            padding: 5px;
-        }
-
         .sidebar ul {
             gap: 5px;
         }

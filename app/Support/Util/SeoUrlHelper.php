@@ -28,6 +28,7 @@ class SeoUrlHelper
         ],
         'category' => [
             'Retro' => 'retro',
+            'Seleção' => 'selecao',
             'torcedor' => 'torcedor',
             'jogador' => 'jogador',
             'treino' => 'treino',
@@ -62,6 +63,8 @@ class SeoUrlHelper
         ],
         'category' => [
             'retro' => 'Retro',
+            'selecao' => 'Seleção',
+            'seleção' => 'Seleção',
             'torcedor' => 'torcedor',
             'jogador' => 'jogador',
             'treino' => 'treino',

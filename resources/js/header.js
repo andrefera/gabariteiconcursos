@@ -407,15 +407,16 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Close sidebar when clicking on sidebar links
-    const sidebarLinks = sidebar.querySelectorAll('.sidebar-section-content a, .sidebar-action-btn');
-    sidebarLinks.forEach(link => {
-        link.addEventListener('click', function() {
+    // Close sidebar when clicking on sidebar links (using event delegation for dynamically added links)
+    sidebar.addEventListener('click', function(e) {
+        const link = e.target.closest('.sidebar-section-content a, .sidebar-link, .sidebar-action-btn');
+        if (link) {
             console.log('Sidebar link clicked, closing sidebar');
+            // Allow navigation to happen before closing
             setTimeout(() => {
                 closeSidebar();
             }, 150);
-        });
+        }
     });
 
     // Handle window resize

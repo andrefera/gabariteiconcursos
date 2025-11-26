@@ -21,7 +21,7 @@ readonly class ListStoreProducts
         private ?string $nationalInternational = null,
         private string $sort = 'most_sold',
         private int $page = 1,
-        private int $perPage = 12
+        private int $perPage = 30
     ) {}
 
     public function execute(): array

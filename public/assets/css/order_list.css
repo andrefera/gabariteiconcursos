@@ -163,13 +163,22 @@
   gap: 0.5rem;
   align-items: start;
 }
-.minhaConta .mainContent .card .orders .orderCard .orderHeader .orderActions button {
+.minhaConta .mainContent .card .orders .orderCard .orderHeader .orderActions button, .minhaConta .mainContent .card .orders .orderCard .orderHeader .orderActions a {
   border-radius: 4px;
   padding: 0.4rem 1rem;
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
   border: 1px solid transparent;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-width: 120px;
+  height: 36px;
+  line-height: 1;
+  box-sizing: border-box;
 }
 .minhaConta .mainContent .card .orders .orderCard .orderHeader .orderActions .btnPrimary {
   background-color: #FF7C00;
@@ -457,13 +466,22 @@
   display: flex;
   gap: 0.75rem;
 }
-.meusPedidos .orderCard .orderHeader .orderActions button {
+.meusPedidos .orderCard .orderHeader .orderActions button, .meusPedidos .orderCard .orderHeader .orderActions a {
   padding: 0.6rem 1.2rem;
   border-radius: 6px;
   font-weight: 500;
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-width: 140px;
+  height: 40px;
+  line-height: 1;
+  box-sizing: border-box;
 }
 .meusPedidos .orderCard .orderHeader .orderActions .btnPrimary {
   background-color: #FF7C00;
@@ -620,6 +638,14 @@
   font-size: 1rem;
   cursor: pointer;
   transition: background 0.2s;
+  min-width: 160px;
+  height: 44px;
+  line-height: 1;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .btnPrimary-green:hover {
@@ -636,6 +662,18 @@
   font-size: 1rem;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-width: 160px;
+  height: 44px;
+  line-height: 1;
+  box-sizing: border-box;
+}
+.btnSecondary-green:hover {
+  background-color: #f1f1f1;
 }
 
 .btnOutline-green {
@@ -753,19 +791,41 @@
     padding: 0;
   }
   .minhaConta .mainContent .userGreeting {
-    padding: 15px;
-    margin-bottom: 15px;
+    padding: 20px 15px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #FF7C00;
+    background: linear-gradient(135deg, #fff5e6 0%, #ffffff 100%);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   }
   .minhaConta .mainContent .userGreeting .group {
     flex-direction: column;
     text-align: center;
-    gap: 15px;
+    gap: 16px;
+    align-items: center;
   }
-  .minhaConta .mainContent .userGreeting h1, .minhaConta .mainContent .userGreeting h2 {
-    font-size: 1.5em;
+  .minhaConta .mainContent .userGreeting .profileImage {
+    width: 72px;
+    height: 72px;
+    border-width: 3px;
+    box-shadow: 0 4px 12px rgba(255, 124, 0, 0.2);
   }
-  .minhaConta .mainContent .userGreeting p {
+  .minhaConta .mainContent .userGreeting .userInfo {
+    width: 100%;
+    max-width: 100%;
+  }
+  .minhaConta .mainContent .userGreeting .userInfo h1, .minhaConta .mainContent .userGreeting .userInfo h2 {
+    font-size: 1.4em;
+    margin-bottom: 8px;
+    color: #333;
+    font-weight: 700;
+  }
+  .minhaConta .mainContent .userGreeting .userInfo p {
     font-size: 0.9em;
+    line-height: 1.5;
+    color: #666;
+    margin: 0;
+    padding: 0 8px;
   }
   .minhaConta .mainContent .card {
     margin-bottom: 15px;

@@ -89,7 +89,7 @@
                                             </div>
                                             <div class="orderActions">
                                                 <button class="btnPrimary order-detail-btn" data-order-id="{{ $order['id'] }}">Ver Pedido</button>
-                                                <button class="btnSecondary">Rastrear Pedido</button>
+                                                <a href="https://rastreamento.correios.com.br/app/index.php" target="_blank" class="btnSecondary">Rastrear Pedido</a>
                                             </div>
                                         </div>
                                         @if($order['delivered_at'])

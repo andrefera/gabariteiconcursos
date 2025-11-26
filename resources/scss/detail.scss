@@ -728,6 +728,13 @@ hr {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 20px;
+        max-width: 100%;
+        
+        // Limita o tamanho máximo dos cards quando há poucos produtos
+        @media (min-width: 769px) {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 300px));
+            justify-content: start;
+        }
     }
 
     .card {
@@ -737,6 +744,8 @@ hr {
         overflow: hidden;
         cursor: pointer;
         transition: transform 0.3s ease;
+        max-width: 300px;
+        width: 100%;
 
         &:hover {
             transform: translateY(-5px);

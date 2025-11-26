@@ -20,17 +20,26 @@ if (document.querySelector('.mySwiperBanner')) {
 if (document.querySelector('.mySwiperTeams')) {
     new Swiper('.mySwiperTeams', {
         slidesPerView: 5,
-        spaceBetween: 24,
-        loop: true,
+        spaceBetween: 12,
+        loop: false,
+        centeredSlides: false,
         pagination: {
             el: '.swiper-pagination-teams',
             clickable: true,
         },
         breakpoints: {
-            320: { slidesPerView: 2 },
-            480: { slidesPerView: 3 },
-            768: { slidesPerView: 4 },
-            1024: { slidesPerView: 5 }
+            320: { 
+                slidesPerView: 3,
+                spaceBetween: 12
+            },
+            768: { 
+                slidesPerView: 4,
+                spaceBetween: 16
+            },
+            1024: { 
+                slidesPerView: 5,
+                spaceBetween: 12
+            }
         }
     });
 }

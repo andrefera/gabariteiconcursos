@@ -9,7 +9,8 @@
             <div class="swiper-wrapper">
                 <!-- Slides aqui -->
                 <div class="swiper-slide">
-                    <img src="{{ asset('images/banner2.jpg') }}" alt="Ellon Sports Banner">
+                    <img src="{{ asset('images/banner.png') }}" alt="Ellon Sports Banner" class="banner-desktop">
+                    <img src="{{ asset('images/banner-mobile.png') }}" alt="Ellon Sports Banner" class="banner-mobile">
                 </div>
                 <!-- Adicione mais slides conforme necessário -->
             </div>
@@ -133,13 +134,13 @@
     <section class="optionsProduct">
         <div class="alignSection">
             <div class="alignOptions">
-                <a href="/" class="option">
+                <a href="{{ \App\Support\Util\SeoUrlHelper::filtersToUrl(['national_international' => 'Não'], '/camisas') }}" class="option">
                     <img src="{{ asset('images/banner-europeus.jpg') }}" alt="europa">
                 </a>
-                <a href="/" class="option">
+                <a href="{{ \App\Support\Util\SeoUrlHelper::filtersToUrl(['national_international' => 'Sim'], '/camisas') }}" class="option">
                     <img src="{{ asset('images/banner-brasileiros.jpg') }}" alt="europa">
                 </a>
-                <a href="/" class="option">
+                <a href="{{ \App\Support\Util\SeoUrlHelper::filtersToUrl(['category' => 'Seleção'], '/camisas') }}" class="option">
                     <img src="{{ asset('images/banner-selecoes.jpg') }}" alt="europa">
                 </a>
             </div>
@@ -193,7 +194,8 @@
     <section class="promotions">
         <div class="alignSection">
             <div class="alignBanner">
-                <img src="{{ asset('images/banner-down.jpg') }}" alt="Ellon Sports Banner">
+                <img src="{{ asset('images/banner2.jpg') }}" alt="Ellon Sports Banner" class="banner-desktop">
+                <img src="{{ asset('images/banner2-mobile.png') }}" alt="Ellon Sports Banner" class="banner-mobile">
             </div>
         </div>
     </section>
@@ -224,9 +226,7 @@
                          height="30">
                     <div class="featureGroup">
                         <p>Cliente Satisfeito</p>
-                        <span>Se o produto não atender às suas expectativas, garantimos a devolução do valor ou troca do
-                            item,
-                            sem complicações.</span>
+                        <span>Nosso compromisso é oferecer produtos de alta qualidade e um atendimento excepcional para garantir sua total satisfação com cada compra.</span>
                     </div>
                 </div>
                 <div class="feature-card">
@@ -253,7 +253,7 @@
                     <p class="message">"Excelente qualidade e atendimento. Chegou antes do prazo!"</p>
                     <div class="info">
                         <span class="author">João Silva</span>
-                        <span class="date">10/01/2025</span>
+                        <span class="date">14/11/2025</span>
                     </div>
                 </div>
 
@@ -262,7 +262,7 @@
                     <p class="message">"Produtos incríveis, super recomendo! Voltarei a comprar."</p>
                     <div class="info">
                         <span class="author">Ana Costa</span>
-                        <span class="date">08/01/2025</span>
+                        <span class="date">26/11/2025</span>
                     </div>
                 </div>
 
@@ -271,7 +271,7 @@
                     <p class="message">"O produto corresponde às expectativas. Muito bom!"</p>
                     <div class="info">
                         <span class="author">Carlos Pereira</span>
-                        <span class="date">05/01/2025</span>
+                        <span class="date">24/11/2025</span>
                     </div>
                 </div>
 
@@ -280,7 +280,7 @@
                     <p class="message">"Gostei bastante, mas poderia ter mais opções de frete."</p>
                     <div class="info">
                         <span class="author">Beatriz Almeida</span>
-                        <span class="date">03/01/2025</span>
+                        <span class="date">22/11/2025</span>
                     </div>
                 </div>
             </div>

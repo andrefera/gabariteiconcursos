@@ -10,6 +10,7 @@ use App\Http\Controllers\Store\ProductSearchController;
 use App\Http\Controllers\PrivacyController;
 use App\Http\Controllers\TermsController;
 use App\Http\Controllers\InformacoesController;
+use App\Http\Controllers\NewsletterController;
 use App\Http\Middleware\CheckUserProfile;
 use App\Http\Middleware\SessionTokenMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -105,6 +106,9 @@ Route::middleware('web')->group(function () {
 
     // Informações
     Route::get('/informacoes', [InformacoesController::class, 'index'])->name('informacoes.index');
+
+    // Newsletter
+    Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
 
     // Times
     Route::get('/teams', [App\Http\Controllers\HomeController::class, 'getTeams'])->name('teams.get');

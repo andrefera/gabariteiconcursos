@@ -616,6 +616,13 @@ hr {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
+  max-width: 100%;
+}
+@media (min-width: 769px) {
+  .productSection .grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 300px));
+    justify-content: start;
+  }
 }
 .productSection .card {
   background-color: #fff;
@@ -624,6 +631,8 @@ hr {
   overflow: hidden;
   cursor: pointer;
   transition: transform 0.3s ease;
+  max-width: 300px;
+  width: 100%;
 }
 .productSection .card:hover {
   transform: translateY(-5px);

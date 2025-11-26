@@ -50,7 +50,7 @@ class ProductController extends Controller
         $nationalInternational = $filtersArray['national_international'] ?? null;
         $sort = $filtersArray['sort'] ?? 'most_sold';
         $page = (int) ($filtersArray['page'] ?? 1);
-        $perPage = 12;
+        $perPage = 30;
 
         $action = new ListStoreProducts(
             search: $search,

@@ -65,12 +65,13 @@
 
                 $categoryLabels = [
                     'Retro' => 'Retro',
+                    'Seleção' => 'Seleção',
                     'torcedor' => 'Torcedor',
                     'jogador' => 'Jogador',
                     'treino' => 'Treino',
                 ];
 
-                $primaryCategoryKeys = ['Retro'];
+                $primaryCategoryKeys = ['Retro', 'Seleção'];
                 $shirtCategoryKeys = ['torcedor', 'jogador', 'treino'];
 
                 $productTypeLabels = [
@@ -444,7 +445,7 @@
                                                 @endif
                                             </div>
                                             <div>{{ $product['installment_price'] }}</div>
-                                            <div class="stars">★★★★★ (5)</div>
+                                            {{-- <div class="stars">★★★★★ (5)</div> --}}
                                         </div>
                                     </a>
                                 </div>

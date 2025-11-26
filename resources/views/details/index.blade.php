@@ -73,9 +73,9 @@
             <div class="textArea">
                 <div class="firstStep">
                     <h1 class="title">{{$product->name}}</h1>
-                    <div class="stars">★★★★★
+                    {{-- <div class="stars">★★★★★
                         <p>(121)</p>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="secondStep">
                     <div class="priceGroup">
@@ -102,10 +102,10 @@
                         <button class="btnMeasure" data-size="{{$size->name}}" data-stock="{{$stocks_by_size[$size->name] ?? 0}}">{{$size->name}}</button>
                         @endforeach
                     </div>
-                    {{-- <button class="tableMeasure">--}}
-                    {{-- <img width="22" height="22" src="{{ asset('images/icons/regua-icon.png') }}" alt="regua">--}}
-                    {{-- <p> Tabela de Medidas</p>--}}
-                    {{-- </button>--}}
+                    <button class="tableMeasure" onclick="openMeasureTableModal()">
+                        <img width="22" height="22" src="{{ asset('images/icons/regua-icon.png') }}" alt="regua">
+                        <p> Tabela de Medidas</p>
+                    </button>
                 </div>
                 <div class="fourthStep">
                     <div class="quantityArea">
@@ -267,9 +267,11 @@
         <p class="title">Produtos Relacionados</p>
         <div class="grid">
             @foreach($related_products as $related_product)
-            <div class="card">
+            <a href="{{ $related_product['url'] }}" class="card" style="text-decoration: none; color: inherit;">
                 <div class="cardContent">
+                    @if($related_product['discount_percentage'])
                     <span class="badge">{{ $related_product['discount_percentage'] }}</span>
+                    @endif
                     <img src="{{ $related_product['image'] }}" alt="{{ $related_product['name'] }}">
                 </div>
                 <div class="info">
@@ -284,7 +286,7 @@
                     </div>
                     <div>{{ $related_product['installment_price'] }}</div>
                 </div>
-            </div>
+            </a>
             @endforeach
         </div>
     </div>
@@ -690,4 +692,122 @@
             mainImageEl.addEventListener('load', updateLensBackground);
         }
     });
+
+    // Modal da Tabela de Medidas
+    function openMeasureTableModal() {
+        const modal = document.getElementById('measureTableModal');
+        if (modal) {
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeMeasureTableModal() {
+        const modal = document.getElementById('measureTableModal');
+        if (modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+    }
+
+    // Fechar modal ao clicar fora da imagem
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('measureTableModal');
+        if (modal) {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeMeasureTableModal();
+                }
+            });
+
+            // Fechar com ESC
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modal.style.display === 'flex') {
+                    closeMeasureTableModal();
+                }
+            });
+        }
+    });
 </script>
+
+<!-- Modal da Tabela de Medidas -->
+<div id="measureTableModal" class="measure-table-modal">
+    <div class="measure-table-modal-content">
+        <span class="measure-table-close" onclick="closeMeasureTableModal()">&times;</span>
+        <img src="{{ asset('images/tabela.jfif') }}" alt="Tabela de Medidas" class="measure-table-image">
+    </div>
+</div>
+
+<style>
+    .measure-table-modal {
+        display: none;
+        position: fixed;
+        z-index: 10000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.85);
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    .measure-table-modal-content {
+        position: relative;
+        max-width: 90%;
+        max-height: 90%;
+        background: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .measure-table-close {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        color: #333;
+        font-size: 36px;
+        font-weight: bold;
+        cursor: pointer;
+        z-index: 10001;
+        line-height: 1;
+        transition: color 0.3s ease;
+    }
+
+    .measure-table-close:hover {
+        color: #FF7C00;
+    }
+
+    .measure-table-image {
+        max-width: 100%;
+        max-height: 85vh;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        border-radius: 8px;
+    }
+
+    @media (max-width: 768px) {
+        .measure-table-modal-content {
+            max-width: 95%;
+            max-height: 95%;
+            padding: 15px;
+        }
+
+        .measure-table-close {
+            top: 5px;
+            right: 10px;
+            font-size: 28px;
+        }
+
+        .measure-table-image {
+            max-height: 90vh;
+        }
+    }
+</style>

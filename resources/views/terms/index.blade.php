@@ -199,7 +199,7 @@
                 <div class="terms-card">
                     <h3>6.3 Processo de Troca</h3>
                     <ul>
-                        <li><strong>Solicitação</strong> - Via e-mail ou WhatsApp</li>
+                        {{-- <li><strong>Solicitação</strong> - Via e-mail ou WhatsApp</li> --}}
                         <li><strong>Análise</strong> - Verificação das condições</li>
                         <li><strong>Envio</strong> - Custo por conta do cliente</li>
                         <li><strong>Processamento</strong> - 5-10 dias úteis</li>
@@ -309,12 +309,12 @@
                             </svg>
                             <span><strong>E-mail:</strong> suporte@ellonsports.com</span>
                         </div>
-                        <div class="contact-item">
+                        {{-- <div class="contact-item">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                             </svg>
                             <span><strong>Telefone:</strong> (35) 99999-9999</span>
-                        </div>
+                        </div> --}}
                         <div class="contact-item">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
@@ -322,12 +322,12 @@
                             </svg>
                             <span><strong>Endereço:</strong> Alfenas, MG - Brasil</span>
                         </div>
-                        <div class="contact-item">
+                        {{-- <div class="contact-item">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                             </svg>
                             <span><strong>WhatsApp:</strong> (35) 99999-9999</span>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </section>

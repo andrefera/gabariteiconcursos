@@ -192,7 +192,9 @@
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
     <div class="sidebar-content">
         <div class="sidebar-header">
-            <h3>Menu</h3>
+            <a href="/" class="sidebar-logo">
+                <img src="{{ asset('images/logobranca.png') }}" alt="Ellon Sports Logo" width="140" height="auto">
+            </a>
             <button class="sidebar-close" id="sidebar-close" aria-label="Fechar Menu">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -344,7 +346,7 @@
             const brasileirosContent = document.getElementById('brasileiros-content');
             if (brasileirosContent) {
                 brasileirosContent.innerHTML = brasileiros.map(team =>
-                    `<a href="/time/${team.url}">${team.logo ? `<img src="${team.logo}" alt="${team.name}" width="16" height="16" style="margin-right: 4px;">` : '⚽'} ${team.name}</a>`
+                    `<a href="/camisas/${team.url}" class="sidebar-link">${team.logo ? `<img src="${team.logo}" alt="${team.name}" width="20" height="20">` : '⚽'} <span>${team.name}</span></a>`
                 ).join('');
             }
 
@@ -352,7 +354,7 @@
             const internacionaisContent = document.getElementById('internacionais-content');
             if (internacionaisContent) {
                 internacionaisContent.innerHTML = internacionais.map(team =>
-                    `<a href="/time/${team.url}">${team.logo ? `<img src="${team.logo}" alt="${team.name}" width="16" height="16" style="margin-right: 4px;">` : '⚽'} ${team.name}</a>`
+                    `<a href="/camisas/${team.url}" class="sidebar-link">${team.logo ? `<img src="${team.logo}" alt="${team.name}" width="20" height="20">` : '🌍'} <span>${team.name}</span></a>`
                 ).join('');
             }
 
@@ -360,7 +362,7 @@
             const selecoesContent = document.getElementById('selecoes-content');
             if (selecoesContent) {
                 selecoesContent.innerHTML = selecoes.map(team =>
-                    `<a href="/time/${team.url}">${team.logo ? `<img src="${team.logo}" alt="${team.name}" width="16" height="16" style="margin-right: 4px;">` : '⚽'} ${team.name}</a>`
+                    `<a href="/camisas/${team.url}" class="sidebar-link">${team.logo ? `<img src="${team.logo}" alt="${team.name}" width="20" height="20">` : '🏆'} <span>${team.name}</span></a>`
                 ).join('');
             }
         }
