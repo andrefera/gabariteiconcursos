@@ -99,7 +99,7 @@
                     <p class="choose">Escolha sua medida</p>
                     <div class="buttons">
                         @foreach($product->sizes as $key => $size)
-                        <button class="btnMeasure">{{$size->name}}</button>
+                        <button class="btnMeasure" data-size="{{$size->name}}" data-stock="{{$stocks_by_size[$size->name] ?? 0}}">{{$size->name}}</button>
                         @endforeach
                     </div>
                     {{-- <button class="tableMeasure">--}}
@@ -110,14 +110,14 @@
                 <div class="fourthStep">
                     <div class="quantityArea">
                         <div class="quantityGroup">
-                            <button class="btnQtd">
+                            <button class="btnQtd btnQtdLess">
                                 <p class="less">-</p>
                             </button>
                             <p class="quantity">1</p>
-                            <button class="btnQtd">+</button>
+                            <button class="btnQtd btnQtdPlus">+</button>
                         </div>
                         <div class="phrase">
-                            <p>Restam apenas <span>12 itens</span></p>
+                            <p>Restam apenas <span id="remainingItems">{{ array_sum($stocks_by_size ?? []) }}</span> itens</p>
                             <p>Não perca essa!</p>
                         </div>
                     </div>
@@ -413,6 +413,11 @@
 <script src="{{ asset('assets/js/detail.min.js') }}?v={{ config('app.static_version') }}"></script>
 
 <script>
+    // Dados de stock por tamanho (definido antes do DOMContentLoaded)
+    window.productStocks = {!! json_encode($stocks_by_size ?? []) !!};
+</script>
+
+<script>
     document.addEventListener("DOMContentLoaded", function() {
         // Fade-in já existente
         const elements = document.querySelectorAll('.fade-in');
@@ -447,9 +452,46 @@
             });
         }
 
+        // Dados de stock por tamanho
+        const stocksBySize = window.productStocks || {};
+        const totalStock = Object.values(stocksBySize).reduce((sum, stock) => sum + stock, 0);
+        
         // Seleção de tamanho
         let selectedSize = null;
+        let maxQuantity = totalStock;
+        const remainingItemsSpan = document.getElementById('remainingItems');
         const btnMeasures = document.querySelectorAll('.btnMeasure');
+        
+        function updateRemainingItems() {
+            if (selectedSize && stocksBySize[selectedSize] !== undefined) {
+                remainingItemsSpan.textContent = stocksBySize[selectedSize];
+                maxQuantity = stocksBySize[selectedSize];
+            } else {
+                remainingItemsSpan.textContent = totalStock;
+                maxQuantity = totalStock;
+            }
+            
+            // Ajustar quantidade se exceder o máximo
+            if (quantity > maxQuantity) {
+                quantity = maxQuantity;
+                quantityDisplay.textContent = quantity;
+            }
+            
+            // Desabilitar botão de aumentar se atingir o máximo
+            const btnPlus = document.querySelector('.btnQtdPlus');
+            if (btnPlus) {
+                if (quantity >= maxQuantity) {
+                    btnPlus.disabled = true;
+                    btnPlus.style.opacity = '0.5';
+                    btnPlus.style.cursor = 'not-allowed';
+                } else {
+                    btnPlus.disabled = false;
+                    btnPlus.style.opacity = '1';
+                    btnPlus.style.cursor = 'pointer';
+                }
+            }
+        }
+        
         if (btnMeasures.length > 0) {
             btnMeasures.forEach(btn => {
                 btn.addEventListener('click', function(e) {
@@ -457,6 +499,7 @@
                     document.querySelectorAll('.btnMeasure').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
                     selectedSize = this.textContent.trim();
+                    updateRemainingItems();
                 });
             });
         }
@@ -464,18 +507,36 @@
         // Controle de quantidade
         let quantity = 1;
         const quantityDisplay = document.querySelector('.quantity');
-        const btnsQtd = document.querySelectorAll('.btnQtd');
-        if (quantityDisplay && btnsQtd.length >= 2) {
-            btnsQtd[0].addEventListener('click', function() {
+        const btnQtdLess = document.querySelector('.btnQtdLess');
+        const btnQtdPlus = document.querySelector('.btnQtdPlus');
+        
+        if (quantityDisplay && btnQtdLess && btnQtdPlus) {
+            btnQtdLess.addEventListener('click', function() {
                 if (quantity > 1) {
                     quantity--;
                     quantityDisplay.textContent = quantity;
+                    updateRemainingItems();
                 }
             });
-            btnsQtd[1].addEventListener('click', function() {
-                quantity++;
-                quantityDisplay.textContent = quantity;
+            
+            btnQtdPlus.addEventListener('click', function() {
+                if (quantity < maxQuantity && maxQuantity > 0) {
+                    quantity++;
+                    quantityDisplay.textContent = quantity;
+                    updateRemainingItems();
+                }
             });
+        }
+        
+        // Inicializar estado
+        updateRemainingItems();
+        
+        // Se não houver stock, desabilitar botões de compra
+        if (totalStock === 0) {
+            const btnBuy = document.querySelector('.btnBuy');
+            const btnCart = document.querySelector('.btnCart');
+            if (btnBuy) btnBuy.disabled = true;
+            if (btnCart) btnCart.disabled = true;
         }
 
         async function addItemToCart() {

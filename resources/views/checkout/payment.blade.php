@@ -165,7 +165,11 @@
 
                     <button class="btn-finalize-payment" id="submitPayment" type="button">
                         <i class="fas fa-lock"></i>
-                        Finalizar Pedido
+                        <span class="btn-text">Finalizar Pedido</span>
+                        <span class="btn-loading" style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            Processando...
+                        </span>
                     </button>
                 </form>
             </div>
@@ -554,6 +558,51 @@
     transform: translateY(0);
 }
 
+.btn-finalize-payment:disabled {
+    opacity: 0.6;
+    cursor: wait !important;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-finalize-payment:disabled:hover {
+    background: #FF7C00;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-finalize-payment .btn-loading {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-finalize-payment .fa-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.payment-form.loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.payment-form.loading * {
+    cursor: wait !important;
+}
+
+body.payment-processing {
+    cursor: wait !important;
+}
+
+body.payment-processing * {
+    cursor: wait !important;
+}
+
 /* Toast Styles */
         .toastify {
             padding: 12px 20px;
@@ -746,6 +795,18 @@
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
 <script>
+    // Função para exibir toast notifications
+    function showToast(title, message, type = 'info') {
+        const backgroundColor = type === 'error' ? '#dc3545' : type === 'success' ? '#28a745' : '#17a2b8';
+        Toastify({
+            text: `${title}: ${message}`,
+            duration: 5000,
+            gravity: "top",
+            position: "right",
+            backgroundColor: backgroundColor,
+            stopOnFocus: true,
+        }).showToast();
+    }
     IMask(document.getElementById('cardNumber'), {
         mask: '0000 0000 0000 0000'
     });
@@ -830,7 +891,7 @@
     });
 
 
-    const mp = new MercadoPago("TEST-0de9a30b-3ac2-408d-b2bf-7c50fba3625f", {
+    const mp = new MercadoPago("{{ config('services.mercado_pago.public_key') }}", {
         locale: "pt-BR"
     });
 
@@ -879,6 +940,56 @@
 
         return;
     };
+
+    // Funções para controlar loading
+    function setLoadingState(isLoading) {
+        const form = document.getElementById('paymentForm');
+        const submitBtn = document.getElementById('submitPayment');
+        const btnText = submitBtn.querySelector('.btn-text');
+        const btnLoading = submitBtn.querySelector('.btn-loading');
+        const allInputs = form.querySelectorAll('input, select, button');
+        const paymentMethodBtns = document.querySelectorAll('.payment-method-btn');
+        
+        if (isLoading) {
+            // Adicionar classes de loading
+            form.classList.add('loading');
+            document.body.classList.add('payment-processing');
+            submitBtn.disabled = true;
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline-flex';
+            
+            // Desabilitar todos os inputs, selects e botões
+            allInputs.forEach(input => {
+                if (input.id !== 'submitPayment') {
+                    input.disabled = true;
+                }
+            });
+            
+            // Desabilitar botões de método de pagamento
+            paymentMethodBtns.forEach(btn => {
+                btn.disabled = true;
+                btn.style.pointerEvents = 'none';
+            });
+        } else {
+            // Remover classes de loading
+            form.classList.remove('loading');
+            document.body.classList.remove('payment-processing');
+            submitBtn.disabled = false;
+            btnText.style.display = 'inline';
+            btnLoading.style.display = 'none';
+            
+            // Reabilitar todos os inputs, selects e botões
+            allInputs.forEach(input => {
+                input.disabled = false;
+            });
+            
+            // Reabilitar botões de método de pagamento
+            paymentMethodBtns.forEach(btn => {
+                btn.disabled = false;
+                btn.style.pointerEvents = 'auto';
+            });
+        }
+    }
 
     document.getElementById("submitPayment").onclick = async function(e) {
         let paymentMethod = document.getElementById("paymentMethod").value;
@@ -932,6 +1043,9 @@
             }
         }
 
+        // Ativar loading antes de processar
+        setLoadingState(true);
+
         let paymentData = {
             total_price: parseFloat('{{$cart->total}}'),
             final_price: parseFloat('{{$cart->subTotal}}'),
@@ -968,6 +1082,8 @@
 
             } catch (error) {
                 console.error("Erro ao gerar token do cartão:", error);
+                setLoadingState(false);
+                showToast('Erro', 'Erro ao processar dados do cartão. Tente novamente.', 'error');
                 return;
             }
         }
@@ -984,16 +1100,20 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success === false) {
+                    setLoadingState(false);
                     showToast('Erro', data.message || 'Erro ao processar pagamento.', 'error');
                     return;
                 }
                 if (data.success === true && data.orderId) {
+                    // Não desabilitar loading aqui, pois vamos redirecionar
                     window.location.href = `/checkout/payment-confirmed/${data.orderId}`;
                     return;
                 }
+                setLoadingState(false);
                 document.getElementById("paymentResponse").innerHTML = `<p>${data.message}</p>`;
             })
             .catch(error => {
+                setLoadingState(false);
                 showToast('Erro', 'Erro inesperado ao processar pagamento.', 'error');
                 console.error(error);
             });

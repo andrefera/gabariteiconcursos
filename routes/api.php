@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\AuthController;
 use App\Http\Middleware\ApiAuthenticate;
+use App\Http\Middleware\MercadoPagoWebhookAuth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -57,6 +58,6 @@ Route::prefix('admin')->group(function () {
     });
 });
 
-Route::prefix('mercadopago')->group(function () {
+Route::prefix('mercadopago')->middleware(MercadoPagoWebhookAuth::class)->group(function () {
     Route::post('/webhook', [OrderController::class, 'webhookMercadoPago']);
 });

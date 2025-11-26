@@ -21,7 +21,20 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-composer-
 
-      - name: Enviar arquivos para a VM
+      - name: 📦 Configurar cache do NPM
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: 🎨 Instalar e compilar assets frontend
+        run: |
+          npm ci --prefer-offline --no-audit
+          npm run production
+
+      - name: 📤 Enviar arquivos para a VM
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -29,9 +42,30 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           source: "."
           target: "/var/www/ellonsports"
-
-      - name: 🧩 Instalar dependências PHP (Composer)
-        run: composer update --optimize-autoloader
+          strip_components: 0
+          exclude: |
+            .git
+            .github
+            node_modules
+            .env
+            .env.*
+            *.log
+            .idea
+            .vscode
+            .fleet
+            .zed
+            .nova
+            Homestead.json
+            Homestead.yaml
+            auth.json
+            .phpunit.cache
+            .phpunit.result.cache
+            .phpactor.json
+            storage/*.key
+            storage/pail
+            public/hot
+            public/storage
+            vendor
 
       - name: 🧨 Executar comandos no servidor (deploy)
         uses: appleboy/ssh-action@v0.1.7
@@ -40,19 +74,36 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
+
             cd /var/www/ellonsports
+
+            echo "📦 Instalando dependências do Composer..."
+            set -e
+            composer install --no-interaction --no-dev --optimize-autoloader
+
+            echo "📦 Instalando dependências do NPM..."
+            npm ci --prefer-offline --no-audit --production || npm install --production
+
+            echo "🎨 Compilando assets frontend..."
+            npm run production
 
             echo "⚡ Executando migrações..."
             php artisan migrate --force
 
-            echo "🚀 Liberando permissões..."
+            echo "🔐 Liberando permissões..."
             sudo chown -R www-data:www-data storage bootstrap/cache
             sudo chmod -R 775 storage bootstrap/cache
 
-            echo "🚀 Limpando e otimizando cache..."
+            echo "🧹 Limpando cache..."
             php artisan optimize:clear
+
+            echo "⚡ Otimizando aplicação..."
             php artisan config:cache
             php artisan route:cache
             php artisan view:cache
+            php artisan event:cache
+
+            echo "🔄 Recarregando serviços..."
+            sudo systemctl reload php8.2-fpm
 
             echo "✅ Deploy finalizado com sucesso!"
