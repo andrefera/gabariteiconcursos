@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     } else {
                         dropdown.innerHTML = products.map(product => `
                             <a class="search-result-item" href="${product.url}">
-                                <img src="${product.image ?? '/images/no-image.png'}" alt="${product.name}" width="50" height="70">
+                                <img src="${product.image ?? '/images/no-image.png'}" alt="${product.name}" width="70" height="70">
                                 <div>
                                     <strong>${product.name}</strong><br>
                                     <span>${product.sku ?? ''}</span>
