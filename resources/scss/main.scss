@@ -1,83 +1,79 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+@charset "UTF-8";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 16px;
-    color: #333;
-    line-height: 1.6;
-    background-color: #f7f7f7;
-    overflow-x: hidden;
+  margin: 0;
+  background-color: #ffffff;
+  color: #413f4f;
+  font-family: "Sora", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Melhorando a largura da seção para telas menores */
-.alignSection {
-    margin: 0 auto;
-    padding: 0rem 2rem;
-    max-width: 100rem;
-    width: 100%;
+img {
+  display: block;
+  max-width: 100%;
 }
 
-/* Links com transição suave */
 a {
-    text-decoration: none;
-    color: inherit;
-    transition: color 0.3s ease-in-out;
-
-    &:hover {
-        color: #007BFF;
-        text-decoration: underline;
-    }
+  color: inherit;
+  text-decoration: none;
 }
 
-/* Ajustes para dispositivos menores */
-@media (max-width: 1200px) {
-    .alignSection {
-        max-width: 90%;
-    }
+button,
+input,
+textarea,
+select {
+  font: inherit;
 }
 
-@media (max-width: 768px) {
-    body {
-        font-size: 14px;
-    }
-
-    .alignSection {
-        padding: 1rem;
-        max-width: 100%;
-    }
+.main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
 }
 
 .breadcrumb {
-    list-style: none;
+  margin: 0 auto;
+  max-width: 1248px;
+  padding: 24px 0 0 0;
+  width: 100%;
+    align-items: baseline;
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  font-size: 14px;
+  color: #999999;
+  z-index: 50;
+
+  & .breadcrumbLink {
+    color: #999999;
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+  }
+
+  & .breadcrumbSep {
+    color: #999999;
+    font-family: 'Font Awesome 5 Pro';
+    font-weight: 900;
+    font-size: 16px;
     display: flex;
-    padding: 10px 0;
-    border-radius: 5px;
+    align-items: center;
+  }
 
-    li {
-        margin-right: 10px;
-        font-size: 14px;
-        &:not(:last-child)::after {
-            content: "/";
-            margin-left: 10px;
-            color: #6c757d;
-        }
-
-        a {
-            text-decoration: none;
-            color: #686868;
-
-            &:hover {
-                text-decoration: underline;
-            }
-        }
-
-        &.active {
-            font-weight: bold;
-            color: #495057;
-        }
-    }
+  & .breadcrumbCurrent {
+    color: #333333;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+  }
 }

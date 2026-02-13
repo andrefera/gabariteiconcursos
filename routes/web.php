@@ -30,7 +30,7 @@ Route::middleware('web')->group(function () {
     Route::get('/camisa/{url?}', [ProductController::class, 'detail'])->name('products.detail');
     
     // Rota de listagem de produtos com filtros amigáveis (incluindo time como primeiro filtro)
-    Route::get('camisas/{filters?}', [ProductController::class, 'index'])
+    Route::get('apostilas/{filters?}', [ProductController::class, 'index'])
         ->where('filters', '.*')
         ->name('products.index');
 
@@ -95,21 +95,5 @@ Route::middleware('web')->group(function () {
         Route::get('facebook/callback', [AuthController::class, 'handleFacebookCallback']);
     });
 
-    // Busca
-    Route::get('/search/products', [ProductSearchController::class, 'search']);
-
-    // Política de Privacidade
-    Route::get('/politica-privacidade', [PrivacyController::class, 'index'])->name('privacy.policy');
-
-    // Termos de Uso
-    Route::get('/termos-uso', [TermsController::class, 'index'])->name('terms.use');
-
-    // Informações
-    Route::get('/informacoes', [InformacoesController::class, 'index'])->name('informacoes.index');
-
-    // Newsletter
-    Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
-
-    // Times
-    Route::get('/teams', [App\Http\Controllers\HomeController::class, 'getTeams'])->name('teams.get');
+  
 });

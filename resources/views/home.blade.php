@@ -1,296 +1,245 @@
 @extends('layouts.app')
-@section('title', 'Ellon Sports | Para Torcedores Apaixonados')
+@section('title', 'Gabaritei Concursos')
 @section('head_content')
 <link rel="stylesheet" href="{!! asset('assets/css/home.css') !!}">
 @endsection
 @section('content')
-    <section class="s-slide-hero">
-        <div class="swiper-container mySwiperBanner">
-            <div class="swiper-wrapper">
-                <!-- Slides aqui -->
-                <div class="swiper-slide">
-                    <img src="{{ asset('images/banner.png') }}" alt="Ellon Sports Banner" class="banner-desktop">
-                    <img src="{{ asset('images/banner-mobile.png') }}" alt="Ellon Sports Banner" class="banner-mobile">
-                </div>
-                <!-- Adicione mais slides conforme necessário -->
-            </div>
-            <div class="swiper-pagination swiper-pagination-banner"></div>
-        </div>
-    </section>
-    <section class="teamSection">
-        <div class="alignSection">
-            <h2 class="title">Navegue por times</h2>
-            <div class="swiper-container mySwiperTeams">
-                <div class="swiper-wrapper teamGroup">
-                    @if(count($brazilianTeams) > 0)
-                        @foreach($brazilianTeams as $team)
-                            <div class="swiper-slide">
-                                <a href="/camisas/{{ $team['url'] }}" class="team">
-                                    @if($team['logo'])
-                                        <img src="{{ $team['logo'] }}" alt="{{ $team['name'] }}">
-                                    @else
-                                        <img src="{{ asset('images/teams/default.png') }}" alt="{{ $team['name'] }}">
-                                    @endif
-                                </a>
+    <div class="homePage">
+        <section class="heroSection">
+            <img class="heroBannerImage" src="{{ asset('images/banner.png') }}" alt="Banner Gabaritei Concursos">
+        </section>
+
+        <section class="launchSection">
+            <div class="sectionInner">
+                <h2 class="sectionTitle">Lançamentos</h2>
+                <div class="productGrid">
+                    @foreach(['frete' => ['Frete grátis', 'transporte.svg'], 'atualizado' => ['Atualizado pós-edital', 'verificado.svg']] as $type => $label)
+                    @for($i = 0; $i < 2; $i++)
+                        <article class="productCard">
+                            <div class="productImageWrapper">
+                                <img src="{{ asset('images/banner.png') }}" alt="Apostila Banco do Brasil - Escriturário e Agente Comercial">
                             </div>
-                        @endforeach
-                    @else
-                        <div class="swiper-slide">
-                            <a href="/" class="team">
-                                <img src="{{ asset('images/teams/botafogo.png') }}" alt="Botafogo">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="/" class="team">
-                                <img src="{{ asset('images/teams/atletico.png') }}" alt="Atlético">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="/" class="team">
-                                <img src="{{ asset('images/teams/cruzeiro.png') }}" alt="Cruzeiro">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="/" class="team">
-                                <img src="{{ asset('images/teams/corinthians.png') }}" alt="Corinthians">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="/" class="team">
-                                <img src="{{ asset('images/teams/flamengo.png') }}" alt="Flamengo">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="/" class="team">
-                                <img src="{{ asset('images/teams/palmeiras.png') }}" alt="Palmeiras">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="/" class="team">
-                                <img src="{{ asset('images/teams/vasco.png') }}" alt="Vasco">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="/" class="team">
-                                <img src="{{ asset('images/teams/saopaulo.png') }}" alt="São Paulo">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="/" class="team">
-                                <img src="{{ asset('images/teams/fluminense.png') }}" alt="Fluminense">
-                            </a>
-                        </div>
-                    @endif
-                </div>
-                <div class="swiper-pagination swiper-pagination-teams"></div>
-            </div>
-        </div>
-    </section>
-
-    <section class="destaques">
-        <div class="alignSection">
-            <div class="title-header">
-                <h2 class="title">Destaques</h2>
-                <a href="/camisas" class="ver-todos">Ver Todos</a>
-            </div>
-            <div class="grid swiper-container mySwiper">
-                <div class="swiper-wrapper">
-                    @if(count($products) > 0)
-                        @foreach($products as $product)
-                            <div class="card swiper-slide">
-                                <a href="{{ $product['url'] }}" class="card-link">
-                                    <div class="cardContent">
-                                        @if($product['discount_percentage'])
-                                            <span class="badge">{{ $product['discount_percentage'] }}</span>
-                                        @endif
-                                        <img
-                                            src="{{ $product['image'] ?? asset('images/icon.png') }}"
-                                            alt="{{ $product['name'] }}">
-                                    </div>
-                                    <div class="info">
-                                        <h3>{{ $product['name'] }}</h3>
-                                        <div>
-                                            <span class="price">{{ $product['special_price'] ?? $product['price'] }}</span>
-                                            @if($product['special_price'])
-                                                <span class="old-price">{{ $product['price'] }}</span>
-                                            @endif
-                                        </div>
-                                        <div>{{ $product['installment_price'] }}</div>
-                                    </div>
-                                </a>
+                            <div class="productInfo">
+                                <span class="productBadge productBadge{{ $type === 'frete' ? 'Frete' : 'Atualizado' }}">
+                                    <img class="productBadgeIcon" src="{{ asset('images/icons/' . $label[1]) }}" alt="">
+                                    {{ $label[0] }}
+                                </span>
+                                <p class="productName">Apostila Banco do Brasil - Escriturário e Agente Comercial</p>
+                                <div class="productPriceGroup">
+                                    <span class="productOldPrice">de R$ 149,00</span>
+                                    <span class="productPrice">R$ 34,88</span>
+                                    <span class="productInstallment">ou 3X de R$ 23 sem juros</span>
+                                </div>
                             </div>
-                        @endforeach
-                    @else
-                        <div class="no-products">
-                            <p>Nenhum produto disponível no momento.</p>
-                        </div>
-                    @endif
+                        </article>
+                    @endfor
+                    @endforeach
                 </div>
-                <div class="swiper-pagination swiper-pagination-depoimentos"></div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="optionsProduct">
-        <div class="alignSection">
-            <div class="alignOptions">
-                <a href="{{ \App\Support\Util\SeoUrlHelper::filtersToUrl(['national_international' => 'Não'], '/camisas') }}" class="option">
-                    <img src="{{ asset('images/banner-europeus.jpg') }}" alt="europa">
-                </a>
-                <a href="{{ \App\Support\Util\SeoUrlHelper::filtersToUrl(['national_international' => 'Sim'], '/camisas') }}" class="option">
-                    <img src="{{ asset('images/banner-brasileiros.jpg') }}" alt="europa">
-                </a>
-                <a href="{{ \App\Support\Util\SeoUrlHelper::filtersToUrl(['category' => 'Seleção'], '/camisas') }}" class="option">
-                    <img src="{{ asset('images/banner-selecoes.jpg') }}" alt="europa">
-                </a>
+        <section class="whySection">
+            <div class="sectionInner">
+                <h2 class="sectionTitle sectionTitleCenter">Porque a Gabaritei tem os materiais que mais aprovam?</h2>
+                <div class="whyGrid">
+                    <article class="whyCard">
+                        <div class="whyIconWrap">
+                            <img class="whyIcon" src="{{ asset('images/icons/urso.svg') }}" alt="">
+                        </div>
+                        <p class="whyText">Sempre alinhado ao edital, com atualizações rápidas a cada mudança.</p>
+                    </article>
+                    <article class="whyCard">
+                        <div class="whyIconWrap">
+                            <img class="whyIcon" src="{{ asset('images/icons/banco.svg') }}" alt="">
+                        </div>
+                        <p class="whyText">Foco no que mais cai, sem perder tempo com conteúdos irrelevantes.</p>
+                    </article>
+                    <article class="whyCard">
+                    <div class="whyIconWrap">
+                            <img class="whyIcon" src="{{ asset('images/icons/oficial.svg') }}" alt="">
+                        </div>
+                        <p class="whyText">Explicações claras e objetivas, facilitando o aprendizado.</p>
+                    </article>
+                    <article class="whyCard">
+    
+                    <div class="whyIconWrap">
+                            <img class="whyIcon" src="{{ asset('images/icons/pagamento.svg') }}" alt="">
+                        </div>
+                        <p class="whyText">Conteúdo eficiente, ideal para quem tem pouco tempo para estudar.</p>
+                    </article>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="destaques">
-        <div class="alignSection">
-            <div class="title-header">
-                <h2 class="title">Times Europeus</h2>
-                <a href="/camisas/internacional" class="ver-todos">Ver Todos</a>
+        <section class="dealSection">
+            <div class="sectionInner">
+                <div class="dealTitleCard">
+                    <p class="dealTitle">Desconto especial do dia! 🔥</p>
+                </div>
+                <div class="dealContent">
+                    <div class="dealImageWrapper">
+                        <img src="https://www.figma.com/api/mcp/asset/4d3b0ad5-c8d3-4058-8845-4feb75c2f065" alt="Apostila Banco do Brasil">
+                    </div>
+                    <div class="dealInfo">
+                        <h3 class="dealProductTitle">Banco do Brasil - Escriturário e Agente Comercial</h3>
+                        <div class="dealPriceBlock">
+                            <span class="dealTag">Pré-venda - 20/02</span>
+                            <p class="dealOldPrice">de R$ 525,60 por</p>
+                            <p class="dealPrice">R$ 169,00</p>
+                            <p class="dealInstallment">ou 12x de R$14,08 sem juros</p>
+                        </div>
+                        <ul class="dealList">
+                            <li>Lorem Ipsum é simplesmente uma simulação de texto</li>
+                            <li>Lorem Ipsum é simplesmente uma simulação de texto</li>
+                            <li>Lorem Ipsum é simplesmente uma simulação de texto</li>
+                        </ul>
+                        <button class="dealButton" type="button">Comprar agora</button>
+                    </div>
+                </div>
             </div>
-            <div class="grid swiper-container mySwiperEuropeus">
-                <div class="swiper-wrapper">
-                    @if(count($europeanProducts) > 0)
-                        @foreach($europeanProducts as $product)
-                            <div class="card swiper-slide">
-                                <a href="{{ $product['url'] }}" class="card-link">
-                                    <div class="cardContent">
-                                        @if($product['discount_percentage'])
-                                            <span class="badge">{{ $product['discount_percentage'] }}</span>
-                                        @endif
-                                        <img
-                                            src="{{ $product['image'] ?? asset('images/icon.png') }}"
-                                            alt="{{ $product['name'] }}">
-                                    </div>
-                                    <div class="info">
-                                        <h3>{{ $product['name'] }}</h3>
-                                        <div>
-                                            <span class="price">{{ $product['special_price'] ?? $product['price'] }}</span>
-                                            @if($product['special_price'])
-                                                <span class="old-price">{{ $product['price'] }}</span>
-                                            @endif
-                                        </div>
-                                        <div>{{ $product['installment_price'] }}</div>
-                                    </div>
-                                </a>
+        </section>
+
+        <section class="materialsSection">
+            <div class="sectionInner">
+                <h2 class="sectionTitle sectionTitleCenter">Materiais para os principais concursos do país</h2>
+                <div class="materialsGrid">
+                    <article class="materialCard">
+                        <img class="materialIcon" src="{{ asset('images/icons/pagamento.svg') }}" alt="">
+                        <div class="materialInfo">
+                            <p class="materialTitle">Receita Federal</p>
+                            <span class="materialTag">Fiscal</span>
+                        </div>
+                    </article>
+                    <article class="materialCard">
+                        <img class="materialIcon" src="{{ asset('images/icons/banco.svg') }}" alt="">
+                        <div class="materialInfo">
+                            <p class="materialTitle">Banco do Brasil</p>
+                            <span class="materialTag">Bancária</span>
+                        </div>
+                    </article>
+                    <article class="materialCard">
+                        <img class="materialIcon" src="{{ asset('images/icons/oficial.svg') }}" alt="">
+                        <div class="materialInfo">
+                            <p class="materialTitle">Polícia Federal</p>
+                            <span class="materialTag">Policial</span>
+                        </div>
+                    </article>
+                    <article class="materialCard">
+                        <img class="materialIcon" src="{{ asset('images/icons/grupo.svg') }}" alt="">
+                        <div class="materialInfo">
+                            <p class="materialTitle">INSS</p>
+                            <span class="materialTag">Previdenciária</span>
+                        </div>
+                    </article>
+                    <a class="materialMoreCard" href="#">
+                        <span>Ver todos</span>
+                        <img class="materialMoreIcon" src="{{ asset('images/icons/diagonal_flecha.svg') }}" alt="">
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="bestValueSection">
+            <div class="sectionInner">
+                <h2 class="sectionTitle">O melhor custo-benefício</h2>
+                <div class="productGrid productGridTall">
+                    @for($i = 0; $i < 4; $i++)
+                        <article class="productCard productCardTall">
+                            <div class="productImageWrapper">
+                                <img src="https://www.figma.com/api/mcp/asset/4d3b0ad5-c8d3-4058-8845-4feb75c2f065" alt="Apostila Banco do Brasil">
                             </div>
-                        @endforeach
-                    @else
-                        <div class="no-products">
-                            <p>Nenhum produto de times europeus disponível no momento.</p>
+                            <div class="productInfo">
+                                <span class="productBadge">
+                                    <img class="productBadgeIcon" src="{{ asset('images/icons/transporte.svg') }}" alt="">
+                                    Frete grátis
+                                </span>
+                                <p class="productName">Apostila Banco do Brasil - Escriturário e Agente Comercial</p>
+                                <div class="productPriceGroup">
+                                    <span class="productOldPrice">de R$ 149,00</span>
+                                    <span class="productPrice">R$ 34,88</span>
+                                    <span class="productInstallment">ou 3X de R$ 23 sem juros</span>
+                                </div>
+                            </div>
+                        </article>
+                    @endfor
+                </div>
+            </div>
+        </section>
+
+        <section class="panoramaSection">
+            <div class="sectionInner">
+                <div class="panoramaHeader">
+                    <div class="panoramaTitleGroup">
+                        <h2 class="sectionTitle sectionTitleCenter">Panorama dos Concursos</h2>
+                        <p class="sectionSubtitle">Fique por dentro do que impacta sua preparação para concursos públicos.</p>
+                    </div>
+                    <div class="panoramaFilters">
+                        <button class="panoramaFilter panoramaFilterActive" type="button">Todos</button>
+                        <button class="panoramaFilter" type="button">Artigos</button>
+                        <button class="panoramaFilter" type="button">Notícias</button>
+                        <button class="panoramaFilter" type="button">Editais</button>
+                    </div>
+                </div>
+                <div class="panoramaGrid">
+                    <article class="panoramaCard">
+                        <div class="panoramaCardTop">
+                            <span class="panoramaTag">Artigo</span>
+                            <span class="panoramaDate">18 jan</span>
                         </div>
-                    @endif
-                </div>
-                <div class="swiper-pagination swiper-pagination-europeus"></div>
-            </div>
-        </div>
-    </section>
-
-    <section class="promotions">
-        <div class="alignSection">
-            <div class="alignBanner">
-                <img src="{{ asset('images/banner2.jpg') }}" alt="Ellon Sports Banner" class="banner-desktop">
-                <img src="{{ asset('images/banner2-mobile.png') }}" alt="Ellon Sports Banner" class="banner-mobile">
-            </div>
-        </div>
-    </section>
-
-    <section class="safePurchase">
-        <div class="alignSection">
-            <div class="features-grid">
-                <div class="feature-card">
-                    <img src="{{ asset('images/icons/cartao-icon.svg') }}" alt="Ellon Sports Banner" width="40"
-                         height="30">
-                    <div class="featureGroup">
-                        <p>Compra Segura</p>
-                        <span>Nosso site utiliza tecnologias avançadas de segurança para garantir a proteção dos seus dados
-                            e transações.</span>
-                    </div>
-                </div>
-                <div class="feature-card">
-                    <img src="{{ asset('images/icons/transporte-icon.svg') }}" alt="Ellon Sports Banner" width="40"
-                         height="30">
-                    <div class="featureGroup">
-                        <p>Entrega Garantida</p>
-                        <span>Garantimos a entrega do seu pedido no prazo informado. Acompanhamos cada etapa para que você
-                            receba tudo certinho.</span>
-                    </div>
-                </div>
-                <div class="feature-card">
-                    <img src="{{ asset('images/icons/presente-icon.svg') }}" alt="Ellon Sports Banner" width="40"
-                         height="30">
-                    <div class="featureGroup">
-                        <p>Cliente Satisfeito</p>
-                        <span>Nosso compromisso é oferecer produtos de alta qualidade e um atendimento excepcional para garantir sua total satisfação com cada compra.</span>
-                    </div>
-                </div>
-                <div class="feature-card">
-                    <img src="{{ asset('images/icons/telefone-icon.svg') }}" alt="Ellon Sports Banner" width="40"
-                         height="30">
-                    <div class="featureGroup">
-                        <p>Suporte ao Cliente</p>
-                        <span>Nosso time de suporte está à disposição para tirar dúvidas e oferecer ajuda durante toda a
-                            sua
-                            jornada de compra.</span>
-                    </div>
+                        <p class="panoramaTitle">Como organizar um plano de estudos eficiente</p>
+                        <div class="panoramaAuthor">
+                            <img class="panoramaAuthorIcon" src="{{ asset('images/icons/profile.svg') }}" alt="">
+                            <span class="panoramaAuthorName">Roberto Ramos</span>
+                        </div>
+                    </article>
+                    <article class="panoramaCard">
+                        <div class="panoramaCardTop">
+                            <span class="panoramaTag">Notícia</span>
+                            <span class="panoramaDate">13 jan</span>
+                        </div>
+                        <p class="panoramaTitle">Governo autoriza novo concurso para Nível Médio</p>
+                    </article>
+                    <article class="panoramaCard">
+                        <div class="panoramaCardTop">
+                            <span class="panoramaTag">Artigo</span>
+                            <span class="panoramaDate">8 jan</span>
+                        </div>
+                        <p class="panoramaTitle">Dicas práticas para melhorar seu desempenho</p>
+                        <div class="panoramaAuthor">
+                            <img class="panoramaAuthorIcon" src="{{ asset('images/icons/profile.svg') }}" alt="">
+                            <span class="panoramaAuthorName">Cintia Garcia</span>
+                        </div>
+                    </article>
+                    <article class="panoramaCard">
+                        <div class="panoramaCardTop">
+                            <span class="panoramaTag">Edital</span>
+                            <span class="panoramaDate">2 jan</span>
+                        </div>
+                        <p class="panoramaTitle">Edital Receita Federal – Auditor e Analista</p>
+                    </article>
+                    <a class="panoramaMoreCard" href="#">
+                        <span>Ver todos</span>
+                        <img class="panoramaMoreIcon" src="{{ asset('images/icons/diagonal_flecha.svg') }}" alt="">
+                    </a>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-
-    <section class="reviews">
-        <div class="alignSection">
-            <h2 class="title">O que falam sobre nós</h2>
-            <div class="reviews-grid reviews-mobile-swiper">
-                <!-- Review 1 -->
-                <div class="review-card">
-                    <p class="message">"Excelente qualidade e atendimento. Chegou antes do prazo!"</p>
-                    <div class="info">
-                        <span class="author">João Silva</span>
-                        <span class="date">14/11/2025</span>
-                    </div>
+        <section class="newsletterSection">
+            <div class="newsletterInner">
+                <div class="newsletterText">
+                    <h3>Fique por dentro das principais novidades dos concursos</h3>
+                    <p>Enviamos diretamente ao seu e-mail</p>
                 </div>
-
-                <!-- Review 2 -->
-                <div class="review-card">
-                    <p class="message">"Produtos incríveis, super recomendo! Voltarei a comprar."</p>
-                    <div class="info">
-                        <span class="author">Ana Costa</span>
-                        <span class="date">26/11/2025</span>
-                    </div>
-                </div>
-
-                <!-- Review 3 -->
-                <div class="review-card">
-                    <p class="message">"O produto corresponde às expectativas. Muito bom!"</p>
-                    <div class="info">
-                        <span class="author">Carlos Pereira</span>
-                        <span class="date">24/11/2025</span>
-                    </div>
-                </div>
-
-                <!-- Review 4 -->
-                <div class="review-card">
-                    <p class="message">"Gostei bastante, mas poderia ter mais opções de frete."</p>
-                    <div class="info">
-                        <span class="author">Beatriz Almeida</span>
-                        <span class="date">22/11/2025</span>
-                    </div>
-                </div>
+                <form class="newsletterForm">
+                    <input class="newsletterInput" type="email" placeholder="Digite o seu e-mail">
+                    <button class="newsletterButton" type="submit">Enviar</button>
+                </form>
             </div>
-        </div>
-    </section>
-
+        </section>
+    </div>
 @endsection
 @section('footer_content')
-<link rel="stylesheet" href="{{ asset('assets/css/plugins.css') }}?v={{ config('app.static_version') }}">
-<script src="{{ asset('assets/js/swiper.min.js') }}?v={{ config('app.static_version') }}"></script>
-<script src="{{ asset('assets/js/home.min.js') }}?v={{ config('app.static_version') }}"></script>
+
 @endsection
 

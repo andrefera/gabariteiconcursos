@@ -2,30 +2,17 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <!-- Preload e inclusão da fonte Montserrat -->
+    <!-- Montserrat (400, 500, 600, 800) + Sora (400, 600, 700, 800) -->
     <link rel="preload"
-          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;800&family=Sora:wght@400;600;700;800&display=swap"
           as="style">
     <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;800&family=Sora:wght@400;600;700;800&display=swap"
           media="print"
           onload="this.media='all'">
     <noscript>
         <link rel="stylesheet"
-              href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&display=swap">
-    </noscript>
-
-    <!-- Roboto ainda presente, se necessário -->
-    <link rel="preload"
-          href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"
-          as="style">
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"
-          media="print"
-          onload="this.media='all'">
-    <noscript>
-        <link rel="stylesheet"
-              href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap">
+              href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;800&family=Sora:wght@400;600;700;800&display=swap">
     </noscript>
 
     <link rel="icon" type="image/png" href="{{ asset('favicon.ico') }}">
@@ -49,7 +36,7 @@
         {
            "@context": "https://schema.org",
            "@type": "Organization",
-           "name": "Nova Concursos",
+           "name": "Gabaritei Concursos",
            "url": "{{ config('app.url') }}",
         {{--        "logo": "{{ asset_cdn('assets/img/logo.svg') }}",--}}
         "sameAs": [

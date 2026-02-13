@@ -1,813 +1,257 @@
 @extends('layouts.app')
-@section('title', 'Ellon Sports | Para Torcedores Apaixonados')
+@section('title', $product->name . ' | Gabaritei Concursos')
+@section('head_content')
 <link rel="stylesheet" href="{!! asset('assets/css/detail.css') !!}">
 <link rel="stylesheet" href="{!! asset('assets/css/plugins.css') !!}">
-
-<style>
-    /* Zoom lens styles - scoped to product detail page */
-    .imageMain {
-        position: relative;
-    }
-
-    .zoomLens {
-        position: absolute;
-        display: none;
-        width: 180px;
-        height: 180px;
-        border: 2px solid #ffffff;
-        border-radius: 50%;
-        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18), 0 0 0 2px rgba(0, 0, 0, 0.06);
-        background-repeat: no-repeat;
-        pointer-events: none;
-        z-index: 5;
-        transition: opacity .15s ease, transform .15s ease;
-        opacity: 0;
-        transform: scale(.92);
-        overflow: hidden;
-    }
-</style>
-
-@section('content')
-<div class="alignSection">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li><a href="#">Início</a></li>
-            <li><a href="/camisas">Camisetas</a></li>
-            <li class="active">{{$product->name}}</li>
-        </ol>
-    </nav>
-</div>
-<section class="detailSection fade-in">
-    <div class="alignSection">
-        <div class="productArea">
-            <div class="imageArea">
-                <!-- Container da imagem principal -->
-                @if(isset($product->images[0]))
-                <div class="imageMain">
-                    <img width="600" height="600"
-                        src="{{ $product->images[0]->url }}"
-                        alt="{{ $product->name }}"
-                        class="main-product-image"
-                        id="mainImage">
-                    <div class="zoomLens" id="zoomLens"></div>
-                </div>
-                @endif
-
-                <!-- Miniaturas das imagens -->
-                @if(!empty($product->images) && count($product->images) > 1)
-                <div class="otherImages">
-                    @foreach($product->images as $index => $image)
-                    <div class="otherImage {{ $index === 0 ? 'active' : '' }}" data-index="{{$index}}">
-                        <img src="{{ $image->url }}" alt="{{ $product->name }} - {{ $index + 1 }}">
-                    </div>
-                    @endforeach
-                </div>
-                @endif
-                {{-- <div class="mobileStars">
-                        <div class="stars">★★★★★
-                            <p>(121)</p>
-                        </div>
-                    </div> --}}
-            </div>
-
-            <div class="textArea">
-                <div class="firstStep">
-                    <h1 class="title">{{$product->name}}</h1>
-                    {{-- <div class="stars">★★★★★
-                        <p>(121)</p>
-                    </div> --}}
-                </div>
-                <div class="secondStep">
-                    <div class="priceGroup">
-                        @if($product->special_price && $product->discount_percentage)
-                        <div class="discountArea">
-                            <span class="totalPrice">de {{$product->price}}</span>
-                            <span class="offer">{{$product->discount_percentage}} OFF</span>
-                        </div>
-                        @endif
-                        <div class="group">
-                            <div class="alignPrice">
-                                <p class="price">{{$product->installment_price}}</p>
-                                <span
-                                    class="specialPrice">ou {{$product->special_price ?? $product->price}} à vista</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @if(!empty($product->sizes))
-                <div class="thirdStep">
-                    <p class="choose">Escolha sua medida</p>
-                    <div class="buttons">
-                        @foreach($product->sizes as $key => $size)
-                        <button class="btnMeasure" data-size="{{$size->name}}" data-stock="{{$stocks_by_size[$size->name] ?? 0}}">{{$size->name}}</button>
-                        @endforeach
-                    </div>
-                    <button class="tableMeasure" onclick="openMeasureTableModal()">
-                        <img width="22" height="22" src="{{ asset('images/icons/regua-icon.png') }}" alt="regua">
-                        <p> Tabela de Medidas</p>
-                    </button>
-                </div>
-                <div class="fourthStep">
-                    <div class="quantityArea">
-                        <div class="quantityGroup">
-                            <button class="btnQtd btnQtdLess">
-                                <p class="less">-</p>
-                            </button>
-                            <p class="quantity">1</p>
-                            <button class="btnQtd btnQtdPlus">+</button>
-                        </div>
-                        <div class="phrase">
-                            <p>Restam apenas <span id="remainingItems">{{ array_sum($stocks_by_size ?? []) }}</span> itens</p>
-                            <p>Não perca essa!</p>
-                        </div>
-                    </div>
-                    <div class="buyArea">
-                        <button class="btnBuy">Comprar Agora</button>
-                        <button class="btnCart">Adicionar ao Carrinho</button>
-                    </div>
-                </div>
-                @else
-                <div class="thirdStep">
-                    <div class="out-of-stock-message" style="padding: 20px; text-align: center; background-color: #fee2e2; border: 1px solid #fca5a5; border-radius: 8px; margin-top: 20px;">
-                        <p style="font-size: 18px; font-weight: bold; color: #dc2626; margin: 0;">Produto Fora de Estoque</p>
-                        <p style="font-size: 14px; color: #991b1b; margin-top: 8px;">Desculpe, este produto está temporariamente indisponível.</p>
-                    </div>
-                </div>
-                @endif
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="descriptionSection">
-    <div class="alignSection">
-        <hr>
-        @if($product->description)
-        <p class="title">Descrição</p>
-        <p class="description">{{$product->description}}</p>
-        @endif
-
-        <div class="informations">
-            <div class="groupInfo">
-                <p><span>Gênero:</span> {{$product->gender}}</p>
-                @if($product->team)
-                <p><span>Time:</span> {{$product->team}}</p>
-                @endif
-
-            </div>
-            <div class="groupInfo">
-                <p><span>Material:</span> Dry-fit</p>
-                <p><span>Escudo:</span> Bordado</p>
-            </div>
-            <div class="groupInfo">
-                <p><span>Origem:</span> Nacional</p>
-                <p><span>Número:</span> Sem número</p>
-            </div>
-        </div>
-    </div>
-</section>
-<section class="reviewSection">
-    <div class="alignSection">
-        <hr>
-        <p class="title">Avaliações dos Clientes</p>
-        <div class="reviewGroup">
-            <div class="review-summary">
-                <div class="review-score">
-                    <span class="score">4.7</span>
-                    <div class="stars">
-                        ★★★★★<span class="half-star">★</span>
-                    </div>
-                    <p class="total-reviews">78 avaliações</p>
-                </div>
-                <div class="review-bars">
-                    <div class="review-bar">
-                        <span class="stars-label">5 ★</span>
-                        <div class="bar">
-                            <div class="filled" style="width: 80%;"></div>
-                        </div>
-                    </div>
-                    <div class="review-bar">
-                        <span class="stars-label">4 ★</span>
-                        <div class="bar">
-                            <div class="filled" style="width: 15%;"></div>
-                        </div>
-                    </div>
-                    <div class="review-bar">
-                        <span class="stars-label">3 ★</span>
-                        <div class="bar">
-                            <div class="filled" style="width: 3%;"></div>
-                        </div>
-                    </div>
-                    <div class="review-bar">
-                        <span class="stars-label">2 ★</span>
-                        <div class="bar">
-                            <div class="filled" style="width: 1%;"></div>
-                        </div>
-                    </div>
-                    <div class="review-bar">
-                        <span class="stars-label">1 ★</span>
-                        <div class="bar">
-                            <div class="filled" style="width: 1%;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="reviews">
-                <div class="review">
-                    <p class="reviewName">Pedro Sergio | <span class="reviewDate">10 de Março</span></p>
-                    <p class="reviewStars">★★★★★</p>
-                    <p class="reviewText">"A qualidade do tecido é incrível! Confortável, respirável e com uma
-                        estampa
-                        que não desbota. Vale cada centavo! A qualidade do tecido é incrível! Confortável,
-                        respirável e
-                        com uma estampa
-                        que não desbota. Vale cada centavo! A qualidade do tecido é incrível! Confortável,
-                        respirável e
-                        com uma estampa
-                        que não desbota. Vale cada centavo!"</p>
-                </div>
-                <div class="review">
-                    <p class="reviewName">Pedro Sergio | <span class="reviewDate">10 de Março</span></p>
-                    <p class="reviewStars">★★★★</p>
-                    <p class="reviewText">"A modelagem ficou perfeita e o tecido é muito bom. Só demorou um pouco
-                        para
-                        chegar, mas a espera valeu a pena."</p>
-                    <div class="photoGroup">
-                        <img alt="" width="150" height="200"
-                            src="https://http2.mlstatic.com/D_NQ_NP_2X_928641-MLA75619515009_042024-F.webp">
-                        <img alt="" width="150" height="200"
-                            src="https://http2.mlstatic.com/D_NQ_NP_2X_847820-MLA82768018972_032025-O.webp">
-                    </div>
-                </div>
-                <div class="review">
-                    <p class="reviewName">Pedro Sergio | <span class="reviewDate">10 de Março</span></p>
-                    <p class="reviewStars">★★★★★</p>
-                    <p class="reviewText">"Surpreendido positivamente! Material resistente, cores vivas e o caimento
-                        no
-                        corpo ficou excelente. Recomendo demais!"</p>
-                </div>
-                <div class="review">
-                    <p class="reviewName">Pedro Sergio | <span class="reviewDate">10 de Março</span></p>
-                    <p class="reviewStars">★★★</p>
-                    <p class="reviewText">"A camisa é elogiada por seu design atraente e qualidade, sendo
-                        considerada
-                        uma ótima compra. O ajuste é adequado para crianças, com tamanhos que correspondem bem às
-                        expectativas. Além disso, a satisfação com o produto é destacada, especialmente entre os
-                        jovens
-                        torcedores."</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="productSection">
-    <div class="alignSection">
-        <hr>
-        <p class="title">Produtos Relacionados</p>
-        <div class="grid">
-            @foreach($related_products as $related_product)
-            <a href="{{ $related_product['url'] }}" class="card" style="text-decoration: none; color: inherit;">
-                <div class="cardContent">
-                    @if($related_product['discount_percentage'])
-                    <span class="badge">{{ $related_product['discount_percentage'] }}</span>
-                    @endif
-                    <img src="{{ $related_product['image'] }}" alt="{{ $related_product['name'] }}">
-                </div>
-                <div class="info">
-                    <h3>{{ $related_product['name'] }}</h3>
-                    <div>
-                        @if($related_product['special_price'])
-                        <span class="price">{{ $related_product['special_price'] }}</span>
-                        <span class="old-price">{{ $related_product['price'] }}</span>
-                        @else
-                        <span class="price">{{ $related_product['price'] }}</span>
-                        @endif
-                    </div>
-                    <div>{{ $related_product['installment_price'] }}</div>
-                </div>
-            </a>
-            @endforeach
-        </div>
-    </div>
-</section>
-{{--
-    <section class="linkSection">
-        <div class="alignSection">
-            <hr>
-            <p class="title">Outras páginas acessadas</p>
-            <div class="outherLinks">
-                <ul class="mostWantesLinks">
-                    <li><a href="/suplementos/creatina">
-                            creatina
-                        </a></li>
-                    <li><a href="/busca/sapatos-masculinos">
-                            sapatos masculinos
-                        </a></li>
-                    <li><a href="/relogios/masculino">
-                            relógios masculinos
-                        </a></li>
-                    <li><a href="/tenis/tesla">
-                            tesla tenis
-                        </a></li>
-                    <li><a href="/busca/papete-feminina">
-                            papete feminina
-                        </a></li>
-                    <li><a href="/busca/creatina-integralmedica">
-                            creatina integralmedica
-                        </a></li>
-                    <li><a href="/busca/creatina-monohidratada">
-                            creatina monohidratada
-                        </a></li>
-                    <li><a href="/busca/creatina-creapure">
-                            creatina creapure
-                        </a></li>
-                    <li><a href="/busca/whey-protein-com-creatina">
-                            kit whey e creatina
-                        </a></li>
-                    <li><a href="/busca/creatina-1kg">
-                            creatina 1kg
-                        </a></li>
-                    <li><a href="/camisa/masculino">
-                            camiseta masculina
-                        </a></li>
-                    <li><a href="/mochilas/masculino">
-                            mochila masculina
-                        </a></li>
-                    <li><a href="/busca/creatina-universal">
-                            creatina universal
-                        </a></li>
-                    <li><a href="/busca/tenis-pra-crossfit">
-                            tenis crossfit
-                        </a></li>
-                    <li><a href="/busca/papete-feminina-beira-rio">
-                            papete beira rio
-                        </a></li>
-                    <li><a href="/growth-supplements">
-                            growth supplements
-                        </a></li>
-                    <li><a href="/busca/creatina-growth">
-                            creatina groth
-                        </a></li>
-                    <li><a href="/busca/chuteira-society-nike">
-                            chuteira society nike
-                        </a></li>
-                    <li><a href="/busca/camisa-do-sao-paulo">
-                            camisa do sao paulo
-                        </a></li>
-                    <li><a href="/busca/chinelo-nike">
-                            chinelo nike
-                        </a></li>
-                    <li><a href="/busca/creatina-probiotica-300g">
-                            creatina probiotica
-                        </a></li>
-                    <li><a href="/suplementos/creatina/black-skull">
-                            creatina black skull
-                        </a></li>
-                    <li><a href="/sandalias/feminino">
-                            sandalias femininas
-                        </a></li>
-                    <li><a href="/sapato-social/masculino">
-                            sapato social masculino
-                        </a></li>
-                    <li><a href="/busca/tenis-nike-court-vision">
-                            nike court vision
-                        </a></li>
-                    <li><a href="/volei/bolas">
-                            bola de volei
-                        </a></li>
-                    <li><a href="/tenis/feminino/adidas">
-                            tenis adidas feminino
-                        </a></li>
-                    <li><a href="/busca/creatina-masterway">
-                            creatina masterway
-                        </a></li>
-                    <li><a href="/busca/calca-cargo-masculina">
-                            calça cargo masculina
-                        </a></li>
-                    <li><a href="/oculos/masculino">
-                            oculos de sol
-                        </a></li>
-                    <li><a href="/busca/whey-growth">
-                            whey growth
-                        </a></li>
-                    <li><a href="/busca/whey-protein-isolado">
-                            whey protein isolado
-                        </a></li>
-                    <li><a href="/busca/calca-sarja">
-                            calça sarja
-                        </a></li>
-                    <li><a href="/futebol/luvas-de-goleiro">
-                            luva de goleiro profissional
-                        </a></li>
-                    <li><a href="/suplementos/creatina/max-titanium">
-                            creatina max titanium 300g
-                        </a></li>
-                </ul>
-            </div>
-        </div>
-    </section>
-    --}}
 @endsection
 
-<!-- Scripts -->
-<script src="{{ asset('assets/js/plugins.min.js') }}?v={{ config('app.static_version') }}"></script>
-<script src="{{ asset('assets/js/detail.min.js') }}?v={{ config('app.static_version') }}"></script>
+@section('content')
+<div class="detailPage">
+    <div class="detailInner">
+        <nav class="detailBreadcrumb" aria-label="breadcrumb">
+            <a href="{{ url('/') }}">Início</a>
+            <span class="detailBreadcrumbSep">▸</span>
+            <span class="detailBreadcrumbCurrent">{{ $product->name }}</span>
+        </nav>
 
-<script>
-    // Dados de stock por tamanho (definido antes do DOMContentLoaded)
-    window.productStocks = {!! json_encode($stocks_by_size ?? []) !!};
-</script>
+        <section class="detailHero {{ (empty($product->images) || count($product->images) <= 1) ? 'detailHero--noThumbs' : '' }}">
+            <div class="detailGalleryCol">
+                @if(!empty($product->images) && count($product->images) > 1)
+                    <div class="detailThumbnails">
+                        @foreach($product->images as $index => $image)
+                            <button type="button" class="detailThumb {{ $index === 0 ? 'is-active' : '' }}" data-index="{{ $index }}" aria-label="Ver imagem {{ $index + 1 }}">
+                                <img src="{{ $image->url }}" alt="">
+                            </button>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Fade-in já existente
-        const elements = document.querySelectorAll('.fade-in');
-        elements.forEach(element => {
-            element.classList.add('show');
-        });
+            <div class="detailImageCol">
+                @if(isset($product->images[0]))
+                    <div class="detailImageMain">
+                        <img id="mainImage" src="{{ $product->images[0]->url }}" alt="{{ $product->name }}" width="400" height="520">
+                    </div>
+                @endif
+            </div>
 
-        // Troca de imagem principal ao clicar nas miniaturas
-        const mainImageEl = document.getElementById('mainImage');
-        const zoomLensEl = document.getElementById('zoomLens');
-        const thumbnailContainers = document.querySelectorAll('.otherImage');
-        if (mainImageEl && thumbnailContainers.length) {
-            thumbnailContainers.forEach(container => {
-                container.addEventListener('click', function() {
-                    // remove estado ativo anterior
-                    thumbnailContainers.forEach(c => c.classList.remove('active'));
-                    this.classList.add('active');
+            <div class="detailInfoCol">
+                <h1 class="detailTitle">{{ $product->name }}</h1>
+                @if($product->sku)
+                    <p class="detailCode">Código: {{ $product->sku }}</p>
+                @endif
 
-                    const img = this.querySelector('img');
-                    if (img) {
-                        mainImageEl.src = img.getAttribute('src');
-                        const altText = img.getAttribute('alt');
-                        if (altText) {
-                            mainImageEl.alt = altText;
-                        }
-                        // atualizar imagem de fundo do zoom quando a principal muda
-                        if (zoomLensEl) {
-                            zoomLensEl.style.backgroundImage = `url('${mainImageEl.src}')`;
-                        }
-                    }
-                });
-            });
-        }
+                @if($product->special_price && $product->discount_percentage)
+                    <div class="detailBadge">{{ $product->discount_percentage }} de desconto</div>
+                @endif
 
-        // Dados de stock por tamanho
-        const stocksBySize = window.productStocks || {};
-        const totalStock = Object.values(stocksBySize).reduce((sum, stock) => sum + stock, 0);
-        
-        // Seleção de tamanho
-        let selectedSize = null;
-        let maxQuantity = totalStock;
-        const remainingItemsSpan = document.getElementById('remainingItems');
-        const btnMeasures = document.querySelectorAll('.btnMeasure');
-        
-        function updateRemainingItems() {
-            if (selectedSize && stocksBySize[selectedSize] !== undefined) {
-                remainingItemsSpan.textContent = stocksBySize[selectedSize];
-                maxQuantity = stocksBySize[selectedSize];
-            } else {
-                remainingItemsSpan.textContent = totalStock;
-                maxQuantity = totalStock;
-            }
-            
-            // Ajustar quantidade se exceder o máximo
-            if (quantity > maxQuantity) {
-                quantity = maxQuantity;
-                quantityDisplay.textContent = quantity;
-            }
-            
-            // Desabilitar botão de aumentar se atingir o máximo
-            const btnPlus = document.querySelector('.btnQtdPlus');
-            if (btnPlus) {
-                if (quantity >= maxQuantity) {
-                    btnPlus.disabled = true;
-                    btnPlus.style.opacity = '0.5';
-                    btnPlus.style.cursor = 'not-allowed';
-                } else {
-                    btnPlus.disabled = false;
-                    btnPlus.style.opacity = '1';
-                    btnPlus.style.cursor = 'pointer';
-                }
-            }
-        }
-        
-        if (btnMeasures.length > 0) {
-            btnMeasures.forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    document.querySelectorAll('.btnMeasure').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    selectedSize = this.textContent.trim();
-                    updateRemainingItems();
-                });
-            });
-        }
+                <div class="detailPriceBlock">
+                    @if($product->special_price)
+                        <p class="detailPriceFrom">de {{ $product->price }}</p>
+                    @endif
+                    <p class="detailPrice">{{ $product->special_price ?? $product->price }}</p>
+                    <p class="detailInstallment">{{ $product->installment_price }}</p>
+                </div>
 
-        // Controle de quantidade
-        let quantity = 1;
-        const quantityDisplay = document.querySelector('.quantity');
-        const btnQtdLess = document.querySelector('.btnQtdLess');
-        const btnQtdPlus = document.querySelector('.btnQtdPlus');
-        
-        if (quantityDisplay && btnQtdLess && btnQtdPlus) {
-            btnQtdLess.addEventListener('click', function() {
-                if (quantity > 1) {
-                    quantity--;
-                    quantityDisplay.textContent = quantity;
-                    updateRemainingItems();
-                }
-            });
-            
-            btnQtdPlus.addEventListener('click', function() {
-                if (quantity < maxQuantity && maxQuantity > 0) {
-                    quantity++;
-                    quantityDisplay.textContent = quantity;
-                    updateRemainingItems();
-                }
-            });
-        }
-        
-        // Inicializar estado
-        updateRemainingItems();
-        
-        // Se não houver stock, desabilitar botões de compra
-        if (totalStock === 0) {
-            const btnBuy = document.querySelector('.btnBuy');
-            const btnCart = document.querySelector('.btnCart');
-            if (btnBuy) btnBuy.disabled = true;
-            if (btnCart) btnCart.disabled = true;
-        }
+                @if(!empty($product->sizes))
+                    <div class="detailVariantBlock">
+                        <p class="detailVariantLabel">Tipo</p>
+                        <div class="detailVariants">
+                            @foreach($product->sizes as $size)
+                                <label class="detailVariantOption">
+                                    <input type="radio" name="variant" value="{{ $size->name }}" {{ $loop->first ? 'checked' : '' }}>
+                                    <span>{{ $size->name }}</span>
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
+                @else
+                    <div class="detailVariantBlock">
+                        <p class="detailVariantLabel">Tipo</p>
+                        <div class="detailVariants">
+                            <label class="detailVariantOption">
+                                <input type="radio" name="variant" value="Digital" checked>
+                                <span>Digital</span>
+                            </label>
+                            <label class="detailVariantOption">
+                                <input type="radio" name="variant" value="Impressa">
+                                <span>Impressa</span>
+                            </label>
+                            <label class="detailVariantOption">
+                                <input type="radio" name="variant" value="Combo">
+                                <span>Combo</span>
+                            </label>
+                        </div>
+                    </div>
+                @endif
 
-        async function addItemToCart() {
-            const productId = "{{ $product->id }}";
-            if (!selectedSize) {
-                showToast('Atenção', 'Selecione um tamanho!', 'warning');
-                return;
-            }
-            // CSRF token do Laravel
-            const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-            try {
-                const response = await fetch("{{ route('cart.add') }}", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': token
-                    },
-                    body: JSON.stringify({
-                        product_id: productId,
-                        size: selectedSize,
-                        quantity: quantity
-                    })
-                });
-                if (response.ok) {
-                    return {
-                        success: true,
-                        message: 'Produto adicionado ao carrinho!'
-                    };
-                } else {
-                    const data = await response.json();
-                    return {
-                        success: false,
-                        message: data.message || 'Erro ao adicionar ao carrinho.'
-                    };
-                }
-            } catch (e) {
-                return {
-                    success: false,
-                    message: 'Erro ao adicionar ao carrinho.'
-                };
-            }
-        }
+                <div class="detailActions">
+                    <button type="button" class="detailBtnBuy">Comprar agora</button>
+                </div>
 
-        // Adicionar ao Carrinho
-        const btnBuy = document.querySelector('.btnBuy');
-        const btnCart = document.querySelector('.btnCart');
+                <ul class="detailTrust">
+                    <li>
+                        <img src="{{ asset('images/icons/transporte.svg') }}" alt="" width="24" height="24">
+                        <span>Envio mais rápido do Brasil</span>
+                    </li>
+                    <li>
+                        <img src="{{ asset('images/icons/verificado.svg') }}" alt="" width="24" height="24">
+                        <span>Compra 100% Segura!</span>
+                    </li>
+                    <li>
+                        <span class="detailTrustIcon">↻</span>
+                        <span>Garantia de devolução do dinheiro em 7 dias</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
 
-        if (btnBuy) {
-            btnBuy.addEventListener('click', async function() {
-                const result = await addItemToCart();
-                if (result.success) {
-                    window.location.href = '/cart';
-                } else {
-                    showToast('Erro', result.message, 'error');
-                }
-            });
-        }
+        <section class="detailSpecs">
+            <h2 class="detailSpecsTitle">Detalhes</h2>
+            <dl class="detailSpecsList">
+                <div class="detailSpecItem">
+                    <dt>Material</dt>
+                    <dd>Atualizado de acordo com Edital!</dd>
+                </div>
+                <div class="detailSpecItem">
+                    <dt>Conteúdo</dt>
+                    <dd>Teoria + Questões</dd>
+                </div>
+                <div class="detailSpecItem">
+                    <dt>Página</dt>
+                    <dd>500</dd>
+                </div>
+                <div class="detailSpecItem">
+                    <dt>Capa</dt>
+                    <dd>Flexível</dd>
+                </div>
+                <div class="detailSpecItem">
+                    <dt>Editora</dt>
+                    <dd>Gabaritei</dd>
+                </div>
+                <div class="detailSpecItem">
+                    <dt>Bônus</dt>
+                    <dd>Exclusivo Gabaritei! 😊</dd>
+                </div>
+            </dl>
+            <a href="#" class="detailReadPages">
+                <span class="detailReadPagesIcon">📖</span>
+                Ler algumas páginas
+            </a>
+        </section>
 
-        if (btnCart) {
-            btnCart.addEventListener('click', async function() {
-                const result = await addItemToCart();
-                if (result.success) {
-                    showToast('Sucesso', result.message, 'success');
-                } else {
-                    showToast('Erro', result.message, 'error');
-                }
-            });
-        }
+        <section class="detailDescription">
+            <h2 class="detailDescTitle">Descrição</h2>
+            <div class="detailDescContent">
+                @if($product->description)
+                    {!! nl2br(e($product->description)) !!}
+                @else
+                    <p>Lorem Ipsum é simplesmente um texto fictício da indústria tipográfica e de impressão. Lorem Ipsum tem sido o texto fictício padrão da indústria desde os anos 1500.</p>
+                @endif
+            </div>
+        </section>
 
-        // Efeito de zoom na imagem principal
-        if (mainImageEl && zoomLensEl) {
-            const imageMainContainer = mainImageEl.parentElement;
-            const lens = zoomLensEl;
-            const zoomScale = 2.2; // fator de zoom
-            let scaleX = 1,
-                scaleY = 1;
-
-            const updateLensBackground = () => {
-                lens.style.backgroundImage = `url('${mainImageEl.src}')`;
-                const naturalWidth = mainImageEl.naturalWidth || mainImageEl.width;
-                const naturalHeight = mainImageEl.naturalHeight || mainImageEl.height;
-                const displayWidth = mainImageEl.clientWidth;
-                const displayHeight = mainImageEl.clientHeight;
-                // tamanho do background (zoom aplicado)
-                const bgW = naturalWidth * zoomScale;
-                const bgH = naturalHeight * zoomScale;
-                lens.style.backgroundSize = `${bgW}px ${bgH}px`;
-                // escala para converter coordenadas da tela para a imagem com zoom
-                scaleX = (naturalWidth / displayWidth) * zoomScale;
-                scaleY = (naturalHeight / displayHeight) * zoomScale;
-            };
-            updateLensBackground();
-
-            const getCursorPos = (e) => {
-                const rect = imageMainContainer.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                return {
-                    x,
-                    y,
-                    rect
-                };
-            };
-
-            const moveLens = (e) => {
-                const {
-                    x,
-                    y,
-                    rect
-                } = getCursorPos(e);
-                const lensW = lens.offsetWidth;
-                const lensH = lens.offsetHeight;
-                // centro da lente deve seguir o ponteiro
-                let centerX = x;
-                let centerY = y;
-                // limitar para que a lente não ultrapasse as bordas
-                const halfW = lensW / 2;
-                const halfH = lensH / 2;
-                if (centerX < halfW) centerX = halfW;
-                if (centerX > rect.width - halfW) centerX = rect.width - halfW;
-                if (centerY < halfH) centerY = halfH;
-                if (centerY > rect.height - halfH) centerY = rect.height - halfH;
-
-                lens.style.left = `${centerX - halfW}px`;
-                lens.style.top = `${centerY - halfH}px`;
-
-                // posiciona o background para que o ponto sob o cursor fique no centro da lente
-                const bgX = centerX * scaleX - halfW;
-                const bgY = centerY * scaleY - halfH;
-                lens.style.backgroundPosition = `-${bgX}px -${bgY}px`;
-            };
-
-            imageMainContainer.addEventListener('mouseenter', () => {
-                lens.style.display = 'block';
-                // força recálculo para ativar a transição
-                // eslint-disable-next-line no-unused-expressions
-                lens.offsetHeight;
-                lens.style.opacity = '1';
-                lens.style.transform = 'scale(1)';
-                updateLensBackground();
-            });
-            imageMainContainer.addEventListener('mousemove', moveLens);
-            imageMainContainer.addEventListener('mouseleave', () => {
-                lens.style.opacity = '0';
-                lens.style.transform = 'scale(.92)';
-                setTimeout(() => {
-                    lens.style.display = 'none';
-                }, 140);
-            });
-            window.addEventListener('resize', updateLensBackground);
-            mainImageEl.addEventListener('load', updateLensBackground);
-        }
-    });
-
-    // Modal da Tabela de Medidas
-    function openMeasureTableModal() {
-        const modal = document.getElementById('measureTableModal');
-        if (modal) {
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-    }
-
-    function closeMeasureTableModal() {
-        const modal = document.getElementById('measureTableModal');
-        if (modal) {
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-    }
-
-    // Fechar modal ao clicar fora da imagem
-    document.addEventListener('DOMContentLoaded', function() {
-        const modal = document.getElementById('measureTableModal');
-        if (modal) {
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    closeMeasureTableModal();
-                }
-            });
-
-            // Fechar com ESC
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && modal.style.display === 'flex') {
-                    closeMeasureTableModal();
-                }
-            });
-        }
-    });
-</script>
-
-<!-- Modal da Tabela de Medidas -->
-<div id="measureTableModal" class="measure-table-modal">
-    <div class="measure-table-modal-content">
-        <span class="measure-table-close" onclick="closeMeasureTableModal()">&times;</span>
-        <img src="{{ asset('images/tabela.jfif') }}" alt="Tabela de Medidas" class="measure-table-image">
+        @if(!empty($related_products))
+        <section class="detailRelated">
+            <h2 class="detailRelatedTitle">Produtos relacionados</h2>
+            <div class="detailRelatedGrid">
+                @foreach($related_products as $related_product)
+                    <a href="{{ $related_product['url'] }}" class="detailRelatedCard">
+                        <div class="detailRelatedImageWrap">
+                            @if($related_product['discount_percentage'] ?? null)
+                                <span class="detailRelatedBadge">{{ $related_product['discount_percentage'] }}</span>
+                            @endif
+                            <img src="{{ $related_product['image'] }}" alt="{{ $related_product['name'] }}">
+                        </div>
+                        <div class="detailRelatedInfo">
+                            <h3 class="detailRelatedName">{{ $related_product['name'] }}</h3>
+                            <div class="detailRelatedPriceBlock">
+                                @if($related_product['special_price'] ?? null)
+                                    <span class="detailRelatedPrice">{{ $related_product['special_price'] }}</span>
+                                    <span class="detailRelatedOldPrice">{{ $related_product['price'] }}</span>
+                                @else
+                                    <span class="detailRelatedPrice">{{ $related_product['price'] }}</span>
+                                @endif
+                            </div>
+                            <span class="detailRelatedInstallment">{{ $related_product['installment_price'] }}</span>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        </section>
+        @endif
     </div>
 </div>
 
-<style>
-    .measure-table-modal {
-        display: none;
-        position: fixed;
-        z-index: 10000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.85);
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-        box-sizing: border-box;
+<script>
+    window.productStocks = {!! json_encode($stocks_by_size ?? []) !!};
+    window.productId = {{ $product->id }};
+    window.cartAddUrl = "{{ route('cart.add') }}";
+    window.csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+</script>
+<script src="{{ asset('assets/js/plugins.min.js') }}?v={{ config('app.static_version') }}"></script>
+<script src="{{ asset('assets/js/detail.min.js') }}?v={{ config('app.static_version') }}"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var mainImage = document.getElementById('mainImage');
+    var thumbs = document.querySelectorAll('.detailThumb');
+    thumbs.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            thumbs.forEach(function(b) { b.classList.remove('is-active'); });
+            this.classList.add('is-active');
+            var img = this.querySelector('img');
+            if (img && mainImage) {
+                mainImage.src = img.src;
+                mainImage.alt = img.alt || '';
+            }
+        });
+    });
+
+    function getSelectedVariant() {
+        var radio = document.querySelector('input[name="variant"]:checked');
+        return radio ? radio.value : null;
     }
 
-    .measure-table-modal-content {
-        position: relative;
-        max-width: 90%;
-        max-height: 90%;
-        background: #fff;
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .measure-table-close {
-        position: absolute;
-        top: 10px;
-        right: 15px;
-        color: #333;
-        font-size: 36px;
-        font-weight: bold;
-        cursor: pointer;
-        z-index: 10001;
-        line-height: 1;
-        transition: color 0.3s ease;
-    }
-
-    .measure-table-close:hover {
-        color: #FF7C00;
-    }
-
-    .measure-table-image {
-        max-width: 100%;
-        max-height: 85vh;
-        width: auto;
-        height: auto;
-        object-fit: contain;
-        border-radius: 8px;
-    }
-
-    @media (max-width: 768px) {
-        .measure-table-modal-content {
-            max-width: 95%;
-            max-height: 95%;
-            padding: 15px;
+    function addToCart(thenRedirect) {
+        var variant = getSelectedVariant();
+        if (!variant) {
+            if (typeof showToast === 'function') {
+                showToast('Atenção', 'Selecione uma opção (Digital, Impressa ou Combo).', 'warning');
+            }
+            return;
         }
-
-        .measure-table-close {
-            top: 5px;
-            right: 10px;
-            font-size: 28px;
-        }
-
-        .measure-table-image {
-            max-height: 90vh;
-        }
+        fetch(window.cartAddUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': window.csrfToken
+            },
+            body: JSON.stringify({
+                product_id: window.productId,
+                size: variant,
+                quantity: 1
+            })
+        })
+        .then(function(r) { return r.json().then(function(data) { return { ok: r.ok, data: data }; }); })
+        .then(function(result) {
+            if (result.ok) {
+                if (typeof showToast === 'function') showToast('Sucesso', 'Produto adicionado ao carrinho!', 'success');
+                if (thenRedirect) window.location.href = '/cart';
+            } else {
+                if (typeof showToast === 'function') showToast('Erro', result.data.message || 'Erro ao adicionar.', 'error');
+            }
+        })
+        .catch(function() {
+            if (typeof showToast === 'function') showToast('Erro', 'Erro ao adicionar ao carrinho.', 'error');
+        });
     }
-</style>
+
+    var btnBuy = document.querySelector('.detailBtnBuy');
+    if (btnBuy) {
+        btnBuy.addEventListener('click', function() {
+            addToCart(true);
+        });
+    }
+});
+</script>
+@endsection

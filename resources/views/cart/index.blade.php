@@ -1,232 +1,154 @@
 @extends('layouts.app')
-@section('title', 'Ellon Sports | Carrinho de Compras')
+@section('title', 'Gabaritei Concursos | Carrinho de Compras')
 <link rel="stylesheet" href="{!! asset('assets/css/cart.css') !!}">
 @section('content')
-    <section class="cartSection fade-in">
-        <div class="alignSection">
-            @if(!$cart || empty($cart->products))
-                <div class="empty-cart">
-                    <div class="empty-cart__illustration" aria-hidden="true">
-                        <!-- Simple cart outline icon -->
-                        <svg width="96" height="96" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3 3h1.6c.46 0 .87.31.98.75L6.7 8.5H19a1 1 0 0 1 .98 1.2l-1.1 5.5a2 2 0 0 1-1.96 1.6H9.3a2 2 0 0 1-1.95-1.43L5.2 6H3" stroke="#FF7C00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <circle cx="9" cy="20" r="1.5" stroke="#333" stroke-width="1.5"/>
-                            <circle cx="17" cy="20" r="1.5" stroke="#333" stroke-width="1.5"/>
-                        </svg>
-                    </div>
-                    <h1>Seu carrinho está vazio</h1>
-                    <p class="empty-cart__subtitle">Você ainda não adicionou nenhum produto ao seu carrinho.</p>
-                    <div class="empty-cart__ctas">
-                        <a href="/camisas" class="btn-continue">Ver produtos</a>
-                        <a href="/" class="link-secondary">Ir para a página inicial</a>
-                    </div>
-                </div>
-            @else
-                <h1>Carrinho de Compras ({{ $cart->totalProducts }})</h1>
-                <div class="cart-content">
-                    <div class="cart-list">
-                        <div class="cart-list__header">
-                            <span class="items">Item(s)</span>
-                            <span>Quantidade</span>
-                            {{--                    <span>Valor Unitário</span>--}}
-                            <span>Valor Total</span>
-                        </div>
-                        @foreach($cart->products as $item)
-                            <div class="cart-item-container" data-item-id="{{ $item->id }}">
-                                <div class="cart-item-product">
-                                    <img class="product-image"
-                                         src="{{ asset($item->imageUrl) }}"
-                                         alt="{{ $item->name }}">
-                                    <p>
-                                        <span>{{ $item->name }}</span>
-                                        <small>Tamanho: {{ $item->size }}</small>
-                                    </p>
-                                </div>
-                                <div class="cart-item-quantity-value">
-                                    <div class="cart-item-quantity">
-                                        <div class="quantity-controls">
-                                            <button class="quantity-btn minus"
-                                                    {{$item->quantity - 1 === 0 ? "disabled" : ""}} onclick="updateQuantity({{ $item->id }}, {{ $item->quantity - 1 }})">
-                                                -
-                                            </button>
-                                            <input type="text" value="{{ $item->quantity }}" id="quantity" class="quantity-input"
-                                                   onchange="updateQuantity({{ $item->id }}, this.value)">
-                                            <button class="quantity-btn plus"
-                                                    onclick="updateQuantity({{ $item->id }}, {{ $item->quantity + 1 }})">
-                                                +
-                                            </button>
-                                        </div>
-                                        <button class="remove-text" onclick="removeItem({{ $item->id }})">Excluir Item
-                                        </button>
-                                    </div>
-                                    {{--                        <div class="cart-item-value">--}}
-                                    {{--                            <div class="cart-item-content">--}}
-                                    {{--                                @if($item->specialPrice && $item->specialPrice < $item->price)--}}
-                                    {{--                                    <span class="original-price">R$ {{ number_format($item->price, 2, ',', '.') }}</span>--}}
-                                    {{--                                    <span class="special-price">R$ {{ number_format($item->specialPrice, 2, ',', '.') }}</span>--}}
-                                    {{--                                    @else--}}
-                                    {{--                                    <span class="total-price">R$ {{ number_format($item->price, 2, ',', '.') }}</span>--}}
-                                    {{--                                    @endif--}}
-                                    {{--                            </div>--}}
-                                    {{--                        </div>--}}
-                                    <div class="cart-item-value">
-                                        <div class="cart-item-content">
-                                            @if($item->specialPrice && $item->specialPrice < $item->price)
-                                                <span
-                                                    class="original-price">R$ {{ number_format($item->price * $item->quantity, 2, ',', '.') }}</span>
-                                                <span
-                                                    class="special-price">R$ {{ number_format($item->specialPrice * $item->quantity, 2, ',', '.') }}</span>
-                                            @else
-                                                <span
-                                                    class="total-price">R$ {{ number_format($item->price * $item->quantity, 2, ',', '.') }}</span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                    <div class="cart-resume">
-                        <a href="/camisas" class="keep-buying">Continuar comprando</a>
-                        <div class="cart-resume-container">
-                            <h4>Resumo do pedido</h4>
-                            <div class="divisor"></div>
-                            <div class="subtotal-content">
-                                <span>Subtotal ({{ $cart->totalProducts }} {{ $cart->totalProducts > 1 ? 'itens' : 'item' }})</span>
-                                <span class="subtotal-value">R$ {{ number_format($cart->total, 2, ',', '.') }}</span>
-                            </div>
-                            @if($cart->discount)
-                                <div class="discount-content">
-                                    <span>Desconto</span>
-                                    <span
-                                        class="discount-value">- R$ {{ number_format($cart->discount, 2, ',', '.') }}</span>
-                                </div>
-                            @endif
-                            @if($cart->shipping > 0)
-                                <div class="shipping-content">
-                                    <span>Frete</span>
-                                    <span
-                                        class="shipping-value">R$ {{ number_format($cart->shipping, 2, ',', '.') }}</span>
-                                </div>
-                            @endif
-                            <div class="divisor"></div>
-                            <div class="total-content">
-                                <span>Total</span>
-                                <div class="total-resume">
-                                    <h6>R$ {{ number_format($cart->finalPrice, 2, ',', '.') }}</h6>
-                                    @if(isset($cart->installments[4]))
-                                        <h6 class="installment">4 x
-                                            R$ {{ number_format($cart->installments[4], 2, ',', '.') }} s/ juros</h6>
-                                    @endif
-                                </div>
-                            </div>
-                            <a href="{{ route('checkout.index') }}" class="btn-continue btn-cart">
-                                <span>Finalizar Compra</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            @endif
+<div class="cart-page">
+  <div class="container">
+    <section class="listNavbar" aria-labelledby="page-title">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a href="{{ url('/') }}" class="breadcrumbLink">Início</a>
+            <span class="breadcrumbSep"><img src="{{ asset('images/breadcrumb.svg') }}" alt=""></span>
+            <span class="breadcrumbCurrent">Meu carrinho</span>
+        </nav>
+      </section>
+
+    <div class="cart-layout">
+      <main class="cart-main">
+        <h2 class="section-title">Dados de entrega</h2>
+
+        <form class="delivery-form" aria-label="Dados de entrega">
+          <div class="grid-2">
+            <label class="input-group">
+              <span class="label">Nome completo</span>
+              <input type="text" value="Sara Oliveira" />
+            </label>
+            <label class="input-group">
+              <span class="label">Telefone</span>
+              <input type="text" value="(00) 0000-0000" />
+            </label>
+
+            <label class="input-group">
+              <span class="label">CEP</span>
+              <input type="text" value="00.000-000" />
+            </label>
+            <label class="input-group">
+              <span class="label">Endereço</span>
+              <input type="text" value="Rua Lorem Ipsum" />
+            </label>
+
+            <label class="input-group">
+              <span class="label">Número</span>
+              <input type="text" value="100" />
+            </label>
+            <label class="input-group">
+              <span class="label">Bairro</span>
+              <input type="text" value="Lorem ipsum" />
+            </label>
+
+            <label class="input-group">
+              <span class="label">Complemento</span>
+              <input type="text" value="Lorem ipsum" />
+            </label>
+            <label class="input-group">
+              <span class="label">Cidade</span>
+              <input type="text" value="Alfenas" />
+            </label>
+
+            <label class="input-group select-group">
+              <span class="label">Estado</span>
+              <select>
+                <option>Minas Gerais</option>
+              </select>
+            </label>
+          </div>
+        </form>
+
+        <h3 class="section-title">Frete e prazo</h3>
+        <div class="shipping-options">
+          <button class="shipping primary">
+            <strong>Normal</strong>
+            <span class="price">R$ 9,00</span>
+            <small>Até 7 dias</small>
+          </button>
+          <button class="shipping">
+            <strong>Expresso</strong>
+            <span class="price">R$ 18,00</span>
+            <small>Até 3 dias</small>
+          </button>
         </div>
-    </section>
 
-    <style>
-        .original-price {
-            color: #ff0000;
-            text-decoration: line-through;
-            font-size: 0.9em;
-        }
+        <h3 class="section-title">Pagamento</h3>
+        <div class="payment-options">
+          <button class="payment primary">
+            <strong>Pix</strong>
+            <span class="price">R$ 120,00 à vista</span>
+          </button>
+          <button class="payment">
+            <strong>Cartão de crédito</strong>
+            <span class="price">À partir de R$ 164,00</span>
+          </button>
+          <button class="payment">
+            <strong>Boleto</strong>
+            <span class="price">R$ 122,00 à vista</span>
+          </button>
+        </div>
 
-        .special-price {
-            color: #000;
-            font-weight: bold;
-        }
+        <div class="payment-info card">
+          <div class="icon"></div>
+          <div class="info">
+            <strong>Pix</strong>
+            <p>O código Pix ficará disponível após a finalização da compra.</p>
+          </div>
+        </div>
+      </main>
 
-        .discount-content {
-            display: flex;
-            justify-content: space-between;
-            margin: 10px 0;
-            font-size: 14px;
-        }
+      <aside class="checkout-sidebar">
+        <h2 class="sidebar-title">Resumo da compra</h2>
 
-        .discount-value {
-            color: #ff0000;
-            font-weight: bold;
-        }
+        <div class="cart-items">
+          @for ($i = 0; $i < 2; $i++)
+          <div class="cart-item">
+            <div class="thumb">
+              <img src="{{ asset('images/tabela.jfif') }}" alt="capa" />
+            </div>
+            <div class="meta">
+              <p class="title">Apostila IBGE 2026 - Agente de Pesquisas e Mapeamento</p>
+              <p class="price">R$ 40,00</p>
+            </div>
+            <div class="controls">
+              <div class="qty">
+                <button class="minus">−</button>
+                <span class="count">1</span>
+                <button class="plus">+</button>
+              </div>
+              <button class="remove">Remover</button>
+            </div>
+          </div>
+          @endfor
+        </div>
 
-        .shipping-content {
-            display: flex;
-            justify-content: space-between;
-            margin: 10px 0;
-            font-size: 14px;
-        }
+        <div class="coupon">
+          <label class="coupon-input">
+            <input type="text" placeholder="Digite o cupom" />
+          </label>
+          <button class="btn-apply">Aplicar cupom</button>
+        </div>
 
-        .cart-item-content {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-        }
-    </style>
+        <div class="coupon-applied">
+          <span>Cupom aplicado</span>
+          <strong>GABARITEI10</strong>
+        </div>
 
-    <script src="https://unpkg.com/imask"></script>
-    <script>
-        const quantityMask = IMask(document.getElementById('quantity'), {
-            mask: '00'
-        });
+        <div class="totals">
+          <div class="row"><span>Subtotal</span><span>R$ 80,00</span></div>
+          <div class="row"><span>Frete</span><span>R$ 18,00</span></div>
+          <div class="row"><span>Cupom de desconto</span><span class="discount">- R$ 8,00</span></div>
+          <div class="total"><span>Valor total</span><strong>R$ 90,00</strong></div>
+        </div>
 
-    </script>
-    @if($cart && !empty($cart->products))
-        <script>
-            function updateQuantity(itemId, newQuantity) {
-                if (!newQuantity || newQuantity < 1) return;
-
-                fetch(`/cart/item/${itemId}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    },
-                    body: JSON.stringify({
-                        quantity: newQuantity
-                    })
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            window.location.reload();
-                        }else if(data.msg){
-                            showToast('Erro', data.msg, 'error');
-                            setTimeout(() => {
-                                window.location.reload();
-                            }, 2000)
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
-            }
-
-            function removeItem(itemId) {
-                fetch(`/cart/item/${itemId}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                        }
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                showToast('Sucesso', 'Item removido do carrinho!', 'success');
-                                setTimeout(() => {
-                                    window.location.reload();
-                                }, 500);
-                            } else {
-                                showToast('Erro', 'Erro ao remover item do carrinho', 'error');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            showToast('Erro', 'Erro ao remover item do carrinho', 'error');
-                        });
-            }
-        </script>
-    @endif
+        <button class="btn-checkout">Finalizar compra</button>
+      </aside>
+    </div>
+  </div>
+</div>
 @endsection

@@ -1,0 +1,95 @@
+// Pagination component styles
+// Variables from list.scss are expected (e.g. $accent, $title-color, $muted)
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 28px;
+  padding: 8px;
+
+  .page-btn {
+    height: 48px;
+    min-width: 48px;
+    border-radius: 8px;
+    border: 2px solid #1E44C3;
+    background: transparent;
+    color: #1E44C3;
+    font-size: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background .12s ease, color .12s ease, transform .06s ease;
+
+    &:hover {
+      background: rgba(30,68,195,0.06);
+    }
+
+    &:disabled {
+      opacity: .4;
+      cursor: default;
+    }
+  }
+
+  .pages {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .page-item {
+    .page-link {
+      height: 48px;
+      min-width: 48px;
+      padding: 0 12px;
+      border-radius: 8px;
+      border: 1px solid #ECEAEA;
+      background: #fff;
+      color: #333333;
+      font-family: 'Sora', sans-serif;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: border-color .12s ease, color .12s ease, transform .06s ease;
+    }
+
+    &.active {
+      .page-link {
+        border: 2px solid #1E44C3;
+        color: #1E44C3;
+        transform: translateY(-1px);
+      }
+    }
+
+    .page-ellipsis {
+      display: inline-block;
+      padding: 0 8px;
+      color: #999999;
+      font-size: 18px;
+      line-height: 48px;
+    }
+  }
+
+  // responsive: stack controls on very small screens
+  @media (max-width: 480px) {
+    flex-direction: column;
+    gap: 8px;
+
+    .pages {
+      order: 2;
+    }
+    .page-btn {
+      order: 1;
+    }
+  }
+}
+
